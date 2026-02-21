@@ -9,7 +9,7 @@ const roster = [
     {
         name: "The Architect",
         label: "7x Founder",
-        description: "Built multiple local businesses from the ground up. The visionary mapping out full-scale digital infrastructures and unit economics. Oversees the entire operation ensuring pure ROI.",
+        description: "Built multiple local businesses from the ground up. The visionary who plans out the big picture for your digital strategy, ensuring every dollar spent brings a return on investment.",
         focus: "Strategic Vision"
     },
     {
@@ -27,7 +27,7 @@ const roster = [
     {
         name: "Visual Engineer",
         label: "2x Co-Founder",
-        description: "Worked with top LinkedIn personal brands. A world-class designer turning logic into emotion and engineering interfaces that convert ruthlessly.",
+        description: "Worked with top LinkedIn personal brands. A world-class designer who builds beautiful, easy-to-use websites designed to maximize your sales.",
         focus: "Design & UX"
     },
     {
@@ -79,9 +79,9 @@ const Team = () => {
                             <div className={`absolute inset-0 bg-white/[0.03] transition-transform duration-500 origin-left ${activeIdx === idx ? 'scale-x-100' : 'scale-x-0'}`} />
 
                             <div className="relative z-10 flex items-center justify-between pointer-events-none pr-8 pl-4">
-                                <div className="flex items-baseline gap-6 focus-within:">
+                                <div className="flex items-baseline gap-4 md:gap-6 focus-within:">
                                     <span className={`font-mono text-sm transition-colors ${activeIdx === idx ? 'text-accent' : 'text-white/20'}`}>0{idx + 1}</span>
-                                    <h3 className={`text-4xl md:text-5xl lg:text-6xl font-display font-medium tracking-tighter transition-all duration-300 ${activeIdx === idx ? 'text-white translate-x-4' : 'text-white/40'}`}>
+                                    <h3 className={`text-3xl md:text-5xl lg:text-6xl font-display font-medium tracking-tighter transition-all duration-300 ${activeIdx === idx ? 'text-white translate-x-2 md:translate-x-4' : 'text-white/40'}`}>
                                         {member.name}
                                     </h3>
                                 </div>
@@ -113,7 +113,7 @@ const Team = () => {
                             Focus: {roster[activeIdx].focus}
                         </h4>
 
-                        <p className="text-2xl md:text-3xl text-white/80 font-light leading-relaxed">
+                        <p className="text-lg md:text-3xl text-white/80 font-light leading-relaxed">
                             "{roster[activeIdx].description}"
                         </p>
                     </div>

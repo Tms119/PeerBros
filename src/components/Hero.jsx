@@ -41,7 +41,7 @@ const Preloader = ({ onComplete }) => {
                 <div className="text-3xl font-display font-medium tracking-tighter">PEERBROS®</div>
                 <div className="w-12 h-[1px] bg-white/20"></div>
                 <div className="font-mono text-[10px] tracking-[0.4em] text-white/40 uppercase">
-                    Initializing Environment
+                    Loading Experience
                 </div>
             </div>
         </div>
@@ -156,7 +156,7 @@ const Hero = () => {
                     <div className="hero-tag opacity-0 translate-y-10 inline-flex items-center gap-3 px-5 py-2.5 rounded-full border border-white/10 bg-[#0a0a0a]/80 backdrop-blur-xl mb-12 shadow-2xl">
                         <div className="w-1.5 h-1.5 bg-accent rounded-full animate-pulse shadow-[0_0_10px_rgba(249,115,22,0.8)]" />
                         <span className="text-white/80 uppercase tracking-[0.3em] text-[10px] md:text-xs font-mono font-medium">
-                            Premium Digital Operations
+                            Digital Growth Agency
                         </span>
                     </div>
 
@@ -167,15 +167,15 @@ const Hero = () => {
                         <div className="hero-focus-word opacity-0 blur-2xl scale-110 translate-y-10 text-accent will-change-transform inline-block mix-blend-screen">Businesses.</div>
                     </h1>
 
-                    <p className="hero-sub opacity-0 translate-y-12 mt-16 text-lg md:text-[clamp(1.2rem,2vw,1.8rem)] text-white/50 font-light max-w-3xl text-center mx-auto tracking-wide leading-relaxed relative z-40">
-                        We don't design templates. We engineer elite, automated digital infrastructures that drive absolute asymmetric growth.
+                    <p className="hero-sub opacity-0 translate-y-12 mt-8 md:mt-16 text-sm md:text-[clamp(1.2rem,2vw,1.8rem)] text-white/50 font-light max-w-sm md:max-w-3xl text-center mx-auto tracking-wide leading-relaxed relative z-40 px-4">
+                        We don't just build websites. We create powerful digital systems that help your business grow automatically.
                     </p>
 
                     {/* --- FLOATING MICRO-ELEMENTS --- */}
                     {/* Badge 1: Top Left */}
-                    <div className="hero-badge opacity-0 translate-y-8 scale-90 absolute top-[10%] left-[5%] md:left-[10%] z-50 px-4 py-2.5 rounded-2xl bg-white/[0.03] backdrop-blur-xl border border-white/[0.08] hidden md:flex items-center gap-3 shadow-[0_10px_40px_rgba(0,0,0,0.5)]" style={{ animation: 'floatBadge 6s ease-in-out infinite' }}>
-                        <div className="w-8 h-8 rounded-full bg-accent/20 flex items-center justify-center border border-accent/30 text-accent">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><polyline points="16 11 18 13 22 9" /></svg>
+                    <div className="hero-badge opacity-0 translate-y-8 scale-75 md:scale-90 absolute top-[5%] left-[0%] md:top-[10%] md:left-[10%] z-50 px-3 md:px-4 py-2 md:py-2.5 rounded-2xl bg-[#0a0a0a]/80 backdrop-blur-xl border border-white/[0.08] flex items-center gap-2 md:gap-3 shadow-[0_10px_40px_rgba(0,0,0,0.5)]" style={{ animation: 'floatBadge 6s ease-in-out infinite' }}>
+                        <div className="w-6 h-6 md:w-8 md:h-8 rounded-full bg-accent/20 flex items-center justify-center border border-accent/30 text-accent">
+                            <svg width="12" height="12" className="md:w-3.5 md:h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><polyline points="16 11 18 13 22 9" /></svg>
                         </div>
                         <div className="flex flex-col text-left">
                             <span className="text-white font-medium text-sm leading-tight">+100K</span>
@@ -184,9 +184,9 @@ const Hero = () => {
                     </div>
 
                     {/* Badge 2: Right Middle */}
-                    <div className="hero-badge opacity-0 translate-y-8 scale-90 absolute top-[45%] right-[2%] md:right-[8%] z-50 px-4 py-2.5 rounded-2xl bg-white/[0.03] backdrop-blur-xl border border-white/[0.08] hidden lg:flex items-center gap-3 shadow-[0_10px_40px_rgba(0,0,0,0.5)]" style={{ animation: 'floatBadge 7s ease-in-out infinite 1s' }}>
-                        <div className="w-8 h-8 rounded-full bg-green-500/20 flex items-center justify-center border border-green-500/30 text-green-400">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="1" x2="12" y2="23" /><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" /></svg>
+                    <div className="hero-badge opacity-0 translate-y-8 scale-75 md:scale-90 absolute top-[30%] right-[0%] md:top-[45%] lg:right-[8%] z-50 px-3 md:px-4 py-2 md:py-2.5 rounded-2xl bg-[#0a0a0a]/80 backdrop-blur-xl border border-white/[0.08] flex items-center gap-2 md:gap-3 shadow-[0_10px_40px_rgba(0,0,0,0.5)]" style={{ animation: 'floatBadge 7s ease-in-out infinite 1s' }}>
+                        <div className="w-6 h-6 md:w-8 md:h-8 rounded-full bg-green-500/20 flex items-center justify-center border border-green-500/30 text-green-400">
+                            <svg width="12" height="12" className="md:w-3.5 md:h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="1" x2="12" y2="23" /><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" /></svg>
                         </div>
                         <div className="flex flex-col text-left">
                             <span className="text-white font-medium text-sm leading-tight">$10M+</span>
@@ -195,9 +195,9 @@ const Hero = () => {
                     </div>
 
                     {/* Badge 3: Bottom Left / Center-ish */}
-                    <div className="hero-badge opacity-0 translate-y-8 scale-90 absolute bottom-[20%] left-[8%] md:left-[15%] z-50 px-4 py-2.5 rounded-2xl bg-white/[0.03] backdrop-blur-xl border border-white/[0.08] hidden md:flex items-center gap-3 shadow-[0_10px_40px_rgba(0,0,0,0.5)]" style={{ animation: 'floatBadge 8s ease-in-out infinite 2s' }}>
-                        <div className="w-8 h-8 rounded-full bg-blue-500/20 flex items-center justify-center border border-blue-500/30 text-blue-400">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" /><polyline points="22 4 12 14.01 9 11.01" /></svg>
+                    <div className="hero-badge opacity-0 translate-y-8 scale-75 md:scale-90 absolute bottom-[25%] left-[5%] md:bottom-[20%] md:left-[15%] z-50 px-3 md:px-4 py-2 md:py-2.5 rounded-2xl bg-[#0a0a0a]/80 backdrop-blur-xl border border-white/[0.08] flex items-center gap-2 md:gap-3 shadow-[0_10px_40px_rgba(0,0,0,0.5)]" style={{ animation: 'floatBadge 8s ease-in-out infinite 2s' }}>
+                        <div className="w-6 h-6 md:w-8 md:h-8 rounded-full bg-blue-500/20 flex items-center justify-center border border-blue-500/30 text-blue-400">
+                            <svg width="12" height="12" className="md:w-3.5 md:h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" /><polyline points="22 4 12 14.01 9 11.01" /></svg>
                         </div>
                         <div className="flex flex-col text-left">
                             <span className="text-white font-medium text-sm leading-tight">99.9%</span>

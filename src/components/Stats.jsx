@@ -71,11 +71,11 @@ const Stats = () => {
                         ref={el => countersRef.current[index] = el}
                         className="flex flex-col items-center justify-center text-center px-4"
                     >
-                        <div className="text-5xl md:text-7xl lg:text-8xl font-display font-medium text-white mb-4 flex items-baseline">
+                        <div className="text-4xl md:text-6xl lg:text-8xl font-display font-medium text-white mb-2 md:mb-4 flex items-baseline">
                             <span className="stat-number">0</span>
                             <span className="text-accent">{stat.suffix}</span>
                         </div>
-                        <div className="text-sm md:text-lg text-white/50 uppercase tracking-widest font-semibold">
+                        <div className="text-xs md:text-lg text-white/50 uppercase tracking-widest font-semibold">
                             {stat.label}
                         </div>
                     </div>

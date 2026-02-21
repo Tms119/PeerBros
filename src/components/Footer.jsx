@@ -30,30 +30,30 @@ const Footer = () => {
 
             <div className="max-w-7xl mx-auto w-full relative z-10 flex-grow flex flex-col items-center justify-center text-center">
 
-                <h2 className="text-6xl md:text-8xl lg:text-[10rem] font-display font-bold text-white tracking-tighter leading-[0.85] mb-12 footer-reveal mix-blend-difference">
+                <h2 className="text-5xl md:text-8xl lg:text-[10rem] font-display font-bold text-white tracking-tighter leading-[0.85] mb-8 md:mb-12 footer-reveal mix-blend-difference">
                     Stop <span className="italic font-light text-white/50">Losing</span> <br />
-                    To Inefficiency.
+                    Time and Money.
                 </h2>
 
-                <p className="text-2xl md:text-4xl text-white/60 max-w-4xl mx-auto mb-16 font-light leading-relaxed footer-reveal">
-                    The market rewards speed and systems. We build both. Ready to engineer your asymmetric advantage?
+                <p className="text-lg md:text-4xl text-white/60 max-w-sm md:max-w-4xl mx-auto mb-10 md:mb-16 font-light leading-relaxed footer-reveal px-4">
+                    The market rewards fast, efficient businesses. We build the systems to get you there. Ready to grow?
                 </p>
 
                 <div className="footer-reveal">
-                    <MagneticButton className="px-12 py-6 rounded-[2rem] bg-white text-black text-2xl font-bold hover:bg-accent hover:text-white transition-all duration-300 flex items-center gap-4 group shadow-[0_0_50px_rgba(255,255,255,0.1)] hover:shadow-[0_0_80px_rgba(192,160,128,0.3)]">
-                        Initiate Protocol
-                        <ArrowUpRight size={28} className="group-hover:translate-x-2 group-hover:-translate-y-2 transition-transform duration-300" />
+                    <MagneticButton className="px-8 py-5 md:px-12 md:py-6 rounded-full md:rounded-[2rem] bg-white text-black text-xl md:text-2xl font-bold hover:bg-accent hover:text-white transition-all duration-300 flex items-center gap-3 md:gap-4 group shadow-[0_0_50px_rgba(255,255,255,0.1)] hover:shadow-[0_0_80px_rgba(192,160,128,0.3)]">
+                        Start Your Project
+                        <ArrowUpRight size={24} className="md:w-7 md:h-7 group-hover:translate-x-2 group-hover:-translate-y-2 transition-transform duration-300" />
                     </MagneticButton>
                 </div>
             </div>
 
-            <div className="w-full relative z-10 pt-12 border-t border-white/10 flex flex-col md:flex-row items-center justify-between text-white/40 text-sm footer-reveal mt-auto max-w-7xl mx-auto">
-                <div className="flex items-center gap-4 mb-6 md:mb-0">
+            <div className="w-full relative z-10 pt-12 border-t border-white/10 flex flex-col md:flex-row items-center justify-between text-white/40 text-sm footer-reveal mt-auto max-w-7xl mx-auto gap-8 md:gap-0">
+                <div className="flex flex-col md:flex-row items-center gap-2 md:gap-4 mb-2 md:mb-0 text-center md:text-left">
                     <span className="text-2xl font-display font-bold tracking-tighter text-white">PEER<span className="text-accent">BROS</span></span>
-                    <span className="tracking-widest uppercase">&copy; {new Date().getFullYear()} Architected for Scale.</span>
+                    <span className="tracking-widest uppercase text-[10px] md:text-sm">&copy; {new Date().getFullYear()} Architected for Scale.</span>
                 </div>
 
-                <div className="flex items-center gap-8 font-mono tracking-widest uppercase text-xs">
+                <div className="flex flex-wrap justify-center items-center gap-6 md:gap-8 font-mono tracking-widest uppercase text-[10px] md:text-xs">
                     <a href="#" className="hover:text-accent transition-colors">X (Twitter)</a>
                     <a href="#" className="hover:text-accent transition-colors">LinkedIn</a>
                     <a href="#" className="hover:text-accent transition-colors">Instagram</a>

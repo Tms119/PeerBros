@@ -54,8 +54,8 @@ const Testimonials = () => {
 
     return (
         <section ref={containerRef} className="h-[100svh] w-full relative overflow-hidden bg-obsidian border-y border-white/5 flex flex-col justify-center">
-            <div className="absolute top-12 md:top-24 left-10 md:left-24 z-50">
-                <h2 className="text-xl md:text-2xl font-mono text-white/30 uppercase tracking-[0.4em]">
+            <div className="absolute top-24 md:top-24 left-6 md:left-24 z-50">
+                <h2 className="text-lg md:text-2xl font-mono text-white/30 uppercase tracking-[0.4em]">
                     The Proof
                 </h2>
             </div>
@@ -64,25 +64,25 @@ const Testimonials = () => {
                 {testimonials.map((testy, index) => (
                     <div
                         key={index}
-                        className="w-[85vw] md:w-[60vw] lg:w-[50vw] shrink-0 glass-panel p-10 md:p-20 rounded-[2rem] relative overflow-hidden"
+                        className="w-[85vw] md:w-[60vw] lg:w-[50vw] shrink-0 glass-panel p-8 md:p-20 rounded-[2rem] relative overflow-hidden"
                     >
                         {/* Massive Quote Mark background */}
-                        <div className="absolute -top-10 -left-10 text-[20rem] font-serif leading-none opacity-5 text-accent pointer-events-none select-none">
+                        <div className="absolute -top-10 -left-6 md:-left-10 text-[12rem] md:text-[20rem] font-serif leading-none opacity-5 text-accent pointer-events-none select-none">
                             "
                         </div>
 
                         <div className="relative z-10">
-                            <div className="text-accent font-mono text-3xl md:text-5xl tracking-tighter mb-12 pb-8 border-b border-white/10">
+                            <div className="text-accent font-mono text-2xl md:text-5xl tracking-tighter mb-8 md:mb-12 pb-6 md:pb-8 border-b border-white/10">
                                 {testy.metric}
                             </div>
 
-                            <p className="text-3xl md:text-5xl text-white font-display font-light leading-[1.2] mb-12 tracking-tight">
+                            <p className="text-2xl md:text-5xl text-white font-display font-light leading-[1.2] mb-8 md:mb-12 tracking-tight">
                                 "{testy.quote}"
                             </p>
 
                             <div className="flex items-center gap-4">
-                                <div className="w-12 h-[1px] bg-white/30" />
-                                <span className="uppercase tracking-widest text-sm text-white/60 font-semibold">{testy.author}</span>
+                                <div className="w-8 md:w-12 h-[1px] bg-white/30" />
+                                <span className="uppercase tracking-widest text-xs md:text-sm text-white/60 font-semibold">{testy.author}</span>
                             </div>
                         </div>
                     </div>

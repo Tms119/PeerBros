@@ -67,12 +67,12 @@ const AutomationPortfolio = () => {
         <section id="automation" className="relative w-full bg-obsidian border-t border-white/5 pb-[10vh]">
 
             {/* The Intro Bridge - Normal Scroll */}
-            <div className="w-full min-h-[50vh] flex flex-col items-center justify-center bg-obsidian py-24 z-10 relative">
+            <div className="w-full min-h-[50vh] flex flex-col items-center justify-center bg-obsidian py-24 z-10 relative px-4">
                 <div className="w-px h-24 bg-gradient-to-b from-transparent to-accent/50 mb-8" />
                 <h2 className="text-4xl md:text-6xl lg:text-7xl font-display font-light text-white uppercase tracking-[0.2em] text-center leading-[1.1]">
                     Automation <br /><span className="text-accent italic">Engines</span>
                 </h2>
-                <div className="mt-12 text-white/40 font-mono text-sm tracking-widest uppercase animate-pulse">
+                <div className="mt-12 text-white/40 font-mono text-sm tracking-widest uppercase animate-pulse text-center">
                     [ Scroll to Initialize ]
                 </div>
             </div>
@@ -93,25 +93,25 @@ const AutomationPortfolio = () => {
                             0{index + 1}
                         </div>
 
-                        <div className="relative z-10 w-full grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-24 items-center">
+                        <div className="relative z-10 w-full grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 lg:gap-24 items-start md:items-center">
                             {/* Left side: Icon & Headline */}
-                            <div className="flex flex-col gap-8">
-                                <div className="glass-panel w-20 h-20 rounded-2xl flex items-center justify-center pointer-events-none">
+                            <div className="flex flex-col gap-6 md:gap-8">
+                                <div className="glass-panel w-16 h-16 md:w-20 md:h-20 rounded-2xl flex items-center justify-center pointer-events-none">
                                     {product.icon}
                                 </div>
                                 <div>
                                     <span className="text-accent font-mono uppercase tracking-[0.3em] text-xs md:text-sm mb-4 block">
                                         {product.subtitle}
                                     </span>
-                                    <h3 className="text-5xl md:text-6xl lg:text-7xl font-display font-bold text-white tracking-tighter leading-[0.9]">
+                                    <h3 className="text-4xl md:text-6xl lg:text-7xl font-display font-bold text-white tracking-tighter leading-[0.9]">
                                         {product.name}
                                     </h3>
                                 </div>
                             </div>
 
                             {/* Right side: Description & Metrics */}
-                            <div className="flex flex-col gap-10">
-                                <p className="text-2xl md:text-3xl lg:text-4xl text-white/80 font-light leading-relaxed">
+                            <div className="flex flex-col gap-8 md:gap-10">
+                                <p className="text-lg md:text-2xl lg:text-4xl text-white/80 font-light leading-relaxed">
                                     {product.description}
                                 </p>
 

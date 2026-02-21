@@ -35,19 +35,19 @@ const Philosophy = () => {
             {/* Massive Background Text for Depth */}
             <h2
                 ref={bgRef}
-                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[15rem] md:text-[30rem] font-display font-bold text-white/[0.02] whitespace-nowrap pointer-events-none tracking-tighter will-change-transform will-change-filter"
+                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[10rem] md:text-[30rem] font-display font-bold text-white/[0.02] whitespace-nowrap pointer-events-none tracking-tighter will-change-transform will-change-filter"
             >
                 THE STANDARD
             </h2>
 
             <div className="max-w-6xl mx-auto text-center relative z-10 px-6">
-                <div className="inline-flex glass-panel rounded-full px-6 py-3 text-sm text-accent mb-12 uppercase tracking-widest border-accent/20">
+                <div className="inline-flex glass-panel rounded-full px-6 py-3 text-xs md:text-sm text-accent mb-8 md:mb-12 uppercase tracking-widest border-accent/20">
                     The Manifesto
                 </div>
 
                 <h3
                     ref={textRef}
-                    className="text-5xl md:text-7xl lg:text-8xl font-display font-medium text-white leading-[1.1] tracking-tight"
+                    className="text-4xl md:text-7xl lg:text-8xl font-display font-medium text-white leading-[1.1] tracking-tight"
                 >
                     We don't build generic websites. <br />
                     We build <span className="text-accent italic font-light">engines</span> that generate <br />

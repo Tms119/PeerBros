@@ -12,17 +12,17 @@ const services = [
     },
     {
         title: 'Website Building',
-        description: 'Cinematic, high-conversion landing pages and scalable web architectures built for the modern internet.',
+        description: 'Beautiful, fast websites designed specifically to turn your visitors into paying customers.',
         metric: "Digital Real Estate"
     },
     {
         title: 'Custom Apps & CRM',
-        description: 'Bespoke software tailored to your specific operational needs. No bloated templates, just pure utility.',
+        description: 'Custom software built exactly for what your business needs. Simple, clean, and highly effective.',
         metric: "Systemizing Chaos"
     },
     {
         title: 'Business Automation',
-        description: 'Replacing repetitive tasks with deterministic systems. Save thousands of hours with custom AI workflows.',
+        description: 'We use AI to automate your repetitive tasks, saving you thousands of hours so you can focus on growth.',
         metric: "Infinite Leverage"
     }
 ];
@@ -76,8 +76,8 @@ const Services = () => {
     return (
         <section id="services" ref={containerRef} className="h-[100svh] w-full bg-black relative overflow-hidden flex items-center justify-center pt-20">
             {/* Absolute center text tracking */}
-            <div ref={titleRef} className="absolute top-12 md:top-24 left-1/2 -translate-x-1/2 text-center w-full z-50">
-                <h2 className="text-xl md:text-2xl font-mono text-white/30 uppercase tracking-[0.4em] mix-blend-difference">
+            <div ref={titleRef} className="absolute top-24 md:top-24 left-1/2 -translate-x-1/2 text-center w-full px-4 z-50">
+                <h2 className="text-lg md:text-2xl font-mono text-white/30 uppercase tracking-[0.4em] mix-blend-difference">
                     The Arsenal
                 </h2>
             </div>
@@ -89,14 +89,14 @@ const Services = () => {
                         ref={el => slidesRef.current[index] = el}
                         className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center will-change-transform"
                     >
-                        <span className="text-accent text-sm md:text-xl font-mono uppercase tracking-[0.5em] mb-8 block">
+                        <span className="text-accent text-xs md:text-xl font-mono uppercase tracking-[0.5em] mb-4 md:mb-8 block">
                             Phase {index + 1} // {service.metric}
                         </span>
                         {/* Break titles to avoid overflowing viewport horizontally if they are too long */}
-                        <h3 className="text-5xl md:text-[7rem] lg:text-[9rem] xl:text-[11rem] font-display font-medium text-white leading-[0.85] tracking-tighter mb-8 max-w-[90vw] flex flex-wrap justify-center gap-x-6">
+                        <h3 className="text-4xl md:text-[7rem] lg:text-[9rem] xl:text-[11rem] font-display font-medium text-white leading-[0.85] tracking-tighter mb-6 md:mb-8 max-w-[95vw] md:max-w-[90vw] flex flex-wrap justify-center gap-x-3 md:gap-x-6">
                             {service.title.split(' ').map((word, wIdx) => <span key={wIdx}>{word}</span>)}
                         </h3>
-                        <p className="text-xl md:text-3xl text-white/60 max-w-3xl font-light leading-relaxed">
+                        <p className="text-lg md:text-3xl text-white/60 max-w-sm md:max-w-3xl font-light leading-relaxed px-4">
                             {service.description}
                         </p>
                     </div>
