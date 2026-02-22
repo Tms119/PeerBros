@@ -61,7 +61,7 @@ const Philosophy = () => {
             </h2>
 
             <div className="max-w-6xl mx-auto text-center relative z-10 px-6">
-                <div className="inline-flex glass-panel rounded-full px-6 py-3 text-xs md:text-sm text-accent mb-8 md:mb-12 uppercase tracking-widest border-accent/20">
+                <div className="inline-flex glass-panel-lite md:glass-panel rounded-full px-6 py-3 text-xs md:text-sm text-accent mb-8 md:mb-12 uppercase tracking-widest border-accent/20">
                     The Manifesto
                 </div>
 

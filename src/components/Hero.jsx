@@ -156,8 +156,8 @@ const Hero = () => {
 
                 <div className="relative z-30 w-full max-w-[100rem] mx-auto px-6 md:px-12 flex flex-col items-center text-center">
 
-                    <div className="hero-tag opacity-0 translate-y-10 inline-flex items-center gap-3 px-5 py-2.5 rounded-full border border-white/10 bg-[#0a0a0a]/80 backdrop-blur-xl mb-12 shadow-2xl">
-                        <div className="w-1.5 h-1.5 bg-accent rounded-full animate-pulse shadow-[0_0_10px_rgba(249,115,22,0.8)]" />
+                    <div className="hero-tag opacity-0 translate-y-10 inline-flex items-center gap-3 px-5 py-2.5 rounded-full border border-white/10 bg-[#0a0a0a]/80 backdrop-blur-xl mb-12 md:shadow-2xl">
+                        <div className="w-1.5 h-1.5 bg-accent rounded-full md:animate-pulse md:shadow-[0_0_10px_rgba(249,115,22,0.8)]" />
                         <span className="text-white/80 uppercase tracking-[0.3em] text-[10px] md:text-xs font-mono font-medium">
                             Digital Growth Agency
                         </span>

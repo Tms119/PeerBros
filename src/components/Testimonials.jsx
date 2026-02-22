@@ -66,7 +66,7 @@ const Testimonials = () => {
                 {testimonials.map((testy, index) => (
                     <div
                         key={index}
-                        className="w-[85vw] md:w-[60vw] lg:w-[50vw] shrink-0 glass-panel p-8 md:p-20 rounded-[2rem] relative overflow-hidden"
+                        className="w-[85vw] md:w-[60vw] lg:w-[50vw] shrink-0 glass-panel-lite md:glass-panel p-8 md:p-20 rounded-[2rem] relative overflow-hidden"
                     >
                         {/* Massive Quote Mark background */}
                         <div className="absolute -top-10 -left-6 md:-left-10 text-[12rem] md:text-[20rem] font-serif leading-none opacity-5 text-accent pointer-events-none select-none">

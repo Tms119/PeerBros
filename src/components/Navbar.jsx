@@ -72,7 +72,7 @@ const Navbar = () => {
 
                 {/* Mobile Menu Toggle Button */}
                 <button
-                    className="md:hidden text-white z-[70] p-3 relative flex items-center justify-center rounded-full bg-white/5 backdrop-blur-md border border-white/10"
+                    className="md:hidden text-white z-[70] p-3 relative flex items-center justify-center rounded-full bg-black/80 border border-white/10"
                     onClick={() => setIsMenuOpen(!isMenuOpen)}
                     aria-label="Toggle menu"
                 >
@@ -83,7 +83,7 @@ const Navbar = () => {
             {/* Mobile Menu Overlay */}
             <div
                 ref={menuRef}
-                className="fixed inset-0 bg-obsidian/95 backdrop-blur-3xl z-[50] flex flex-col items-center justify-center transform translate-x-full border-l border-white/10"
+                className="fixed inset-0 bg-obsidian z-[50] flex flex-col items-center justify-center transform translate-x-full border-l border-white/10"
             >
                 <div className="flex flex-col items-center gap-6 w-full px-8 max-w-sm">
                     <span className="text-accent font-mono uppercase tracking-[0.5em] text-xs mb-4">Navigation</span>

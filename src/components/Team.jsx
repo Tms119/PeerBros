@@ -74,6 +74,7 @@ const Team = () => {
                         <div
                             key={idx}
                             onMouseEnter={() => setActiveIdx(idx)}
+                            onClick={() => setActiveIdx(idx)}
                             className="group cursor-none py-6 border-b border-white/5 transition-all duration-300 relative overflow-hidden"
                         >
                             {/* Background fill on hover */}
@@ -100,13 +101,13 @@ const Team = () => {
                 {/* Dynamic Abstract Background representing data */}
                 <div className="absolute inset-0 z-0 opacity-20">
                     <div className={`absolute inset-0 transition-opacity duration-1000 bg-[radial-gradient(circle_at_center,rgba(192,160,128,0.3)_0%,transparent_100%)] ${activeIdx % 2 === 0 ? 'opacity-100' : 'opacity-0'}`} />
-                    <div className={`absolute top-0 right-0 w-[800px] h-[800px] bg-white border border-white/10 rounded-full blur-[40px] md:blur-[100px] transition-transform duration-[2s] ${activeIdx % 2 !== 0 ? 'scale-150' : 'scale-50'}`} />
+                    <div className={`absolute top-0 right-0 w-[800px] h-[800px] bg-white border border-white/10 rounded-full blur-[20px] md:blur-[100px] transition-transform duration-[2s] ${activeIdx % 2 !== 0 ? 'scale-150' : 'scale-50'}`} />
                 </div>
 
                 <div className="relative z-10 w-full max-w-md">
                     <div className="mb-12">
-                        <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full border border-white/10 bg-black/50 backdrop-blur-md text-accent font-mono text-xs uppercase tracking-widest mb-6">
-                            <div className="w-2 h-2 rounded-full bg-accent animate-pulse" />
+                        <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full border border-white/10 bg-black/80 md:bg-black/50 md:backdrop-blur-md text-accent font-mono text-xs uppercase tracking-widest mb-6">
+                            <div className="w-2 h-2 rounded-full bg-accent" />
                             {roster[activeIdx].label}
                         </div>
 

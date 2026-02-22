@@ -109,10 +109,10 @@ const AutomationPortfolio = () => {
                 ref={indicatorRef}
                 className="fixed bottom-6 left-6 md:bottom-12 md:left-12 z-[90] pointer-events-none flex flex-col items-center gap-2 opacity-0"
             >
-                <div className="text-[10px] md:text-xs font-mono text-accent uppercase tracking-widest bg-black/50 backdrop-blur-md px-3 py-1.5 rounded-full border border-accent/20">
+                <div className="text-[10px] md:text-xs font-mono text-accent uppercase tracking-widest bg-black/80 md:bg-black/50 md:backdrop-blur-md px-3 py-1.5 rounded-full border border-accent/20">
                     Keep Scrolling
                 </div>
-                <div className="w-8 h-12 md:w-10 md:h-14 rounded-full border border-accent/30 flex justify-center p-1 bg-black/50 backdrop-blur-md">
+                <div className="w-8 h-12 md:w-10 md:h-14 rounded-full border border-accent/30 flex justify-center p-1 bg-black/80 md:bg-black/50 md:backdrop-blur-md">
                     <div ref={bounceRef} className="w-1.5 h-3 md:w-2 md:h-4 bg-accent rounded-full" />
                 </div>
             </div>
@@ -133,21 +133,23 @@ const AutomationPortfolio = () => {
                 {products.map((product, index) => (
                     <div
                         key={index}
-                        className={`sticky flex items-center justify-center p-6 lg:p-16 rounded-[2rem] shadow-2xl mb-12 ${product.bg} border border-white/10 overflow-hidden min-h-[80vh] w-full`}
+                        className={`sticky flex items-center justify-center p-6 lg:p-16 rounded-[2rem] md:shadow-2xl mb-12 ${product.bg} border border-white/10 overflow-hidden min-h-[60vh] md:min-h-[80vh] w-full`}
                         style={{
-                            top: `${10 + (index * 2)}vh`, // Slight stair-step effect when stacked
-                            zIndex: index + 10
+                            top: `${10 + (index * 2)}vh`,
+                            zIndex: index + 10,
+                            willChange: 'transform',
+                            contain: 'layout style'
                         }}
                     >
                         {/* Background Number */}
-                        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[30vw] md:text-[40vw] font-display font-medium text-white/5 pointer-events-none z-0 tracking-tighter md:mix-blend-screen leading-none">
+                        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[20vw] md:text-[40vw] font-display font-medium text-white/[0.03] md:text-white/5 pointer-events-none z-0 tracking-tighter md:mix-blend-screen leading-none">
                             0{index + 1}
                         </div>
 
                         <div className="relative z-10 w-full grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 lg:gap-24 items-start md:items-center">
                             {/* Left side: Icon & Headline */}
                             <div className="flex flex-col gap-6 md:gap-8">
-                                <div className="glass-panel w-16 h-16 md:w-20 md:h-20 rounded-2xl flex items-center justify-center pointer-events-none">
+                                <div className="glass-panel-lite md:glass-panel w-16 h-16 md:w-20 md:h-20 rounded-2xl flex items-center justify-center pointer-events-none">
                                     {product.icon}
                                 </div>
                                 <div>
@@ -178,7 +180,7 @@ const AutomationPortfolio = () => {
                                 <div className="flex flex-wrap gap-4 pt-6 border-t border-white/10">
                                     {product.stats.map((stat, sIdx) => (
                                         <div key={sIdx} className="px-5 py-2.5 rounded-full bg-white/5 text-white/70 font-mono text-xs md:text-sm tracking-wider border border-white/10 flex items-center gap-3">
-                                            <div className="w-1.5 h-1.5 bg-accent rounded-full animate-pulse" />
+                                            <div className="w-1.5 h-1.5 bg-accent rounded-full" />
                                             {stat}
                                         </div>
                                     ))}

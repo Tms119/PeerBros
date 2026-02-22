@@ -94,6 +94,11 @@
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
 }
 
+/* Lightweight version without backdrop-blur for mobile performance */
+.glass-panel-lite {
+  @apply bg-white/5 border border-white/[0.05];
+}
+
 /* Utilities */
 /* Animations */
 @keyframes marquee {
