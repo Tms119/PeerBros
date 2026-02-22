@@ -17,7 +17,9 @@ export const CustomCursor = () => {
         const aura = auraRef.current;
         const label = labelRef.current;
 
-        if (!dot || !ring || !aura) return;
+        // Completely disable on touch devices
+        const isTouchDevice = window.matchMedia("(hover: none) and (pointer: coarse)").matches || window.innerWidth < 768;
+        if (isTouchDevice || !dot || !ring || !aura) return;
 
         // Layer 1: Inner dot - instant snap
         const dotXTo = gsap.quickTo(dot, 'x', { duration: 0.05, ease: 'none' });

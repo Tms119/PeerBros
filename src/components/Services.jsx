@@ -134,6 +134,34 @@ const Services = () => {
 
             {/* Cinematic vignette */}
             <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_center,transparent_0%,rgba(0,0,0,0.8)_100%)] z-40" />
+
+            {/* Scroll Indicator */}
+            <div className="absolute bottom-8 md:bottom-10 left-6 md:left-10 z-50 flex flex-row items-end gap-3 pointer-events-none opacity-50">
+                <svg
+                    width="18"
+                    height="28"
+                    viewBox="0 0 22 34"
+                    fill="none"
+                    className="text-white/40 flex-shrink-0"
+                >
+                    <rect x="1" y="1" width="20" height="32" rx="10" stroke="currentColor" strokeWidth="1.5" />
+                    <rect
+                        className="animate-[bounce_2s_infinite]"
+                        x="9.5"
+                        y="6"
+                        width="3"
+                        height="7"
+                        rx="1.5"
+                        fill="currentColor"
+                    />
+                </svg>
+                <span
+                    className="text-[8px] font-mono tracking-[0.35em] text-white/40 uppercase"
+                    style={{ writingMode: 'vertical-rl', transform: 'rotate(180deg)' }}
+                >
+                    Keep Scrolling
+                </span>
+            </div>
         </section>
     );
 };

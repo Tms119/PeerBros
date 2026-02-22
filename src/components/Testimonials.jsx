@@ -3,6 +3,7 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 gsap.registerPlugin(ScrollTrigger);
+ScrollTrigger.config({ ignoreMobileResize: true });
 
 const testimonials = [
     {
@@ -45,7 +46,8 @@ const Testimonials = () => {
                 pin: true,
                 animation: tween,
                 scrub: 1,
-                invalidateOnRefresh: true
+                invalidateOnRefresh: true,
+                normalizeScroll: true
             });
 
         }, containerRef);

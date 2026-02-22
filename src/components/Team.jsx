@@ -100,7 +100,7 @@ const Team = () => {
                 {/* Dynamic Abstract Background representing data */}
                 <div className="absolute inset-0 z-0 opacity-20">
                     <div className={`absolute inset-0 transition-opacity duration-1000 bg-[radial-gradient(circle_at_center,rgba(192,160,128,0.3)_0%,transparent_100%)] ${activeIdx % 2 === 0 ? 'opacity-100' : 'opacity-0'}`} />
-                    <div className={`absolute top-0 right-0 w-[800px] h-[800px] bg-white border border-white/10 rounded-full blur-[100px] transition-transform duration-[2s] ${activeIdx % 2 !== 0 ? 'scale-150' : 'scale-50'}`} />
+                    <div className={`absolute top-0 right-0 w-[800px] h-[800px] bg-white border border-white/10 rounded-full blur-[40px] md:blur-[100px] transition-transform duration-[2s] ${activeIdx % 2 !== 0 ? 'scale-150' : 'scale-50'}`} />
                 </div>
 
                 <div className="relative z-10 w-full max-w-md">

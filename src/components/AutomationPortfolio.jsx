@@ -89,7 +89,7 @@ const AutomationPortfolio = () => {
                         }}
                     >
                         {/* Background Number */}
-                        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[30vw] md:text-[40vw] font-display font-medium text-white/5 pointer-events-none z-0 tracking-tighter mix-blend-screen leading-none">
+                        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[30vw] md:text-[40vw] font-display font-medium text-white/5 pointer-events-none z-0 tracking-tighter md:mix-blend-screen leading-none">
                             0{index + 1}
                         </div>
 

@@ -43,7 +43,7 @@ function App() {
       lenis.raf(time * 1000);
     });
 
-    gsap.ticker.lagSmoothing(0);
+    // Removed gsap.ticker.lagSmoothing(0) to allow GSAP to drop frames and avoid slow-motion jitter on mobile
 
     // Reveal animations globally
     const sections = gsap.utils.toArray('.reveal-section');

@@ -56,13 +56,13 @@ const AmbientDepthEngine = () => {
             <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,#0a0a0a_0%,#020202_100%)] opacity-80" />
 
             {/* Massive Soft Light Bleed 1 (Top Right) */}
-            <div className="absolute -top-[20%] -right-[10%] w-[70vw] h-[70vw] bg-accent/5 rounded-full blur-[120px] mix-blend-screen animate-[pulse_8s_ease-in-out_infinite]" />
+            <div className="absolute -top-[20%] -right-[10%] w-[70vw] h-[70vw] bg-accent/5 rounded-full md:blur-[120px] md:mix-blend-screen md:animate-[pulse_8s_ease-in-out_infinite]" />
 
             {/* Massive Soft Light Bleed 2 (Bottom Left) */}
-            <div className="absolute -bottom-[20%] -left-[10%] w-[60vw] h-[60vw] bg-white/5 rounded-full blur-[140px] mix-blend-screen animate-[pulse_12s_ease-in-out_infinite_reverse]" />
+            <div className="absolute -bottom-[20%] -left-[10%] w-[60vw] h-[60vw] bg-white/5 rounded-full md:blur-[140px] md:mix-blend-screen md:animate-[pulse_12s_ease-in-out_infinite_reverse]" />
 
             {/* Extremely subtle, expensive film grain overlay to bind the lighting */}
-            <div className="absolute inset-0 opacity-[0.03] bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0IiBoZWlnaHQ9IjQiPgo8cmVjdCB3aWR0aD0iNCIgaGVpZ2h0PSI0IiBmaWxsPSIjZmZmIiBmaWxsLW9wYWNpdHk9IjAuMDUiLz4KPHJlY3QgeD0iMSIgeT0iMSIgd2lkdGg9IjIiIGhlaWdodD0iMiIgZmlsbD0iIzAwMCIgZmlsbC1vcGFjaXR5PSIwLjA1Ii8+Cjwvc3ZnPg==')] pointer-events-none mix-blend-overlay" />
+            <div className="hidden md:block absolute inset-0 opacity-[0.03] bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0IiBoZWlnaHQ9IjQiPgo8cmVjdCB3aWR0aD0iNCIgaGVpZ2h0PSI0IiBmaWxsPSIjZmZmIiBmaWxsLW9wYWNpdHk9IjAuMDUiLz4KPHJlY3QgeD0iMSIgeT0iMSIgd2lkdGg9IjIiIGhlaWdodD0iMiIgZmlsbD0iIzAwMCIgZmlsbC1vcGFjaXR5PSIwLjA1Ii8+Cjwvc3ZnPg==')] pointer-events-none md:mix-blend-overlay" />
         </div>
     );
 };
@@ -108,6 +108,9 @@ const Hero = () => {
     // --- MAGNETIC VELVETY HOVER ---
     useEffect(() => {
         if (!loaded || !containerRef.current || !auraRef.current) return;
+
+        const isTouchDevice = window.matchMedia("(hover: none) and (pointer: coarse)").matches || window.innerWidth < 768;
+        if (isTouchDevice) return; // Completely disable the math on mobile
 
         // Extremely sluggish, velvety interpolation for the massive glow tracking
         const xToAura = gsap.quickTo(auraRef.current, "x", { duration: 1.5, ease: "power3.out" });
@@ -173,7 +176,7 @@ const Hero = () => {
 
                     {/* --- FLOATING MICRO-ELEMENTS --- */}
                     {/* Badge 1: Top Left */}
-                    <div className="hero-badge opacity-0 translate-y-8 scale-75 md:scale-90 absolute top-[5%] left-[0%] md:top-[10%] md:left-[10%] z-50 px-3 md:px-4 py-2 md:py-2.5 rounded-2xl bg-[#0a0a0a]/80 backdrop-blur-xl border border-white/[0.08] flex items-center gap-2 md:gap-3 shadow-[0_10px_40px_rgba(0,0,0,0.5)]" style={{ animation: 'floatBadge 6s ease-in-out infinite' }}>
+                    <div className="hero-badge opacity-0 translate-y-8 scale-75 md:scale-90 absolute top-[5%] left-[0%] md:top-[10%] md:left-[10%] z-50 px-3 md:px-4 py-2 md:py-2.5 rounded-2xl bg-[#0a0a0a]/90 md:bg-[#0a0a0a]/80 md:backdrop-blur-xl border border-white/[0.08] flex items-center gap-2 md:gap-3 shadow-[0_10px_40px_rgba(0,0,0,0.5)] md:animate-[floatBadge_6s_ease-in-out_infinite]">
                         <div className="w-6 h-6 md:w-8 md:h-8 rounded-full bg-accent/20 flex items-center justify-center border border-accent/30 text-accent">
                             <svg width="12" height="12" className="md:w-3.5 md:h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><polyline points="16 11 18 13 22 9" /></svg>
                         </div>
@@ -184,7 +187,7 @@ const Hero = () => {
                     </div>
 
                     {/* Badge 2: Right Middle */}
-                    <div className="hero-badge opacity-0 translate-y-8 scale-75 md:scale-90 absolute top-[30%] right-[0%] md:top-[45%] lg:right-[8%] z-50 px-3 md:px-4 py-2 md:py-2.5 rounded-2xl bg-[#0a0a0a]/80 backdrop-blur-xl border border-white/[0.08] flex items-center gap-2 md:gap-3 shadow-[0_10px_40px_rgba(0,0,0,0.5)]" style={{ animation: 'floatBadge 7s ease-in-out infinite 1s' }}>
+                    <div className="hero-badge opacity-0 translate-y-8 scale-75 md:scale-90 absolute top-[30%] right-[0%] md:top-[45%] lg:right-[8%] z-50 px-3 md:px-4 py-2 md:py-2.5 rounded-2xl bg-[#0a0a0a]/90 md:bg-[#0a0a0a]/80 md:backdrop-blur-xl border border-white/[0.08] flex items-center gap-2 md:gap-3 shadow-[0_10px_40px_rgba(0,0,0,0.5)] md:animate-[floatBadge_7s_ease-in-out_infinite_1s]">
                         <div className="w-6 h-6 md:w-8 md:h-8 rounded-full bg-green-500/20 flex items-center justify-center border border-green-500/30 text-green-400">
                             <svg width="12" height="12" className="md:w-3.5 md:h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="1" x2="12" y2="23" /><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" /></svg>
                         </div>
@@ -195,7 +198,7 @@ const Hero = () => {
                     </div>
 
                     {/* Badge 3: Bottom Left / Center-ish */}
-                    <div className="hero-badge opacity-0 translate-y-8 scale-75 md:scale-90 absolute bottom-[25%] left-[5%] md:bottom-[20%] md:left-[15%] z-50 px-3 md:px-4 py-2 md:py-2.5 rounded-2xl bg-[#0a0a0a]/80 backdrop-blur-xl border border-white/[0.08] flex items-center gap-2 md:gap-3 shadow-[0_10px_40px_rgba(0,0,0,0.5)]" style={{ animation: 'floatBadge 8s ease-in-out infinite 2s' }}>
+                    <div className="hero-badge opacity-0 translate-y-8 scale-75 md:scale-90 absolute bottom-[25%] left-[5%] md:bottom-[20%] md:left-[15%] z-50 px-3 md:px-4 py-2 md:py-2.5 rounded-2xl bg-[#0a0a0a]/90 md:bg-[#0a0a0a]/80 md:backdrop-blur-xl border border-white/[0.08] flex items-center gap-2 md:gap-3 shadow-[0_10px_40px_rgba(0,0,0,0.5)] md:animate-[floatBadge_8s_ease-in-out_infinite_2s]">
                         <div className="w-6 h-6 md:w-8 md:h-8 rounded-full bg-blue-500/20 flex items-center justify-center border border-blue-500/30 text-blue-400">
                             <svg width="12" height="12" className="md:w-3.5 md:h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" /><polyline points="22 4 12 14.01 9 11.01" /></svg>
                         </div>

@@ -55,7 +55,7 @@ const Navbar = () => {
 
     return (
         <>
-            <nav ref={navRef} className="fixed top-0 left-0 right-0 z-[60] px-6 py-4 flex justify-between items-center mix-blend-difference bg-gradient-to-b from-black/80 to-transparent">
+            <nav ref={navRef} className="fixed top-0 left-0 right-0 z-[60] px-6 py-4 flex justify-between items-center md:mix-blend-difference bg-gradient-to-b from-black/80 to-transparent">
                 <a href="#home" className="text-2xl font-display font-bold tracking-tighter text-white hover:text-white/80 transition-colors z-[70] relative">
                     PEER<span className="text-accent">BROS</span>
                 </a>
