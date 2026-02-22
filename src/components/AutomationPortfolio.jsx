@@ -63,8 +63,59 @@ const products = [
 ];
 
 const AutomationPortfolio = () => {
+    const containerRef = useRef(null);
+    const indicatorRef = useRef(null);
+    const bounceRef = useRef(null);
+
+    useEffect(() => {
+        if (!containerRef.current || !indicatorRef.current) return;
+        const ctx = gsap.context(() => {
+            // Fade in/out the indicator based on scroll depth inside this section
+            gsap.fromTo(indicatorRef.current,
+                { opacity: 0, y: 20 },
+                {
+                    opacity: 1,
+                    y: 0,
+                    duration: 0.4,
+                    ease: "power2.out",
+                    scrollTrigger: {
+                        trigger: containerRef.current,
+                        start: "top center",
+                        end: "bottom bottom",
+                        toggleActions: "play reverse play reverse"
+                    }
+                }
+            );
+
+            // Bouncing arrow animation
+            if (bounceRef.current) {
+                gsap.to(bounceRef.current, {
+                    y: 8,
+                    duration: 1,
+                    ease: "power1.inOut",
+                    repeat: -1,
+                    yoyo: true
+                });
+            }
+        }, containerRef);
+        return () => ctx.revert();
+    }, []);
+
     return (
-        <section id="automation" className="relative w-full bg-obsidian border-t border-white/5 pb-[10vh]">
+        <section ref={containerRef} id="automation" className="relative w-full bg-obsidian border-t border-white/5 pb-[10vh]">
+
+            {/* Sticky Mobile-friendly Bottom Right Indicator */}
+            <div
+                ref={indicatorRef}
+                className="fixed bottom-6 right-6 md:bottom-12 md:right-12 z-[100] pointer-events-none flex flex-col items-center gap-2 opacity-0"
+            >
+                <div className="text-[10px] md:text-xs font-mono text-accent uppercase tracking-widest bg-black/50 backdrop-blur-md px-3 py-1.5 rounded-full border border-accent/20">
+                    Keep Scrolling
+                </div>
+                <div className="w-8 h-12 md:w-10 md:h-14 rounded-full border border-accent/30 flex justify-center p-1 bg-black/50 backdrop-blur-md">
+                    <div ref={bounceRef} className="w-1.5 h-3 md:w-2 md:h-4 bg-accent rounded-full" />
+                </div>
+            </div>
 
             {/* The Intro Bridge - Normal Scroll */}
             <div className="w-full min-h-[50vh] flex flex-col items-center justify-center bg-obsidian py-24 z-10 relative px-4">
@@ -72,26 +123,8 @@ const AutomationPortfolio = () => {
                 <h2 className="text-4xl md:text-6xl lg:text-7xl font-display font-light text-white uppercase tracking-[0.2em] text-center leading-[1.1]">
                     Automation <br /><span className="text-accent italic">Engines</span>
                 </h2>
-                <div className="mt-12 text-white/40 font-mono text-sm tracking-widest uppercase animate-pulse text-center flex flex-col items-center gap-4">
-                    [ Scroll to Initialize ]
-                    <svg
-                        width="18"
-                        height="28"
-                        viewBox="0 0 22 34"
-                        fill="none"
-                        className="text-accent/40"
-                    >
-                        <rect x="1" y="1" width="20" height="32" rx="10" stroke="currentColor" strokeWidth="1.5" />
-                        <rect
-                            className="animate-[bounce_2s_infinite]"
-                            x="9.5"
-                            y="6"
-                            width="3"
-                            height="7"
-                            rx="1.5"
-                            fill="currentColor"
-                        />
-                    </svg>
+                <div className="mt-8 md:mt-12 text-accent/60 font-mono text-xs md:text-sm tracking-widest uppercase animate-pulse text-center">
+                    [ Engineering Systems ]
                 </div>
             </div>
 

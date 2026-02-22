@@ -136,31 +136,13 @@ const Services = () => {
             <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_center,transparent_0%,rgba(0,0,0,0.8)_100%)] z-40" />
 
             {/* Scroll Indicator */}
-            <div className="absolute bottom-8 md:bottom-10 left-6 md:left-10 z-50 flex flex-row items-end gap-3 pointer-events-none opacity-50">
-                <svg
-                    width="18"
-                    height="28"
-                    viewBox="0 0 22 34"
-                    fill="none"
-                    className="text-white/40 flex-shrink-0"
-                >
-                    <rect x="1" y="1" width="20" height="32" rx="10" stroke="currentColor" strokeWidth="1.5" />
-                    <rect
-                        className="animate-[bounce_2s_infinite]"
-                        x="9.5"
-                        y="6"
-                        width="3"
-                        height="7"
-                        rx="1.5"
-                        fill="currentColor"
-                    />
-                </svg>
-                <span
-                    className="text-[8px] font-mono tracking-[0.35em] text-white/40 uppercase"
-                    style={{ writingMode: 'vertical-rl', transform: 'rotate(180deg)' }}
-                >
+            <div className="absolute bottom-6 right-6 md:bottom-12 md:right-12 z-50 pointer-events-none flex flex-col items-center gap-2 opacity-50">
+                <div className="text-[10px] md:text-xs font-mono text-white/60 uppercase tracking-widest bg-black/50 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/10">
                     Keep Scrolling
-                </span>
+                </div>
+                <div className="w-8 h-12 md:w-10 md:h-14 rounded-full border border-white/20 flex justify-center p-1 bg-black/50 backdrop-blur-md">
+                    <div className="w-1.5 h-3 md:w-2 md:h-4 bg-white/60 rounded-full animate-[bounce_1.5s_infinite]" />
+                </div>
             </div>
         </section>
     );

@@ -81,26 +81,26 @@ const Hero = () => {
         let ctx = gsap.context(() => {
             const tl = gsap.timeline();
 
-            // Focus-Pull
-            tl.to('.hero-tag', { opacity: 1, y: 0, duration: 1.2, ease: 'power3.out' })
+            // Focus-Pull sequence with cascading waterfall timing
+            tl.to('.hero-tag', { opacity: 1, y: 0, duration: 1.0, ease: 'power3.out' })
                 .to('.hero-focus-word', {
                     scale: 1,
                     opacity: 1,
                     filter: 'blur(0px)',
                     y: 0,
-                    duration: 2.2,
-                    stagger: 0.15,
+                    duration: 1.8,
+                    stagger: 0.25, // Wider stagger for cinematic cascade
                     ease: "power4.out"
-                }, "-=0.8")
-                .to('.hero-sub', { opacity: 1, y: 0, duration: 1.5, ease: "power3.out" }, "-=1.5")
+                }, "-=0.6")
+                .to('.hero-sub', { opacity: 1, y: 0, duration: 1.2, ease: "power3.out" }, "-=1.0")
                 .to('.hero-badge', {
                     opacity: 1,
                     y: 0,
                     scale: 1,
                     duration: 1.2,
-                    stagger: 0.2,
-                    ease: "back.out(1.5)"
-                }, "-=1.0");
+                    stagger: 0.3, // Sequential bounce-ins
+                    ease: "back.out(2)" // Powerful bounce easing
+                }, "-=0.5");
         }, containerRef);
         return () => ctx.revert();
     }, [loaded]);
