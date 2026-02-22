@@ -22,14 +22,14 @@ const Preloader = ({ onComplete }) => {
 
             tl.to(textRef.current, {
                 opacity: 1,
-                duration: 0.5,
-                ease: "power2.out"
+                duration: 1.0,
+                ease: "power3.inOut"
             })
                 .to(textRef.current, {
                     opacity: 0,
-                    duration: 0.3,
-                    delay: 1.2,
-                    ease: "power2.in"
+                    duration: 0.8,
+                    delay: 1.5,
+                    ease: "power2.inOut"
                 });
         }, containerRef);
         return () => ctx.revert();
@@ -151,7 +151,7 @@ const Hero = () => {
                 {/* The Velvety Magnetic Aura */}
                 <div
                     ref={auraRef}
-                    className="absolute top-0 left-0 w-[800px] h-[800px] bg-accent/15 rounded-full blur-[150px] mix-blend-screen pointer-events-none z-10 will-change-transform transform-gpu opacity-0 animate-[fadeIn_3s_ease-in_2s_forwards]"
+                    className="hidden md:block absolute top-0 left-0 w-[800px] h-[800px] bg-accent/15 rounded-full blur-[150px] mix-blend-screen pointer-events-none z-10 will-change-transform transform-gpu opacity-0 animate-[fadeIn_3s_ease-in_2s_forwards]"
                 />
 
                 <div className="relative z-30 w-full max-w-[100rem] mx-auto px-6 md:px-12 flex flex-col items-center text-center">
