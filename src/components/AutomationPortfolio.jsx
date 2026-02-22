@@ -104,10 +104,10 @@ const AutomationPortfolio = () => {
     return (
         <section ref={containerRef} id="automation" className="relative w-full bg-obsidian border-t border-white/5 pb-[10vh]">
 
-            {/* Sticky Mobile-friendly Bottom Right Indicator */}
+            {/* Sticky Mobile-friendly Bottom Left Indicator */}
             <div
                 ref={indicatorRef}
-                className="fixed bottom-6 right-6 md:bottom-12 md:right-12 z-[100] pointer-events-none flex flex-col items-center gap-2 opacity-0"
+                className="fixed bottom-6 left-6 md:bottom-12 md:left-12 z-[90] pointer-events-none flex flex-col items-center gap-2 opacity-0"
             >
                 <div className="text-[10px] md:text-xs font-mono text-accent uppercase tracking-widest bg-black/50 backdrop-blur-md px-3 py-1.5 rounded-full border border-accent/20">
                     Keep Scrolling
