@@ -72,8 +72,26 @@ const AutomationPortfolio = () => {
                 <h2 className="text-4xl md:text-6xl lg:text-7xl font-display font-light text-white uppercase tracking-[0.2em] text-center leading-[1.1]">
                     Automation <br /><span className="text-accent italic">Engines</span>
                 </h2>
-                <div className="mt-12 text-white/40 font-mono text-sm tracking-widest uppercase animate-pulse text-center">
+                <div className="mt-12 text-white/40 font-mono text-sm tracking-widest uppercase animate-pulse text-center flex flex-col items-center gap-4">
                     [ Scroll to Initialize ]
+                    <svg
+                        width="18"
+                        height="28"
+                        viewBox="0 0 22 34"
+                        fill="none"
+                        className="text-accent/40"
+                    >
+                        <rect x="1" y="1" width="20" height="32" rx="10" stroke="currentColor" strokeWidth="1.5" />
+                        <rect
+                            className="animate-[bounce_2s_infinite]"
+                            x="9.5"
+                            y="6"
+                            width="3"
+                            height="7"
+                            rx="1.5"
+                            fill="currentColor"
+                        />
+                    </svg>
                 </div>
             </div>
 
