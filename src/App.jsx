@@ -5,16 +5,18 @@ import Lenis from 'lenis';
 
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
-import Services from './components/Services';
-import AutomationPortfolio from './components/AutomationPortfolio';
-import Philosophy from './components/Philosophy';
-import Testimonials from './components/Testimonials';
-import Team from './components/Team';
-import Process from './components/Process';
-import Stats from './components/Stats';
-import Footer from './components/Footer';
 import { CustomCursor } from './components/MicroInteractions';
 import ScrollToTop from './components/ScrollToTop';
+
+// Lazy load below-the-fold components
+const Services = React.lazy(() => import('./components/Services'));
+const AutomationPortfolio = React.lazy(() => import('./components/AutomationPortfolio'));
+const Philosophy = React.lazy(() => import('./components/Philosophy'));
+const Testimonials = React.lazy(() => import('./components/Testimonials'));
+const Team = React.lazy(() => import('./components/Team'));
+const Process = React.lazy(() => import('./components/Process'));
+const Stats = React.lazy(() => import('./components/Stats'));
+const Footer = React.lazy(() => import('./components/Footer'));
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -87,15 +89,19 @@ function App() {
       <Navbar />
       <main>
         <Hero />
-        <Services />
-        <Process />
-        <AutomationPortfolio />
-        <Stats />
-        <Philosophy />
-        <Testimonials />
-        <Team />
+        <React.Suspense fallback={<div className="h-[100svh] w-full bg-black flex items-center justify-center text-white/50 text-sm font-mono tracking-widest uppercase">Loading Modules...</div>}>
+          <Services />
+          <Process />
+          <AutomationPortfolio />
+          <Stats />
+          <Philosophy />
+          <Testimonials />
+          <Team />
+        </React.Suspense>
       </main>
-      <Footer />
+      <React.Suspense fallback={<div className="h-48 w-full bg-black"></div>}>
+        <Footer />
+      </React.Suspense>
     </div>
   );
 }

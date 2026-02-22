@@ -51,6 +51,7 @@ const Team = () => {
                     opacity: 1,
                     duration: 1.2,
                     ease: "power2.out",
+                    willChange: "opacity",
                     scrollTrigger: {
                         trigger: sectionRef.current,
                         start: "top 80%",
@@ -62,7 +63,7 @@ const Team = () => {
     }, []);
 
     return (
-        <section id="team" ref={sectionRef} className="min-h-[100svh] w-full bg-[#050505] flex flex-col md:flex-row relative z-10 will-change-opacity">
+        <section id="team" ref={sectionRef} className="min-h-[100svh] w-full bg-[#050505] flex flex-col md:flex-row relative z-10">
 
             {/* Left Menu (The Roster) */}
             <div className="w-full md:w-1/2 flex flex-col justify-center px-6 md:px-24 py-24 border-r border-white/10">

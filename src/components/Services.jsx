@@ -36,37 +36,66 @@ const Services = () => {
         if (!containerRef.current || slidesRef.current.length === 0) return;
 
         const ctx = gsap.context(() => {
-            // Pin the entire section
-            const tl = gsap.timeline({
-                scrollTrigger: {
-                    trigger: containerRef.current,
-                    start: 'top top',
-                    end: `+=${services.length * 100}%`,
-                    pin: true,
-                    scrub: 1,
-                    invalidateOnRefresh: true,
-                }
+            let mm = gsap.matchMedia();
+
+            // Desktop Animation (Complex 3D scale)
+            mm.add("(min-width: 768px)", () => {
+                const tl = gsap.timeline({
+                    scrollTrigger: {
+                        trigger: containerRef.current,
+                        start: 'top top',
+                        end: `+=${services.length * 100}%`,
+                        pin: true,
+                        scrub: 1,
+                        invalidateOnRefresh: true,
+                    }
+                });
+
+                tl.to(titleRef.current, { opacity: 0, y: -50, duration: 0.5 }, 0);
+
+                slidesRef.current.forEach((slide, i) => {
+                    if (i === 0) {
+                        gsap.set(slide, { opacity: 1, scale: 1, zIndex: services.length - i });
+                        tl.to(slide, { opacity: 0, scale: 4, duration: 1, willChange: 'transform, opacity' }, 0);
+                    } else if (i === services.length - 1) {
+                        gsap.set(slide, { opacity: 0, scale: 0.5, zIndex: services.length - i });
+                        tl.to(slide, { opacity: 1, scale: 1, duration: 1, willChange: 'transform, opacity' });
+                    } else {
+                        gsap.set(slide, { opacity: 0, scale: 0.5, zIndex: services.length - i });
+                        tl.to(slide, { opacity: 1, scale: 1, duration: 1, willChange: 'transform, opacity' })
+                            .to(slide, { opacity: 0, scale: 4, duration: 1, willChange: 'transform, opacity' }, "+=0.2");
+                    }
+                });
             });
 
-            // Fade out the title immediately upon scrolling to prevent overlap
-            tl.to(titleRef.current, { opacity: 0, y: -50, duration: 0.5 }, 0);
+            // Mobile Animation (Simple Fade)
+            mm.add("(max-width: 767px)", () => {
+                const tl = gsap.timeline({
+                    scrollTrigger: {
+                        trigger: containerRef.current,
+                        start: 'top top',
+                        end: `+=${services.length * 100}%`,
+                        pin: true,
+                        scrub: 1,
+                        invalidateOnRefresh: true,
+                    }
+                });
 
-            // Fly-through Z-axis effect
-            slidesRef.current.forEach((slide, i) => {
-                if (i === 0) {
-                    // First slide is visible initially (opacity 1) and just scales up and out
-                    gsap.set(slide, { opacity: 1, scale: 1, zIndex: services.length - i });
-                    tl.to(slide, { opacity: 0, scale: 4, duration: 1 }, 0);
-                } else if (i === services.length - 1) {
-                    // Last slide should scale in, and NOT fade out.
-                    gsap.set(slide, { opacity: 0, scale: 0.5, zIndex: services.length - i });
-                    tl.to(slide, { opacity: 1, scale: 1, duration: 1 });
-                } else {
-                    // Subsequent slides scale out of nothingness
-                    gsap.set(slide, { opacity: 0, scale: 0.5, zIndex: services.length - i });
-                    tl.to(slide, { opacity: 1, scale: 1, duration: 1 })
-                        .to(slide, { opacity: 0, scale: 4, duration: 1 }, "+=0.2");
-                }
+                tl.to(titleRef.current, { opacity: 0, y: -20, duration: 0.5 }, 0);
+
+                slidesRef.current.forEach((slide, i) => {
+                    if (i === 0) {
+                        gsap.set(slide, { opacity: 1, zIndex: services.length - i });
+                        tl.to(slide, { opacity: 0, duration: 1, willChange: 'opacity' }, 0);
+                    } else if (i === services.length - 1) {
+                        gsap.set(slide, { opacity: 0, zIndex: services.length - i });
+                        tl.to(slide, { opacity: 1, duration: 1, willChange: 'opacity' });
+                    } else {
+                        gsap.set(slide, { opacity: 0, zIndex: services.length - i });
+                        tl.to(slide, { opacity: 1, duration: 1, willChange: 'opacity' })
+                            .to(slide, { opacity: 0, duration: 1, willChange: 'opacity' }, "+=0.2");
+                    }
+                });
             });
 
         }, containerRef);
@@ -87,7 +116,7 @@ const Services = () => {
                     <div
                         key={index}
                         ref={el => slidesRef.current[index] = el}
-                        className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center will-change-transform"
+                        className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center"
                     >
                         <span className="text-accent text-xs md:text-xl font-mono uppercase tracking-[0.5em] mb-4 md:mb-8 block">
                             Phase {index + 1} // {service.metric}

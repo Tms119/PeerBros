@@ -12,19 +12,39 @@ const Philosophy = () => {
     useEffect(() => {
         if (!containerRef.current) return;
         const ctx = gsap.context(() => {
-            const tl = gsap.timeline({
-                scrollTrigger: {
-                    trigger: containerRef.current,
-                    start: 'top top',
-                    end: '+=80%', // Shorten pin to remove dead scroll
-                    scrub: true,
-                    pin: true,
-                    invalidateOnRefresh: true
-                }
+            let mm = gsap.matchMedia();
+
+            mm.add("(min-width: 768px)", () => {
+                const tl = gsap.timeline({
+                    scrollTrigger: {
+                        trigger: containerRef.current,
+                        start: 'top top',
+                        end: '+=80%',
+                        scrub: true,
+                        pin: true,
+                        invalidateOnRefresh: true
+                    }
+                });
+
+                tl.to(bgRef.current, { scale: 1.5, filter: 'blur(20px)', opacity: 0, duration: 1, willChange: 'transform, filter, opacity' }, 0)
+                    .fromTo(textRef.current, { scale: 0.8, opacity: 0, y: 100 }, { scale: 1, opacity: 1, y: 0, duration: 0.8, willChange: 'transform, opacity' }, 0);
             });
 
-            tl.to(bgRef.current, { scale: 1.5, filter: 'blur(20px)', opacity: 0, duration: 1 }, 0)
-                .fromTo(textRef.current, { scale: 0.8, opacity: 0, y: 100 }, { scale: 1, opacity: 1, y: 0, duration: 0.8 }, 0);
+            mm.add("(max-width: 767px)", () => {
+                const tl = gsap.timeline({
+                    scrollTrigger: {
+                        trigger: containerRef.current,
+                        start: 'top top',
+                        end: '+=80%',
+                        scrub: true,
+                        pin: true,
+                        invalidateOnRefresh: true
+                    }
+                });
+
+                tl.to(bgRef.current, { scale: 1.5, opacity: 0, duration: 1, willChange: 'transform, opacity' }, 0)
+                    .fromTo(textRef.current, { scale: 0.8, opacity: 0, y: 100 }, { scale: 1, opacity: 1, y: 0, duration: 0.8, willChange: 'transform, opacity' }, 0);
+            });
 
         }, containerRef);
         return () => ctx.revert();
@@ -35,7 +55,7 @@ const Philosophy = () => {
             {/* Massive Background Text for Depth */}
             <h2
                 ref={bgRef}
-                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[10rem] md:text-[30rem] font-display font-bold text-white/[0.02] whitespace-nowrap pointer-events-none tracking-tighter will-change-transform will-change-filter"
+                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[10rem] md:text-[30rem] font-display font-bold text-white/[0.02] whitespace-nowrap pointer-events-none tracking-tighter"
             >
                 THE STANDARD
             </h2>
