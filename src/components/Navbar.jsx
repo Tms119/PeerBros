@@ -5,6 +5,7 @@ import { Menu, X } from 'lucide-react';
 const Navbar = () => {
     const navRef = useRef(null);
     const menuRef = useRef(null);
+    const linkRefs = useRef([]);  // Direct refs — no DOM query
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
     // Initial Navbar animation
@@ -20,27 +21,34 @@ const Navbar = () => {
         if (!menuRef.current) return;
 
         if (isMenuOpen) {
-            // Open animation
-            gsap.to(menuRef.current, {
+            // Single timeline — links start only AFTER panel lands
+            const tl = gsap.timeline();
+
+            tl.to(menuRef.current, {
                 x: '0%',
-                duration: 0.6,
-                ease: 'power3.inOut'
-            });
-            // Staggered stagger in links
-            gsap.fromTo('.mobile-link',
-                { y: 50, opacity: 0 },
-                { y: 0, opacity: 1, duration: 0.5, stagger: 0.1, delay: 0.3, ease: 'power2.out' }
+                duration: 0.45,          // Faster panel slide
+                ease: 'power3.out',       // Ease-out feels snappier (no inOut cost)
+            })
+            .fromTo(linkRefs.current.filter(Boolean),
+                { y: 30, opacity: 0 },   // Smaller y distance = less paint
+                { y: 0, opacity: 1, duration: 0.35, stagger: 0.07, ease: 'power2.out' },
+                '-=0.05'                  // Tiny overlap, not full parallel
             );
-            // Prevent scrolling on body when menu is open
+
             document.body.style.overflow = 'hidden';
         } else {
-            // Close animation
+            // Kill any running animation first to avoid conflict
+            gsap.killTweensOf(menuRef.current);
+            gsap.killTweensOf(linkRefs.current);
+
+            // Reset links instantly, slide panel out
+            gsap.set(linkRefs.current.filter(Boolean), { opacity: 0, y: 30 });
             gsap.to(menuRef.current, {
                 x: '100%',
-                duration: 0.5,
+                duration: 0.35,
                 ease: 'power3.in'
             });
-            // Re-enable scrolling
+
             document.body.style.overflow = '';
         }
 
@@ -49,9 +57,7 @@ const Navbar = () => {
         };
     }, [isMenuOpen]);
 
-    const handleLinkClick = () => {
-        setIsMenuOpen(false);
-    };
+    const handleLinkClick = () => setIsMenuOpen(false);
 
     return (
         <>
@@ -80,18 +86,47 @@ const Navbar = () => {
                 </button>
             </nav>
 
-            {/* Mobile Menu Overlay */}
+            {/* Mobile Menu Overlay
+                - will-change-transform: GPU layer promoted BEFORE animation
+                - transform-gpu: forces hardware acceleration
+                - No CSS transition-colors on links (conflicts with GSAP)
+            */}
             <div
                 ref={menuRef}
-                className="fixed inset-0 bg-obsidian z-[50] flex flex-col items-center justify-center transform translate-x-full border-l border-white/10"
+                className="fixed inset-0 bg-obsidian z-[50] flex flex-col items-center justify-center border-l border-white/10 will-change-transform transform-gpu"
+                style={{ transform: 'translateX(100%)' }}
             >
                 <div className="flex flex-col items-center gap-6 w-full px-8 max-w-sm">
                     <span className="text-accent font-mono uppercase tracking-[0.5em] text-xs mb-4">Navigation</span>
-                    <a href="#services" onClick={handleLinkClick} className="mobile-link text-5xl font-display font-medium text-white hover:text-accent transition-colors w-full text-center py-6 border-b border-white/[0.05]">Services</a>
-                    <a href="#automation" onClick={handleLinkClick} className="mobile-link text-5xl font-display font-medium text-white hover:text-accent transition-colors w-full text-center py-6 border-b border-white/[0.05]">Portfolio</a>
-                    <a href="#team" onClick={handleLinkClick} className="mobile-link text-5xl font-display font-medium text-white hover:text-accent transition-colors w-full text-center py-6 mb-8">Team</a>
-                    <div className="mobile-link w-full">
-                        <a href="mailto:peerbros.official@gmail.com" className="block w-full py-5 rounded-full bg-white text-black font-bold text-xl hover:bg-accent hover:text-white transition-colors duration-300 shadow-[0_0_30px_rgba(255,255,255,0.1)] text-center" onClick={handleLinkClick}>
+
+                    {/* Direct refs on each link — no global DOM query */}
+                    <a
+                        href="#services"
+                        ref={el => linkRefs.current[0] = el}
+                        onClick={handleLinkClick}
+                        className="text-5xl font-display font-medium text-white w-full text-center py-6 border-b border-white/[0.05] opacity-0"
+                    >Services</a>
+
+                    <a
+                        href="#automation"
+                        ref={el => linkRefs.current[1] = el}
+                        onClick={handleLinkClick}
+                        className="text-5xl font-display font-medium text-white w-full text-center py-6 border-b border-white/[0.05] opacity-0"
+                    >Portfolio</a>
+
+                    <a
+                        href="#team"
+                        ref={el => linkRefs.current[2] = el}
+                        onClick={handleLinkClick}
+                        className="text-5xl font-display font-medium text-white w-full text-center py-6 mb-8 opacity-0"
+                    >Team</a>
+
+                    <div ref={el => linkRefs.current[3] = el} className="w-full opacity-0">
+                        <a
+                            href="mailto:peerbros.official@gmail.com"
+                            className="block w-full py-5 rounded-full bg-white text-black font-bold text-xl shadow-[0_0_30px_rgba(255,255,255,0.1)] text-center"
+                            onClick={handleLinkClick}
+                        >
                             Book a Call
                         </a>
                     </div>
