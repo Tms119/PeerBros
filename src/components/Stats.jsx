@@ -8,7 +8,7 @@ const statsData = [
     { value: 10, suffix: "+", label: "Brands Elevated" },
     { value: 50, suffix: "M+", label: "Client Revenue" },
     { value: 100, suffix: "k+", label: "Hours Automated" },
-    { value: 5, suffix: "", label: "Elite Operators" },
+    { value: 4, suffix: "", label: "Elite Operators" },
 ];
 
 const Stats = () => {
