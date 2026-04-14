@@ -15,7 +15,7 @@ const roster = [
     {
         name: "Sys Admin",
         label: "3x Founder",
-        description: "Executive producer at a unicorn company. Managed seven figure accounts across three offshore finance firms. Founded a software company and an advertising agency. Architecting our most complex automation stacks and AI models.",
+        description: "Former Executive Producer at a unicorn startup. Directed seven figure operations across three offshore finance firms and founded successful software and advertising agencies. As our Head of Technology and Operations, he now architects our most sophisticated enterprise automation stacks and AI models.",
         focus: "Technology & AI"
     },
 
