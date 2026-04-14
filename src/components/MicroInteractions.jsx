@@ -138,7 +138,7 @@ export const CustomCursor = () => {
     );
 };
 
-export const MagneticButton = ({ children, className, onClick, ...props }) => {
+export const MagneticButton = ({ children, className, onClick, href, ...props }) => {
     const buttonRef = useRef(null);
     const textRef = useRef(null);
 
@@ -169,7 +169,7 @@ export const MagneticButton = ({ children, className, onClick, ...props }) => {
             xTo(0);
             yTo(0);
             txTo(0);
-            tyTo(0);
+            yTo(0);
         };
 
         button.addEventListener('mousemove', handleMouseMove);
@@ -181,16 +181,19 @@ export const MagneticButton = ({ children, className, onClick, ...props }) => {
         };
     }, []);
 
+    const Tag = href ? 'a' : 'button';
+
     return (
-        <button
+        <Tag
             ref={buttonRef}
             className={className}
             onClick={onClick}
+            href={href}
             {...props}
         >
             <span ref={textRef} className="block pointer-events-none">
                 {children}
             </span>
-        </button>
+        </Tag>
     );
 };

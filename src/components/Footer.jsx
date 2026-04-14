@@ -40,11 +40,11 @@ const Footer = () => {
                 </p>
 
                 <div className="footer-reveal">
-                    <MagneticButton className="px-8 py-5 md:px-12 md:py-6 rounded-full md:rounded-[2rem] bg-white text-black text-xl md:text-2xl font-bold hover:bg-accent hover:text-white transition-all duration-300 flex items-center gap-3 md:gap-4 group shadow-[0_0_50px_rgba(255,255,255,0.1)] hover:shadow-[0_0_80px_rgba(192,160,128,0.3)]">
-                        <a href="mailto:peerbros.official@gmail.com" className="flex items-center gap-3 md:gap-4">
+                    <MagneticButton href="mailto:peerbros.official@gmail.com" className="px-8 py-5 md:px-12 md:py-6 rounded-full md:rounded-[2rem] bg-white text-black text-xl md:text-2xl font-bold hover:bg-accent hover:text-white transition-all duration-300 flex items-center gap-3 md:gap-4 group shadow-[0_0_50px_rgba(255,255,255,0.1)] hover:shadow-[0_0_80px_rgba(192,160,128,0.3)]">
+                        <span className="flex items-center gap-3 md:gap-4">
                             Contact Us
                             <ArrowUpRight size={24} className="md:w-7 md:h-7 group-hover:translate-x-2 group-hover:-translate-y-2 transition-transform duration-300" />
-                        </a>
+                        </span>
                     </MagneticButton>
                 </div>
             </div>
