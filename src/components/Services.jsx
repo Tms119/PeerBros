@@ -31,6 +31,7 @@ const Services = () => {
     const containerRef = useRef(null);
     const titleRef = useRef(null);
     const slidesRef = useRef([]);
+    const mobileSlidesRef = useRef([]);
 
     useEffect(() => {
         if (!containerRef.current || slidesRef.current.length === 0) return;
@@ -68,19 +69,19 @@ const Services = () => {
                 });
             });
 
-            // Mobile: simple scroll-triggered fade-in per card — no pinning, no jitter
+            // Mobile: cascade fade-up
             mm.add("(max-width: 767px)", () => {
-                slidesRef.current.forEach((slide) => {
+                mobileSlidesRef.current.forEach((slide) => {
                     gsap.fromTo(slide,
-                        { opacity: 0, y: 40 },
+                        { opacity: 0, y: 60 },
                         {
                             opacity: 1,
                             y: 0,
-                            duration: 0.7,
-                            ease: 'power2.out',
+                            duration: 0.8,
+                            ease: 'power3.out',
                             scrollTrigger: {
                                 trigger: slide,
-                                start: 'top 80%',
+                                start: 'top 85%',
                                 toggleActions: 'play none none reverse',
                             }
                         }
@@ -144,10 +145,7 @@ const Services = () => {
                     {services.map((service, index) => (
                         <div
                             key={index}
-                            ref={el => {
-                                // Only assign to slidesRef if desktop hasn't claimed it
-                                if (!slidesRef.current[index]) slidesRef.current[index] = el;
-                            }}
+                            ref={el => mobileSlidesRef.current[index] = el}
                             className="flex flex-col items-center justify-center px-6 py-20 text-center border-b border-white/5 last:border-0"
                         >
                             <span className="text-accent text-xs font-mono uppercase tracking-[0.5em] mb-4 block">

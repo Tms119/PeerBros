@@ -34,6 +34,7 @@ const steps = [
 const Process = () => {
     const containerRef = useRef(null);
     const trackRef = useRef(null);
+    const mobileStepsRef = useRef([]);
 
     useEffect(() => {
         if (!containerRef.current || !trackRef.current) return;
@@ -41,6 +42,7 @@ const Process = () => {
         const ctx = gsap.context(() => {
             let mm = gsap.matchMedia();
 
+            // Desktop Animation
             mm.add("(min-width: 768px)", () => {
                 const getScrollAmount = () => -(trackRef.current.scrollWidth - window.innerWidth);
 
@@ -73,6 +75,34 @@ const Process = () => {
                 });
             });
 
+            // Mobile Animation: Draw & Pop
+            mm.add("(max-width: 767px)", () => {
+                mobileStepsRef.current.forEach((stepEl) => {
+                    if (!stepEl) return;
+                    
+                    const line = stepEl.querySelector(".mobile-connecting-line");
+                    const dot = stepEl.querySelector(".mobile-connecting-dot");
+                    const content = stepEl.querySelector(".mobile-content");
+
+                    // Set initial states to ensure they exist before animation
+                    gsap.set(line, { scaleY: 0 });
+                    gsap.set(dot, { scale: 0, opacity: 0 });
+                    gsap.set(content, { x: 30, opacity: 0 });
+
+                    const tl = gsap.timeline({
+                        scrollTrigger: {
+                            trigger: stepEl,
+                            start: "top 70%",
+                            toggleActions: "play none none reverse"
+                        }
+                    });
+
+                    tl.to(line, { scaleY: 1, duration: 0.5, ease: "power1.inOut", transformOrigin: "top" })
+                      .to(dot, { scale: 1, opacity: 1, duration: 0.3, ease: "back.out(2)" }, "-=0.1")
+                      .to(content, { x: 0, opacity: 1, duration: 0.5, ease: "power3.out" }, "-=0.1");
+                });
+            });
+
         }, containerRef);
         return () => ctx.revert();
     }, []);
@@ -88,23 +118,35 @@ const Process = () => {
             {/* Horizontal scrolling track on desktop, vertical stack on mobile */}
             <div ref={trackRef} className="flex flex-col md:flex-row items-start md:items-center md:h-full w-full md:w-max px-6 md:px-[10vw] gap-24 md:gap-32 mt-16 md:mt-0">
                 {steps.map((step, index) => (
-                    <div key={index} className="flex flex-col justify-center w-full md:w-[60vw] max-w-4xl shrink-0 relative">
-
+                    <div 
+                        key={index}
+                        ref={el => mobileStepsRef.current[index] = el}
+                        className="flex flex-col justify-center w-full md:w-[60vw] max-w-4xl shrink-0 relative"
+                    >
                         {/* Background Number */}
                         <div className="absolute -top-[10%] -left-4 md:-top-20 md:-left-10 text-[6rem] md:text-[25rem] font-display font-medium text-white/5 pointer-events-none select-none z-0 tracking-tighter leading-none">
                             {step.number}
                         </div>
 
-                        <div className="relative z-10 pl-6 md:pl-20 border-l border-accent/30 py-8 md:py-12">
-                            <span className="text-accent font-mono uppercase tracking-[0.3em] text-xs md:text-base mb-4 md:mb-6 block">
-                                PHASE // {step.metric}
-                            </span>
-                            <h3 className="text-4xl md:text-6xl lg:text-8xl font-display font-bold text-white mb-6 md:mb-8 tracking-tighter leading-[0.9]">
-                                {step.title}
-                            </h3>
-                            <p className="text-lg md:text-2xl lg:text-3xl text-white/50 font-light leading-relaxed max-w-3xl">
-                                {step.description}
-                            </p>
+                        <div className="relative z-10 pl-8 md:pl-20 md:border-l border-accent/30 py-8 md:py-12">
+                            
+                            {/* Mobile Line & Dot Elements */}
+                            <div className="md:hidden absolute left-0 top-0 bottom-0 w-[2px] bg-white/5">
+                                <div className="mobile-connecting-line w-full h-full bg-accent" />
+                            </div>
+                            <div className="mobile-connecting-dot md:hidden absolute left-[-3px] top-12 w-2 h-2 rounded-full bg-accent shadow-[0_0_10px_rgba(249,115,22,0.8)]" />
+
+                            <div className="mobile-content flex flex-col justify-center opacity-100 md:opacity-100 md:translate-x-0">
+                                <span className="text-accent font-mono uppercase tracking-[0.3em] text-xs md:text-base mb-4 md:mb-6 block">
+                                    PHASE // {step.metric}
+                                </span>
+                                <h3 className="text-4xl md:text-6xl lg:text-8xl font-display font-bold text-white mb-6 md:mb-8 tracking-tighter leading-[0.9]">
+                                    {step.title}
+                                </h3>
+                                <p className="text-lg md:text-2xl lg:text-3xl text-white/50 font-light leading-relaxed max-w-3xl">
+                                    {step.description}
+                                </p>
+                            </div>
                         </div>
 
                     </div>
