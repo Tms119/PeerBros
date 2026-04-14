@@ -22,7 +22,7 @@ const roster = [
     {
         name: "Visual Engineer",
         label: "2x Co-Founder",
-        description: "Worked with top LinkedIn personal brands. A world-class designer who builds beautiful, easy-to-use websites designed to maximize your sales.",
+        description: "Founding Designer of a successful SaaS platform and trusted partner to top LinkedIn personal brands. A world class design engineer who builds beautiful and intuitive digital experiences tailored to maximize your sales.",
         focus: "Design & UX"
     },
     {
