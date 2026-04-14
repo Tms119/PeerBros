@@ -66,8 +66,8 @@ const Team = () => {
         <section id="team" ref={sectionRef} className="min-h-[100svh] w-full bg-[#050505] flex flex-col md:flex-row relative z-10">
 
             {/* Left Menu (The Roster) */}
-            <div className="w-full md:w-1/2 flex flex-col justify-center px-6 md:px-24 py-24 border-r border-white/10">
-                <h2 className="text-sm uppercase tracking-widest text-accent mb-12 font-semibold">The Core Five</h2>
+            <div className="w-full md:w-1/2 flex flex-col justify-center px-6 md:px-24 py-16 md:py-24 md:border-r border-white/10">
+                <h2 className="text-sm uppercase tracking-widest text-accent mb-8 md:mb-12 font-semibold">The Core Five</h2>
 
                 <div className="flex flex-col gap-2">
                     {roster.map((member, idx) => (
@@ -75,20 +75,41 @@ const Team = () => {
                             key={idx}
                             onMouseEnter={() => setActiveIdx(idx)}
                             onClick={() => setActiveIdx(idx)}
-                            className="group cursor-pointer py-6 border-b border-white/5 transition-all duration-300 relative overflow-hidden"
+                            className="group cursor-pointer py-6 border-b border-white/5 transition-all duration-300 relative"
                         >
-                            {/* Background fill on hover */}
-                            <div className={`absolute inset-0 bg-white/[0.03] transition-transform duration-500 origin-left ${activeIdx === idx ? 'scale-x-100' : 'scale-x-0'}`} />
+                            {/* Background fill on hover (Desktop mainly) */}
+                            <div className={`hidden md:block absolute inset-0 bg-white/[0.03] transition-transform duration-500 origin-left ${activeIdx === idx ? 'scale-x-100' : 'scale-x-0'}`} />
 
-                            <div className="relative z-10 flex items-center justify-between pointer-events-none pr-8 pl-4">
-                                <div className="flex items-baseline gap-4 md:gap-6 focus-within:">
+                            <div className="relative z-10 flex items-center justify-between pointer-events-none md:pr-8 md:pl-4">
+                                <div className="flex items-baseline gap-4 md:gap-6">
                                     <span className={`font-mono text-sm transition-colors ${activeIdx === idx ? 'text-accent' : 'text-white/20'}`}>0{idx + 1}</span>
-                                    <h3 className={`text-3xl md:text-5xl lg:text-6xl font-display font-medium tracking-tighter transition-all duration-300 ${activeIdx === idx ? 'text-white translate-x-2 md:translate-x-4' : 'text-white/40'}`}>
+                                    <h3 className={`text-3xl md:text-5xl lg:text-6xl font-display font-medium tracking-tighter transition-all duration-300 ${activeIdx === idx ? 'text-white md:translate-x-4' : 'text-white/40'}`}>
                                         {member.name}
                                     </h3>
                                 </div>
-                                <div className={`text-accent transition-all duration-300 ${activeIdx === idx ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-8'}`}>
+                                <div className={`hidden md:block text-accent transition-all duration-300 ${activeIdx === idx ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-8'}`}>
                                     <ArrowRight size={24} />
+                                </div>
+                                <div className={`md:hidden text-accent transition-transform duration-300 ${activeIdx === idx ? 'rotate-90' : 'rotate-0 opacity-30'}`}>
+                                    <ArrowRight size={20} />
+                                </div>
+                            </div>
+
+                            {/* Mobile Accordion Content */}
+                            <div 
+                                className={`md:hidden overflow-hidden transition-all duration-500 ease-in-out ${activeIdx === idx ? 'max-h-[500px] opacity-100 mt-6' : 'max-h-0 opacity-0 mt-0'}`}
+                            >
+                                <div className="pl-8 text-left">
+                                    <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-white/10 bg-black/80 text-accent font-mono text-[10px] uppercase tracking-widest mb-4">
+                                        <div className="w-1.5 h-1.5 rounded-full bg-accent" />
+                                        {member.label}
+                                    </div>
+                                    <h4 className="text-xs font-mono text-white/40 uppercase tracking-widest mb-3 border-b border-white/10 pb-2">
+                                        Focus: {member.focus}
+                                    </h4>
+                                    <p className="text-base text-white/80 font-light leading-relaxed">
+                                        "{member.description}"
+                                    </p>
                                 </div>
                             </div>
                         </div>
@@ -96,8 +117,8 @@ const Team = () => {
                 </div>
             </div>
 
-            {/* Right Info Deep Dive */}
-            <div className="w-full md:w-1/2 p-6 md:p-24 flex items-center justify-center relative overflow-hidden">
+            {/* Right Info Deep Dive (Desktop Only) */}
+            <div className="hidden md:flex w-full md:w-1/2 p-6 md:p-24 items-center justify-center relative overflow-hidden">
                 {/* Dynamic Abstract Background representing data */}
                 <div className="absolute inset-0 z-0 opacity-20">
                     <div className={`absolute inset-0 transition-opacity duration-1000 bg-[radial-gradient(circle_at_center,rgba(192,160,128,0.3)_0%,transparent_100%)] ${activeIdx % 2 === 0 ? 'opacity-100' : 'opacity-0'}`} />
