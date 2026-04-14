@@ -91,7 +91,7 @@ const Process = () => {
                     <div key={index} className="flex flex-col justify-center w-full md:w-[60vw] max-w-4xl shrink-0 relative">
 
                         {/* Background Number */}
-                        <div className="absolute -top-[10%] -left-4 md:-top-20 md:-left-10 text-[10rem] md:text-[25rem] font-display font-medium text-white/5 pointer-events-none select-none z-0 tracking-tighter leading-none">
+                        <div className="absolute -top-[10%] -left-4 md:-top-20 md:-left-10 text-[6rem] md:text-[25rem] font-display font-medium text-white/5 pointer-events-none select-none z-0 tracking-tighter leading-none">
                             {step.number}
                         </div>
 
@@ -102,7 +102,7 @@ const Process = () => {
                             <h3 className="text-4xl md:text-6xl lg:text-8xl font-display font-bold text-white mb-6 md:mb-8 tracking-tighter leading-[0.9]">
                                 {step.title}
                             </h3>
-                            <p className="text-lg md:text-2xl lg:text-4xl text-white/50 font-light leading-relaxed max-w-3xl">
+                            <p className="text-lg md:text-2xl lg:text-3xl text-white/50 font-light leading-relaxed max-w-3xl">
                                 {step.description}
                             </p>
                         </div>

@@ -10,7 +10,7 @@ const products = [
         name: 'OpenClaw.ai Setup',
         subtitle: 'The Core Infrastructure',
         description: 'We deploy and configure the powerful OpenClaw.ai agent framework customized entirely for your operational needs.',
-        icon: <BrainCircuit size={60} strokeWidth={1} className="text-accent/50" />,
+        icon: <BrainCircuit size={48} strokeWidth={1} className="text-accent/50" />,
         stats: ['24/7 Autonomy', 'Custom Workflows'],
         bg: 'bg-black',
         roi: 'Full operational control.'
@@ -19,7 +19,7 @@ const products = [
         name: 'Appointment Agent',
         subtitle: 'Inbound Conversion',
         description: 'Answers calls/chats 24/7, checks the calendar, books the slot, and sends confirmation automatically.',
-        icon: <CalendarClock size={60} strokeWidth={1} className="text-accent/50" />,
+        icon: <CalendarClock size={48} strokeWidth={1} className="text-accent/50" />,
         stats: ['Zero Lags', 'Instant Booking'],
         bg: 'bg-black',
         roi: 'Never miss a lead after hours. $48K/yr saved on receptionist costs.'
@@ -28,7 +28,7 @@ const products = [
         name: 'Cold Outreach Agent',
         subtitle: 'Outbound Scale',
         description: 'Scrapes prospect info, writes a personalized email for each one, and sends them automatically at scale.',
-        icon: <Mail size={60} strokeWidth={1} className="text-accent/50" />,
+        icon: <Mail size={48} strokeWidth={1} className="text-accent/50" />,
         stats: ['Hyper-Personalized', '100 emails / hr'],
         bg: 'bg-black',
         roi: '79.5% open rates vs 21% industry average. Zero manual work.'
@@ -37,7 +37,7 @@ const products = [
         name: 'DM / Chat Agent',
         subtitle: 'Social Conversion',
         description: 'Replies to Instagram DMs and WhatsApp comments automatically, qualifies the lead, and books a call.',
-        icon: <MessageCircle size={60} strokeWidth={1} className="text-accent/50" />,
+        icon: <MessageCircle size={48} strokeWidth={1} className="text-accent/50" />,
         stats: ['Instant Replies', 'Lead Qualification'],
         bg: 'bg-black',
         roi: 'No lead goes cold because nobody replied fast enough.'
@@ -46,7 +46,7 @@ const products = [
         name: 'Onboarding Agent',
         subtitle: 'Client Experience',
         description: 'New client signs → contract sent, welcome email delivered, first tasks created, and intro call booked.',
-        icon: <UserPlus size={60} strokeWidth={1} className="text-accent/50" />,
+        icon: <UserPlus size={48} strokeWidth={1} className="text-accent/50" />,
         stats: ['Instant Setup', 'Zero Errors'],
         bg: 'bg-black',
         roi: 'Zero admin time per new client. Professional experience from day one.'
@@ -55,7 +55,7 @@ const products = [
         name: 'Invoice Agent',
         subtitle: 'Cashflow Protection',
         description: 'Sends invoices automatically and chases unpaid ones with polite, automated follow-up messages.',
-        icon: <FileText size={60} strokeWidth={1} className="text-accent/50" />,
+        icon: <FileText size={48} strokeWidth={1} className="text-accent/50" />,
         stats: ['Auto-Followups', 'Payment Links'],
         bg: 'bg-black',
         roi: 'Get paid faster. Stop chasing clients manually.'
@@ -135,7 +135,7 @@ const AutomationPortfolio = () => {
                         key={index}
                         className={`sticky flex items-center justify-center p-6 lg:p-16 rounded-[2rem] md:shadow-2xl mb-12 ${product.bg} border border-white/10 overflow-hidden min-h-[60vh] md:min-h-[80vh] w-full`}
                         style={{
-                            top: `${10 + (index * 2)}vh`,
+                            top: `${8 + (index * 1.5)}vh`,
                             zIndex: index + 10,
                             willChange: 'transform',
                             contain: 'layout style'

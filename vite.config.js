@@ -16,7 +16,8 @@ export default defineConfig({
       output: {
         manualChunks: {
           vendor: ['react', 'react-dom'],
-          gsap: ['gsap', 'lenis']
+          gsap: ['gsap', 'lenis'],
+          icons: ['lucide-react']
         }
       }
     }

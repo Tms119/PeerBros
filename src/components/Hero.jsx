@@ -144,7 +144,7 @@ const Hero = () => {
             {!loaded && <Preloader onComplete={() => setLoaded(true)} />}
 
             {/* Standard 100svh Hero (No Scroll Scrubbing/Rig needed) */}
-            <section id="home" ref={containerRef} className="relative h-[100svh] w-full bg-[#020202] overflow-hidden flex flex-col justify-center items-center perspective-[2000px] cursor-none">
+            <section id="home" ref={containerRef} className="relative h-[100svh] w-full bg-[#020202] overflow-hidden flex flex-col justify-center items-center perspective-[2000px] md:cursor-none">
 
                 <AmbientDepthEngine />
 
@@ -164,10 +164,10 @@ const Hero = () => {
                     </div>
 
                     <h1 className="flex flex-col md:flex-row flex-wrap items-center justify-center gap-x-[2vw] gap-y-2 text-[clamp(4rem,11vw,14rem)] font-display font-medium tracking-tighter text-white w-full leading-[0.85] drop-shadow-2xl relative z-40 transform-gpu">
-                        <div className="hero-focus-word opacity-0 blur-2xl scale-110 translate-y-10 will-change-transform inline-block">We</div>
-                        <div className="hero-focus-word opacity-0 blur-2xl scale-110 translate-y-10 text-white/30 italic font-light will-change-transform inline-block pr-2">Build</div>
-                        <div className="hero-focus-word opacity-0 blur-2xl scale-110 translate-y-10 will-change-transform inline-block">Digital</div>
-                        <div className="hero-focus-word opacity-0 blur-2xl scale-110 translate-y-10 text-accent will-change-transform inline-block mix-blend-screen">Businesses.</div>
+                        <div className="hero-focus-word opacity-0 md:blur-2xl blur-xl scale-110 translate-y-10 will-change-transform inline-block">We</div>
+                        <div className="hero-focus-word opacity-0 md:blur-2xl blur-xl scale-110 translate-y-10 text-white/30 italic font-light will-change-transform inline-block pr-2">Build</div>
+                        <div className="hero-focus-word opacity-0 md:blur-2xl blur-xl scale-110 translate-y-10 will-change-transform inline-block">Digital</div>
+                        <div className="hero-focus-word opacity-0 md:blur-2xl blur-xl scale-110 translate-y-10 text-accent will-change-transform inline-block mix-blend-screen">Businesses.</div>
                     </h1>
 
                     <p className="hero-sub opacity-0 translate-y-12 mt-8 md:mt-16 text-sm md:text-[clamp(1.2rem,2vw,1.8rem)] text-white/50 font-light max-w-sm md:max-w-3xl text-center mx-auto tracking-wide leading-relaxed relative z-40 px-4">
@@ -176,7 +176,7 @@ const Hero = () => {
 
                     {/* --- FLOATING MICRO-ELEMENTS --- */}
                     {/* Badge 1: Top Left */}
-                    <div className="hero-badge opacity-0 translate-y-8 scale-75 md:scale-90 absolute top-[5%] left-[0%] md:top-[10%] md:left-[10%] z-50 px-3 md:px-4 py-2 md:py-2.5 rounded-2xl bg-[#0a0a0a]/90 md:bg-[#0a0a0a]/80 md:backdrop-blur-xl border border-white/[0.08] flex items-center gap-2 md:gap-3 shadow-[0_10px_40px_rgba(0,0,0,0.5)] md:animate-[floatBadge_6s_ease-in-out_infinite]">
+                    <div className="hero-badge opacity-0 translate-y-8 scale-[0.85] md:scale-90 absolute top-[5%] left-2 md:top-[10%] md:left-[10%] z-50 px-3 md:px-4 py-2 md:py-2.5 rounded-2xl bg-[#0a0a0a]/90 md:bg-[#0a0a0a]/80 md:backdrop-blur-xl border border-white/[0.08] flex items-center gap-2 md:gap-3 shadow-[0_10px_40px_rgba(0,0,0,0.5)] md:animate-[floatBadge_6s_ease-in-out_infinite] max-w-[48vw]">
                         <div className="w-6 h-6 md:w-8 md:h-8 rounded-full bg-accent/20 flex items-center justify-center border border-accent/30 text-accent">
                             <svg width="12" height="12" className="md:w-3.5 md:h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><polyline points="16 11 18 13 22 9" /></svg>
                         </div>
@@ -187,7 +187,7 @@ const Hero = () => {
                     </div>
 
                     {/* Badge 2: Right Middle */}
-                    <div className="hero-badge opacity-0 translate-y-8 scale-75 md:scale-90 absolute top-[30%] right-[0%] md:top-[45%] lg:right-[8%] z-50 px-3 md:px-4 py-2 md:py-2.5 rounded-2xl bg-[#0a0a0a]/90 md:bg-[#0a0a0a]/80 md:backdrop-blur-xl border border-white/[0.08] flex items-center gap-2 md:gap-3 shadow-[0_10px_40px_rgba(0,0,0,0.5)] md:animate-[floatBadge_7s_ease-in-out_infinite_1s]">
+                    <div className="hero-badge opacity-0 translate-y-8 scale-[0.85] md:scale-90 absolute top-[30%] right-2 md:top-[45%] lg:right-[8%] z-50 px-3 md:px-4 py-2 md:py-2.5 rounded-2xl bg-[#0a0a0a]/90 md:bg-[#0a0a0a]/80 md:backdrop-blur-xl border border-white/[0.08] flex items-center gap-2 md:gap-3 shadow-[0_10px_40px_rgba(0,0,0,0.5)] md:animate-[floatBadge_7s_ease-in-out_infinite_1s] max-w-[48vw]">
                         <div className="w-6 h-6 md:w-8 md:h-8 rounded-full bg-green-500/20 flex items-center justify-center border border-green-500/30 text-green-400">
                             <svg width="12" height="12" className="md:w-3.5 md:h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="1" x2="12" y2="23" /><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" /></svg>
                         </div>
@@ -198,7 +198,7 @@ const Hero = () => {
                     </div>
 
                     {/* Badge 3: Bottom Left / Center-ish */}
-                    <div className="hero-badge opacity-0 translate-y-8 scale-75 md:scale-90 absolute bottom-[25%] left-[5%] md:bottom-[20%] md:left-[15%] z-50 px-3 md:px-4 py-2 md:py-2.5 rounded-2xl bg-[#0a0a0a]/90 md:bg-[#0a0a0a]/80 md:backdrop-blur-xl border border-white/[0.08] flex items-center gap-2 md:gap-3 shadow-[0_10px_40px_rgba(0,0,0,0.5)] md:animate-[floatBadge_8s_ease-in-out_infinite_2s]">
+                    <div className="hero-badge opacity-0 translate-y-8 scale-[0.85] md:scale-90 absolute bottom-[25%] left-4 md:bottom-[20%] md:left-[15%] z-50 px-3 md:px-4 py-2 md:py-2.5 rounded-2xl bg-[#0a0a0a]/90 md:bg-[#0a0a0a]/80 md:backdrop-blur-xl border border-white/[0.08] flex items-center gap-2 md:gap-3 shadow-[0_10px_40px_rgba(0,0,0,0.5)] md:animate-[floatBadge_8s_ease-in-out_infinite_2s] max-w-[48vw]">
                         <div className="w-6 h-6 md:w-8 md:h-8 rounded-full bg-blue-500/20 flex items-center justify-center border border-blue-500/30 text-blue-400">
                             <svg width="12" height="12" className="md:w-3.5 md:h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" /><polyline points="22 4 12 14.01 9 11.01" /></svg>
                         </div>

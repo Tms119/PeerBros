@@ -75,7 +75,7 @@ const Team = () => {
                             key={idx}
                             onMouseEnter={() => setActiveIdx(idx)}
                             onClick={() => setActiveIdx(idx)}
-                            className="group cursor-none py-6 border-b border-white/5 transition-all duration-300 relative overflow-hidden"
+                            className="group cursor-pointer py-6 border-b border-white/5 transition-all duration-300 relative overflow-hidden"
                         >
                             {/* Background fill on hover */}
                             <div className={`absolute inset-0 bg-white/[0.03] transition-transform duration-500 origin-left ${activeIdx === idx ? 'scale-x-100' : 'scale-x-0'}`} />

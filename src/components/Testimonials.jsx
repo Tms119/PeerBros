@@ -29,25 +29,30 @@ const Testimonials = () => {
 
     useEffect(() => {
         const ctx = gsap.context(() => {
-            const getScrollAmount = () => {
-                let trackWidth = trackRef.current.scrollWidth;
-                return -(trackWidth - window.innerWidth);
-            };
+            let mm = gsap.matchMedia();
 
-            const tween = gsap.to(trackRef.current, {
-                x: getScrollAmount,
-                ease: "none"
-            });
+            // Desktop: GSAP horizontal scroll pinned
+            mm.add("(min-width: 768px)", () => {
+                const getScrollAmount = () => {
+                    let trackWidth = trackRef.current.scrollWidth;
+                    return -(trackWidth - window.innerWidth);
+                };
 
-            ScrollTrigger.create({
-                trigger: containerRef.current,
-                start: "top top",
-                end: () => `+=${getScrollAmount() * -1}`,
-                pin: true,
-                animation: tween,
-                scrub: 1,
-                invalidateOnRefresh: true,
-                normalizeScroll: true
+                const tween = gsap.to(trackRef.current, {
+                    x: getScrollAmount,
+                    ease: "none"
+                });
+
+                ScrollTrigger.create({
+                    trigger: containerRef.current,
+                    start: "top top",
+                    end: () => `+=${getScrollAmount() * -1}`,
+                    pin: true,
+                    animation: tween,
+                    scrub: 1,
+                    invalidateOnRefresh: true,
+                    normalizeScroll: true
+                });
             });
 
         }, containerRef);
@@ -55,42 +60,85 @@ const Testimonials = () => {
     }, []);
 
     return (
-        <section ref={containerRef} className="h-[100svh] w-full relative overflow-hidden bg-obsidian border-y border-white/5 flex flex-col justify-center">
-            <div className="absolute top-24 md:top-24 left-6 md:left-24 z-50">
-                <h2 className="text-lg md:text-2xl font-mono text-white/30 uppercase tracking-[0.4em]">
-                    The Proof
-                </h2>
-            </div>
+        <>
+            {/* Desktop: GSAP pinned horizontal scroll */}
+            <section ref={containerRef} className="hidden md:flex h-[100svh] w-full relative overflow-hidden bg-obsidian border-y border-white/5 flex-col justify-center">
+                <div className="absolute top-24 left-24 z-50">
+                    <h2 className="text-2xl font-mono text-white/30 uppercase tracking-[0.4em]">
+                        The Proof
+                    </h2>
+                </div>
 
-            <div ref={trackRef} className="flex flex-row items-center h-full w-max px-[10vw] gap-12 md:gap-32 will-change-transform">
-                {testimonials.map((testy, index) => (
-                    <div
-                        key={index}
-                        className="w-[85vw] md:w-[60vw] lg:w-[50vw] shrink-0 glass-panel-lite md:glass-panel p-8 md:p-20 rounded-[2rem] relative overflow-hidden"
-                    >
-                        {/* Massive Quote Mark background */}
-                        <div className="absolute -top-10 -left-6 md:-left-10 text-[12rem] md:text-[20rem] font-serif leading-none opacity-5 text-accent pointer-events-none select-none">
-                            "
-                        </div>
-
-                        <div className="relative z-10">
-                            <div className="text-accent font-mono text-2xl md:text-5xl tracking-tighter mb-8 md:mb-12 pb-6 md:pb-8 border-b border-white/10">
-                                {testy.metric}
+                <div ref={trackRef} className="flex flex-row items-center h-full w-max px-[10vw] gap-32 will-change-transform">
+                    {testimonials.map((testy, index) => (
+                        <div
+                            key={index}
+                            className="w-[60vw] lg:w-[50vw] shrink-0 glass-panel p-20 rounded-[2rem] relative overflow-hidden"
+                        >
+                            <div className="absolute -top-10 -left-10 text-[20rem] font-serif leading-none opacity-5 text-accent pointer-events-none select-none">
+                                "
                             </div>
-
-                            <p className="text-2xl md:text-5xl text-white font-display font-light leading-[1.2] mb-8 md:mb-12 tracking-tight">
-                                "{testy.quote}"
-                            </p>
-
-                            <div className="flex items-center gap-4">
-                                <div className="w-8 md:w-12 h-[1px] bg-white/30" />
-                                <span className="uppercase tracking-widest text-xs md:text-sm text-white/60 font-semibold">{testy.author}</span>
+                            <div className="relative z-10">
+                                <div className="text-accent font-mono text-5xl tracking-tighter mb-12 pb-8 border-b border-white/10">
+                                    {testy.metric}
+                                </div>
+                                <p className="text-5xl text-white font-display font-light leading-[1.2] mb-12 tracking-tight">
+                                    "{testy.quote}"
+                                </p>
+                                <div className="flex items-center gap-4">
+                                    <div className="w-12 h-[1px] bg-white/30" />
+                                    <span className="uppercase tracking-widest text-sm text-white/60 font-semibold">{testy.author}</span>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                ))}
-            </div>
-        </section>
+                    ))}
+                </div>
+            </section>
+
+            {/* Mobile: native CSS horizontal scroll-snap — no GSAP pin, no jitter */}
+            <section className="md:hidden w-full bg-obsidian border-y border-white/5 py-20 relative overflow-hidden">
+                <div className="absolute top-6 left-6 z-50">
+                    <h2 className="text-lg font-mono text-white/30 uppercase tracking-[0.4em]">
+                        The Proof
+                    </h2>
+                </div>
+
+                <div
+                    className="flex flex-row overflow-x-auto gap-5 px-6 pt-14 pb-6 snap-x snap-mandatory scroll-smooth"
+                    style={{ scrollbarWidth: 'none', WebkitOverflowScrolling: 'touch' }}
+                >
+                    {testimonials.map((testy, index) => (
+                        <div
+                            key={index}
+                            className="w-[85vw] shrink-0 snap-center glass-panel-lite p-8 rounded-[2rem] relative overflow-hidden"
+                        >
+                            <div className="absolute -top-10 -left-6 text-[12rem] font-serif leading-none opacity-5 text-accent pointer-events-none select-none">
+                                "
+                            </div>
+                            <div className="relative z-10">
+                                <div className="text-accent font-mono text-2xl tracking-tighter mb-8 pb-6 border-b border-white/10">
+                                    {testy.metric}
+                                </div>
+                                <p className="text-2xl text-white font-display font-light leading-[1.2] mb-8 tracking-tight">
+                                    "{testy.quote}"
+                                </p>
+                                <div className="flex items-center gap-4">
+                                    <div className="w-8 h-[1px] bg-white/30" />
+                                    <span className="uppercase tracking-widest text-xs text-white/60 font-semibold">{testy.author}</span>
+                                </div>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+
+                {/* Swipe hint dots */}
+                <div className="flex justify-center gap-2 mt-4">
+                    {testimonials.map((_, i) => (
+                        <div key={i} className={`w-1.5 h-1.5 rounded-full ${i === 0 ? 'bg-accent' : 'bg-white/20'}`} />
+                    ))}
+                </div>
+            </section>
+        </>
     );
 };
 

@@ -14,6 +14,7 @@ const Philosophy = () => {
         const ctx = gsap.context(() => {
             let mm = gsap.matchMedia();
 
+            // Desktop: pinned parallax reveal
             mm.add("(min-width: 768px)", () => {
                 const tl = gsap.timeline({
                     scrollTrigger: {
@@ -30,20 +31,31 @@ const Philosophy = () => {
                     .fromTo(textRef.current, { scale: 0.8, opacity: 0, y: 100 }, { scale: 1, opacity: 1, y: 0, duration: 0.8, willChange: 'transform, opacity' }, 0);
             });
 
+            // Mobile: no pin — simple fade-in, no blur filter cost
             mm.add("(max-width: 767px)", () => {
-                const tl = gsap.timeline({
-                    scrollTrigger: {
-                        trigger: containerRef.current,
-                        start: 'top top',
-                        end: '+=80%',
-                        scrub: true,
-                        pin: true,
-                        invalidateOnRefresh: true
+                gsap.fromTo(bgRef.current,
+                    { scale: 1, opacity: 1 },
+                    {
+                        scale: 1.2, opacity: 0, duration: 1, willChange: 'transform, opacity',
+                        scrollTrigger: {
+                            trigger: containerRef.current,
+                            start: 'top 60%',
+                            end: 'center center',
+                            scrub: 1,
+                        }
                     }
-                });
-
-                tl.to(bgRef.current, { scale: 1.5, opacity: 0, duration: 1, willChange: 'transform, opacity' }, 0)
-                    .fromTo(textRef.current, { scale: 0.8, opacity: 0, y: 100 }, { scale: 1, opacity: 1, y: 0, duration: 0.8, willChange: 'transform, opacity' }, 0);
+                );
+                gsap.fromTo(textRef.current,
+                    { opacity: 0, y: 50 },
+                    {
+                        opacity: 1, y: 0, duration: 0.9, ease: 'power3.out',
+                        scrollTrigger: {
+                            trigger: textRef.current,
+                            start: 'top 80%',
+                            toggleActions: 'play none none reverse',
+                        }
+                    }
+                );
             });
 
         }, containerRef);
@@ -52,10 +64,10 @@ const Philosophy = () => {
 
     return (
         <section ref={containerRef} className="h-[100svh] w-full relative overflow-hidden bg-black flex items-center justify-center z-20">
-            {/* Massive Background Text for Depth */}
+            {/* Massive Background Text — smaller on mobile to prevent overflow & reduce paint cost */}
             <h2
                 ref={bgRef}
-                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[10rem] md:text-[30rem] font-display font-bold text-white/[0.02] whitespace-nowrap pointer-events-none tracking-tighter"
+                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[6rem] md:text-[30rem] font-display font-bold text-white/[0.02] whitespace-nowrap pointer-events-none tracking-tighter"
             >
                 THE STANDARD
             </h2>

@@ -38,7 +38,7 @@ const Services = () => {
         const ctx = gsap.context(() => {
             let mm = gsap.matchMedia();
 
-            // Desktop Animation (Complex 3D scale)
+            // Desktop Animation (Complex 3D scale) — pinned scroll
             mm.add("(min-width: 768px)", () => {
                 const tl = gsap.timeline({
                     scrollTrigger: {
@@ -68,33 +68,23 @@ const Services = () => {
                 });
             });
 
-            // Mobile Animation (Simple Fade)
+            // Mobile: simple scroll-triggered fade-in per card — no pinning, no jitter
             mm.add("(max-width: 767px)", () => {
-                const tl = gsap.timeline({
-                    scrollTrigger: {
-                        trigger: containerRef.current,
-                        start: 'top top',
-                        end: `+=${services.length * 100}%`,
-                        pin: true,
-                        scrub: 1,
-                        invalidateOnRefresh: true,
-                    }
-                });
-
-                tl.to(titleRef.current, { opacity: 0, y: -20, duration: 0.5 }, 0);
-
-                slidesRef.current.forEach((slide, i) => {
-                    if (i === 0) {
-                        gsap.set(slide, { opacity: 1, zIndex: services.length - i });
-                        tl.to(slide, { opacity: 0, duration: 1, willChange: 'opacity' }, 0);
-                    } else if (i === services.length - 1) {
-                        gsap.set(slide, { opacity: 0, zIndex: services.length - i });
-                        tl.to(slide, { opacity: 1, duration: 1, willChange: 'opacity' });
-                    } else {
-                        gsap.set(slide, { opacity: 0, zIndex: services.length - i });
-                        tl.to(slide, { opacity: 1, duration: 1, willChange: 'opacity' })
-                            .to(slide, { opacity: 0, duration: 1, willChange: 'opacity' }, "+=0.2");
-                    }
+                slidesRef.current.forEach((slide) => {
+                    gsap.fromTo(slide,
+                        { opacity: 0, y: 40 },
+                        {
+                            opacity: 1,
+                            y: 0,
+                            duration: 0.7,
+                            ease: 'power2.out',
+                            scrollTrigger: {
+                                trigger: slide,
+                                start: 'top 80%',
+                                toggleActions: 'play none none reverse',
+                            }
+                        }
+                    );
                 });
             });
 
@@ -103,48 +93,77 @@ const Services = () => {
     }, []);
 
     return (
-        <section id="services" ref={containerRef} className="h-[100svh] w-full bg-black relative overflow-hidden flex items-center justify-center pt-20">
-            {/* Absolute center text tracking */}
-            <div ref={titleRef} className="absolute top-24 md:top-24 left-1/2 -translate-x-1/2 text-center w-full px-4 z-50">
-                <h2 className="text-lg md:text-2xl font-mono text-white/30 uppercase tracking-[0.4em] mix-blend-difference">
-                    The Arsenal
-                </h2>
-            </div>
-
-            <div className="relative w-full h-full flex items-center justify-center mt-12">
-                {services.map((service, index) => (
-                    <div
-                        key={index}
-                        ref={el => slidesRef.current[index] = el}
-                        className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center"
-                    >
-                        <span className="text-accent text-xs md:text-xl font-mono uppercase tracking-[0.5em] mb-4 md:mb-8 block">
-                            Phase {index + 1} // {service.metric}
-                        </span>
-                        {/* Break titles to avoid overflowing viewport horizontally if they are too long */}
-                        <h3 className="text-4xl md:text-[7rem] lg:text-[9rem] xl:text-[11rem] font-display font-medium text-white leading-[0.85] tracking-tighter mb-6 md:mb-8 max-w-[95vw] md:max-w-[90vw] flex flex-wrap justify-center gap-x-3 md:gap-x-6">
-                            {service.title.split(' ').map((word, wIdx) => <span key={wIdx}>{word}</span>)}
-                        </h3>
-                        <p className="text-lg md:text-3xl text-white/60 max-w-sm md:max-w-3xl font-light leading-relaxed px-4">
-                            {service.description}
-                        </p>
-                    </div>
-                ))}
-            </div>
-
-            {/* Cinematic vignette */}
-            <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_center,transparent_0%,rgba(0,0,0,0.8)_100%)] z-40" />
-
-            {/* Scroll Indicator */}
-            <div className="absolute bottom-6 right-6 md:bottom-12 md:right-12 z-50 pointer-events-none flex flex-col items-center gap-2 opacity-50">
-                <div className="text-[10px] md:text-xs font-mono text-white/60 uppercase tracking-widest bg-black/50 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/10">
-                    Keep Scrolling
+        <>
+            {/* Desktop: pinned full-height section */}
+            <section
+                id="services"
+                ref={containerRef}
+                className="hidden md:flex h-[100svh] w-full bg-black relative overflow-hidden items-center justify-center pt-20"
+            >
+                <div ref={titleRef} className="absolute top-24 left-1/2 -translate-x-1/2 text-center w-full px-4 z-50">
+                    <h2 className="text-2xl font-mono text-white/30 uppercase tracking-[0.4em] mix-blend-difference">
+                        The Arsenal
+                    </h2>
                 </div>
-                <div className="w-8 h-12 md:w-10 md:h-14 rounded-full border border-white/20 flex justify-center p-1 bg-black/50 backdrop-blur-md">
-                    <div className="w-1.5 h-3 md:w-2 md:h-4 bg-white/60 rounded-full animate-[bounce_1.5s_infinite]" />
+
+                <div className="relative w-full h-full flex items-center justify-center mt-12">
+                    {services.map((service, index) => (
+                        <div
+                            key={index}
+                            ref={el => slidesRef.current[index] = el}
+                            className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center"
+                        >
+                            <span className="text-accent text-xl font-mono uppercase tracking-[0.5em] mb-8 block">
+                                Phase {index + 1} // {service.metric}
+                            </span>
+                            <h3 className="text-[7rem] lg:text-[9rem] xl:text-[11rem] font-display font-medium text-white leading-[0.85] tracking-tighter mb-8 max-w-[90vw] flex flex-wrap justify-center gap-x-6">
+                                {service.title.split(' ').map((word, wIdx) => <span key={wIdx}>{word}</span>)}
+                            </h3>
+                            <p className="text-3xl text-white/60 max-w-3xl font-light leading-relaxed px-4">
+                                {service.description}
+                            </p>
+                        </div>
+                    ))}
                 </div>
-            </div>
-        </section>
+
+                <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_center,transparent_0%,rgba(0,0,0,0.8)_100%)] z-40" />
+            </section>
+
+            {/* Mobile: natural vertical scroll with CSS snap — no pin jitter */}
+            <section
+                id="services"
+                className="md:hidden w-full bg-black relative pt-24 pb-12"
+            >
+                <div className="text-center w-full px-4 mb-12">
+                    <h2 className="text-lg font-mono text-white/30 uppercase tracking-[0.4em]">
+                        The Arsenal
+                    </h2>
+                </div>
+
+                <div className="flex flex-col gap-0">
+                    {services.map((service, index) => (
+                        <div
+                            key={index}
+                            ref={el => {
+                                // Only assign to slidesRef if desktop hasn't claimed it
+                                if (!slidesRef.current[index]) slidesRef.current[index] = el;
+                            }}
+                            className="flex flex-col items-center justify-center px-6 py-20 text-center border-b border-white/5 last:border-0"
+                        >
+                            <span className="text-accent text-xs font-mono uppercase tracking-[0.5em] mb-4 block">
+                                Phase {index + 1} // {service.metric}
+                            </span>
+                            <h3 className="text-5xl font-display font-medium text-white leading-[0.85] tracking-tighter mb-6 max-w-[90vw]">
+                                {service.title}
+                            </h3>
+                            <p className="text-lg text-white/60 max-w-sm font-light leading-relaxed">
+                                {service.description}
+                            </p>
+                        </div>
+                    ))}
+                </div>
+            </section>
+        </>
     );
 };
 
