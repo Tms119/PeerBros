@@ -15,15 +15,10 @@ const roster = [
     {
         name: "Sys Admin",
         label: "3x Founder",
-        description: "Top 10 marketing expert in Bangladesh. Solopreneur and Head of Technology architecting our most complex automation stacks and AI models.",
+        description: "Executive producer at a unicorn company. Managed seven figure accounts across three offshore finance firms. Founded a software company and an advertising agency. Architecting our most complex automation stacks and AI models.",
         focus: "Technology & AI"
     },
-    {
-        name: "The Narrative",
-        label: "Marketing Head",
-        description: "Worked for 7 major media companies. Controls the narrative and distribution algorithms. If you have a story, he scales it globally.",
-        focus: "Media Strategy"
-    },
+
     {
         name: "Visual Engineer",
         label: "2x Co-Founder",
@@ -67,7 +62,7 @@ const Team = () => {
 
             {/* Left Menu (The Roster) */}
             <div className="w-full md:w-1/2 flex flex-col justify-center px-6 md:px-24 py-16 md:py-24 md:border-r border-white/10">
-                <h2 className="text-sm uppercase tracking-widest text-accent mb-8 md:mb-12 font-semibold">The Core Five</h2>
+                <h2 className="text-sm uppercase tracking-widest text-accent mb-8 md:mb-12 font-semibold">The Core Four</h2>
 
                 <div className="flex flex-col gap-2">
                     {roster.map((member, idx) => (
