@@ -55,11 +55,7 @@ const Footer = () => {
                     <span className="tracking-widest uppercase text-[10px] md:text-sm">&copy; {new Date().getFullYear()} Architected for Scale.</span>
                 </div>
 
-                <div className="flex flex-wrap justify-center items-center gap-6 md:gap-8 font-mono tracking-widest uppercase text-[10px] md:text-xs">
-                    <a href="#" className="hover:text-accent transition-colors">X (Twitter)</a>
-                    <a href="#" className="hover:text-accent transition-colors">LinkedIn</a>
-                    <a href="#" className="hover:text-accent transition-colors">Instagram</a>
-                </div>
+
             </div>
         </footer>
     );
