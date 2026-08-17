@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useCallback } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Lenis from 'lenis';
@@ -62,7 +62,7 @@ const WorkPage = () => {
     };
   }, []);
 
-  const handleLoadComplete = () => setLoaded(true);
+  const handleLoadComplete = useCallback(() => setLoaded(true), []);
 
   return (
     <div ref={pageRef} className="relative bg-background text-foreground overflow-x-hidden min-h-screen selection:bg-accent/30 selection:text-accent">
