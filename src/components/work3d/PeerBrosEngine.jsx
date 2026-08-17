@@ -1,6 +1,6 @@
 import React, { useRef, useMemo, useLayoutEffect } from 'react';
 import { useFrame } from '@react-three/fiber';
-import { MeshTransmissionMaterial, Float, Environment, Edges } from '@react-three/drei';
+import { Float, Environment, Edges } from '@react-three/drei';
 import * as THREE from 'three';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -57,19 +57,14 @@ const PeerBrosEngine = () => {
       {/* The Central Core */}
       <Float speed={2} rotationIntensity={0.5} floatIntensity={1}>
         <mesh ref={coreRef} geometry={coreGeometry}>
-          <MeshTransmissionMaterial 
-            backside
-            samples={4}
-            thickness={2}
-            chromaticAberration={0.05}
-            anisotropy={0.1}
-            distortion={0.2}
-            distortionScale={0.5}
-            temporalDistortion={0.1}
-            iridescence={1}
-            iridescenceIOR={1}
-            iridescenceThicknessRange={[0, 1400]}
+          <meshStandardMaterial 
             color="#7C6FE0"
+            emissive="#7C6FE0"
+            emissiveIntensity={0.5}
+            roughness={0.2}
+            metalness={0.8}
+            transparent
+            opacity={0.9}
           />
           <Edges color="#ffffff" opacity={0.3} transparent />
           {/* Internal glowing light */}
@@ -81,12 +76,12 @@ const PeerBrosEngine = () => {
       {shardRefs.current.map((ref, i) => (
         <Float key={i} speed={1.5 + Math.random()} rotationIntensity={2} floatIntensity={2}>
           <mesh ref={ref} geometry={shardGeometry} name={`shard-${i}`}>
-            <MeshTransmissionMaterial 
-              samples={3}
-              thickness={1.5}
-              roughness={0.2}
-              transmission={1}
+            <meshPhysicalMaterial 
               color="#ffffff"
+              roughness={0.1}
+              metalness={0.9}
+              transparent
+              opacity={0.8}
             />
             <Edges color="#7C6FE0" opacity={0.5} transparent />
           </mesh>

@@ -1,6 +1,6 @@
 import React, { useRef, useLayoutEffect } from 'react';
 import { Canvas, useThree } from '@react-three/fiber';
-import { EffectComposer, Bloom } from '@react-three/postprocessing';
+
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import PeerBrosEngine from './PeerBrosEngine';
@@ -101,9 +101,7 @@ const Work3DCanvas = ({ containerRef }) => {
         
         <SceneController containerRef={containerRef} />
         
-        <EffectComposer disableNormalPass>
-          <Bloom luminanceThreshold={0.5} mipmapBlur intensity={1.5} />
-        </EffectComposer>
+
       </Canvas>
     </div>
   );
