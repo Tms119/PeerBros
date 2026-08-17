@@ -110,7 +110,7 @@ function App() {
         <Route
           path="/work"
           element={
-            <Suspense fallback={<LoadingFallback />}>
+            <Suspense fallback={<div className="fixed inset-0 bg-[#050508]" />}>
               <WorkPage />
             </Suspense>
           }

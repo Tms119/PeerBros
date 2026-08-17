@@ -72,7 +72,7 @@ const WorkPage = () => {
       <div className="noise-overlay pointer-events-none z-[100]" />
       <Navbar />
       <main>
-        <WorkHero />
+        <WorkHero ready={loaded} />
         <WorkMarquee />
         <ProjectsGallery />
         <WorkStats />
