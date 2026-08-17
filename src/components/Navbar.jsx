@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import gsap from 'gsap';
 import { Menu, X } from 'lucide-react';
 
@@ -69,7 +70,8 @@ const Navbar = () => {
                 {/* Desktop Menu */}
                 <div className="hidden md:flex items-center space-x-8 text-sm font-medium text-white/70">
                     <a href="#services" className="hover:text-accent transition-colors">Services</a>
-                    <a href="#automation" className="hover:text-accent transition-colors">Portfolio</a>
+                    <a href="#automation" className="hover:text-accent transition-colors">Automation</a>
+                    <Link to="/work" className="hover:text-accent transition-colors font-medium">Work</Link>
                     <a href="#team" className="hover:text-accent transition-colors">Team</a>
                     <a href="mailto:peerbros.official@gmail.com" className="px-5 py-2.5 rounded-full bg-white text-black hover:bg-accent transition-colors font-semibold">
                         Book a Call
@@ -107,12 +109,12 @@ const Navbar = () => {
                         className="text-5xl font-display font-medium text-white w-full text-center py-6 border-b border-white/[0.05] opacity-0"
                     >Services</a>
 
-                    <a
-                        href="#automation"
+                    <Link
+                        to="/work"
                         ref={el => linkRefs.current[1] = el}
                         onClick={handleLinkClick}
-                        className="text-5xl font-display font-medium text-white w-full text-center py-6 border-b border-white/[0.05] opacity-0"
-                    >Portfolio</a>
+                        className="text-5xl font-display font-medium text-accent w-full text-center py-6 border-b border-white/[0.05] opacity-0"
+                    >Work</Link>
 
                     <a
                         href="#team"
