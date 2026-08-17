@@ -40,15 +40,15 @@ export default function StudioMonitor({ activeProjectIndex }) {
           </RoundedBox>
           
           {/* Inner Black Bezel (Strict 16:9 bounds) */}
-          <RoundedBox args={[4.6, 2.59, 0.17]} radius={0.02} smoothness={4} position={[0, 0, 0.01]}>
+          <RoundedBox args={[4.6, 2.5875, 0.17]} radius={0.02} smoothness={4} position={[0, 0, 0.01]}>
             <meshStandardMaterial color="#050505" metalness={0.8} roughness={0.5} />
           </RoundedBox>
 
-          {/* The HTML Screen Overlay (Precisely Placed on the Z-axis to prevent clipping) */}
+          {/* The HTML Screen Overlay (Mathematically scaled to perfectly fit 4.6 width) */}
           <Html
             transform
             wrapperClass="studio-monitor-overlay"
-            distanceFactor={1.18}
+            scale={0.0044921875} // 4.6 (3D width) / 1024 (CSS width)
             position={[0, 0, 0.1]} // Perfectly in front of bezel, zero clipping
             rotation-x={0}
           >
