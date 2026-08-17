@@ -1,11 +1,11 @@
 import React, { useRef, useState, useMemo, useEffect } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
-import { Html, OrbitControls, Sky, Text, useGLTF, useAnimations, MeshReflectorMaterial } from '@react-three/drei';
+import { Html, OrbitControls, Text, useGLTF, useAnimations, MeshReflectorMaterial, useTexture } from '@react-three/drei';
 import * as THREE from 'three';
 import { projects } from '../../data/projects';
 import gsap from 'gsap';
 
-// Preload the placeholder asset for all 6 buildings
+// Preload the placeholder assets
 useGLTF.preload('/LittlestTokyo.glb');
 
 // --- Real Asset Loader Component ---
@@ -34,129 +34,69 @@ const AssetModel = ({ url, scale = [0.03, 0.03, 0.03] }) => {
   return <primitive ref={group} object={clonedScene} position={[0, 0, 0]} scale={scale} />;
 };
 
-// --- Procedural Suspension Bridge ---
-const SuspensionBridge = ({ start, end, width = 4 }) => {
-  const vStart = new THREE.Vector3(...start);
-  const vEnd = new THREE.Vector3(...end);
-  const distance = vStart.distanceTo(vEnd);
-  
-  // Midpoint for the bridge structure
-  const midPoint = new THREE.Vector3().addVectors(vStart, vEnd).multiplyScalar(0.5);
-  
-  // Calculate angle
-  const angle = Math.atan2(vEnd.x - vStart.x, vEnd.z - vStart.z);
+// --- High-Resolution 2D Map Plane ---
+const TexturedMap = ({ size = 200 }) => {
+  // We use the downloaded placeholder map. You will swap this for your GTA style JPG map.
+  const mapTexture = useTexture('/map_placeholder.jpg');
+  mapTexture.colorSpace = THREE.SRGBColorSpace;
 
   return (
-    <group position={[midPoint.x, 0.5, midPoint.z]} rotation={[0, angle, 0]}>
-      {/* Roadway */}
-      <mesh position={[0, 0, 0]} receiveShadow castShadow>
-        <boxGeometry args={[width, 0.5, distance]} />
-        <meshStandardMaterial color="#1f2229" roughness={0.9} />
-      </mesh>
-      
-      {/* Support Pillars */}
-      <mesh position={[-width/2 + 0.5, -5, distance * 0.25]} castShadow>
-        <cylinderGeometry args={[0.5, 0.5, 10, 8]} />
-        <meshStandardMaterial color="#333" />
-      </mesh>
-      <mesh position={[width/2 - 0.5, -5, distance * 0.25]} castShadow>
-        <cylinderGeometry args={[0.5, 0.5, 10, 8]} />
-        <meshStandardMaterial color="#333" />
-      </mesh>
-      <mesh position={[-width/2 + 0.5, -5, -distance * 0.25]} castShadow>
-        <cylinderGeometry args={[0.5, 0.5, 10, 8]} />
-        <meshStandardMaterial color="#333" />
-      </mesh>
-      <mesh position={[width/2 - 0.5, -5, -distance * 0.25]} castShadow>
-        <cylinderGeometry args={[0.5, 0.5, 10, 8]} />
-        <meshStandardMaterial color="#333" />
-      </mesh>
+    <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, 0]} receiveShadow>
+      <planeGeometry args={[size, size]} />
+      <meshStandardMaterial map={mapTexture} roughness={0.8} />
+    </mesh>
+  );
+};
 
-      {/* Suspension Cables (Stylized) */}
-      <mesh position={[0, 2, 0]} rotation={[Math.PI / 2, 0, 0]}>
-        <cylinderGeometry args={[0.1, 0.1, distance, 4]} />
-        <meshStandardMaterial color="#ff4444" emissive="#ff0000" emissiveIntensity={0.5} />
+// --- Interactive Map Pin (Hovering over the 3D asset) ---
+const MapPin = ({ accentColor, isActive }) => {
+  const groupRef = useRef();
+
+  useFrame(({ clock }) => {
+    if (groupRef.current && !isActive) {
+      // Bob up and down gently when not active
+      groupRef.current.position.y = 8 + Math.sin(clock.elapsedTime * 2) * 1.5;
+    }
+  });
+
+  if (isActive) return null; // Hide the pin when zoomed into the building
+
+  return (
+    <group ref={groupRef}>
+      {/* Pin Head */}
+      <mesh position={[0, 2, 0]} castShadow>
+        <sphereGeometry args={[2, 32, 32]} />
+        <meshStandardMaterial color={accentColor} emissive={accentColor} emissiveIntensity={0.8} />
+      </mesh>
+      {/* Pin Point */}
+      <mesh position={[0, 0, 0]} castShadow>
+        <cylinderGeometry args={[2, 0.1, 4, 32]} />
+        <meshStandardMaterial color={accentColor} emissive={accentColor} emissiveIntensity={0.8} />
       </mesh>
     </group>
   );
 };
 
-// --- Open World Geography ---
-
-const Islands = () => {
-  return (
-    <group>
-      {/* Island 1: Downtown (Center) - Concrete */}
-      <group position={[0, 0, 0]}>
-        <mesh position={[0, 0, 0]} receiveShadow castShadow scale={[1, 1, 1.3]}>
-          <cylinderGeometry args={[25, 26, 1.5, 64]} />
-          <meshStandardMaterial color="#1a1c23" roughness={0.9} />
-        </mesh>
-        {/* Stepped elevation */}
-        <mesh position={[0, 0.8, 0]} receiveShadow castShadow scale={[1, 1, 1.2]}>
-          <cylinderGeometry args={[15, 16, 1, 32]} />
-          <meshStandardMaterial color="#22252e" roughness={0.9} />
-        </mesh>
-      </group>
-
-      {/* Island 2: Industrial (North West) - Darker, Rigid */}
-      <group position={[-45, 0, -35]}>
-        <mesh position={[0, 0, 0]} receiveShadow castShadow scale={[1.2, 1, 0.8]}>
-          <boxGeometry args={[35, 1.5, 35]} />
-          <meshStandardMaterial color="#111318" roughness={1} />
-        </mesh>
-      </group>
-
-      {/* Island 3: Creative (South East) - Lush/Green */}
-      <group position={[45, 0, 30]}>
-        <mesh position={[0, 0, 0]} receiveShadow castShadow scale={[1.4, 1, 1.1]}>
-          <cylinderGeometry args={[20, 22, 1.5, 64]} />
-          <meshStandardMaterial color="#20331e" roughness={0.8} />
-        </mesh>
-      </group>
-
-      {/* The Bridges Connecting the Islands */}
-      <SuspensionBridge start={[0, 0, 0]} end={[-45, 0, -35]} width={6} />
-      <SuspensionBridge start={[0, 0, 0]} end={[45, 0, 30]} width={6} />
-    </group>
-  );
-};
-
-
-// --- Project Placement on Islands ---
+// --- Project Location (Asset + Pin on the Map) ---
 const ProjectLocation = ({ project, position, activeProject, setActiveProject }) => {
   const [hovered, setHovered] = useState(false);
   const isActive = activeProject === project.id;
   const accentColor = new THREE.Color(project.accent);
   
-  const BASE_SIZE = 8;
+  const BASE_SIZE = 12;
 
   return (
     <group position={position}>
       
-      {/* Foundation Pad */}
-      <mesh position={[0, 0.1, 0]} receiveShadow castShadow>
-        <boxGeometry args={[BASE_SIZE, 0.2, BASE_SIZE]} />
-        <meshStandardMaterial color="#0a0c10" roughness={0.5} />
-      </mesh>
-
-      {/* Glowing Accent Ring */}
-      <mesh position={[0, 0.25, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-        <ringGeometry args={[BASE_SIZE/2 - 0.5, BASE_SIZE/2, 32]} />
-        <meshBasicMaterial 
-          color={accentColor} 
-          transparent 
-          opacity={hovered || isActive ? 1 : 0.3} 
-          side={THREE.DoubleSide}
-        />
-      </mesh>
-
-      {/* The 3D Asset Placeholder */}
-      <group position={[0, 0.2, 0]}>
+      {/* The 3D Asset Placeholder sitting on the map */}
+      <group position={[0, 0.1, 0]}>
         <AssetModel url="/LittlestTokyo.glb" />
       </group>
 
-      {/* Interactive Raycast Shield */}
+      {/* The Floating Map Pin */}
+      <MapPin accentColor={accentColor} isActive={isActive} />
+
+      {/* Invisible Click Target (Larger for easier clicking from God View) */}
       <mesh 
         position={[0, 5, 0]} 
         visible={false}
@@ -170,21 +110,45 @@ const ProjectLocation = ({ project, position, activeProject, setActiveProject })
         }}
         onPointerOut={() => setHovered(false)}
       >
-        <boxGeometry args={[BASE_SIZE, 10, BASE_SIZE]} />
+        <cylinderGeometry args={[6, 6, 20, 16]} />
         <meshBasicMaterial />
       </mesh>
 
-      {/* Large Project Description Box UI */}
+      {/* Glowing Base Ring when hovered in God View */}
+      {!isActive && hovered && (
+        <mesh position={[0, 0.2, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+          <ringGeometry args={[6, 8, 32]} />
+          <meshBasicMaterial color={accentColor} transparent opacity={0.8} side={THREE.DoubleSide} />
+        </mesh>
+      )}
+
+      {/* Billboard Name (God View) */}
+      {!isActive && (
+        <Text
+          position={[0, 15, 0]}
+          rotation={[-Math.PI / 2, 0, 0]} // Face straight up for top-down view
+          fontSize={3}
+          color={hovered ? accentColor : '#ffffff'}
+          anchorX="center"
+          anchorY="middle"
+          outlineWidth={0.1}
+          outlineColor="#000000"
+        >
+          {project.name}
+        </Text>
+      )}
+
+      {/* Large Project Description Box UI (When Zoomed In) */}
       {isActive && (
         <Html
-          position={[-BASE_SIZE - 2, 5, 0]}
+          position={[-BASE_SIZE, 6, 0]}
           center
           zIndexRange={[100, 0]}
         >
           <div 
             className="w-[360px] md:w-[420px] opacity-0 animate-in fade-in slide-in-from-bottom-4 duration-500 rounded-3xl overflow-hidden shadow-2xl"
             style={{
-              background: 'rgba(10, 12, 16, 0.85)',
+              background: 'rgba(10, 12, 16, 0.9)',
               backdropFilter: 'blur(24px)',
               border: `1px solid rgba(${project.accentRgb}, 0.5)`,
               color: '#fff',
@@ -222,22 +186,6 @@ const ProjectLocation = ({ project, position, activeProject, setActiveProject })
           </div>
         </Html>
       )}
-
-      {/* Billboard Name (God View) */}
-      {!isActive && (
-        <Text
-          position={[0, 8, 0]}
-          rotation={[-Math.PI / 4, 0, 0]}
-          fontSize={1.5}
-          color={hovered ? accentColor : '#fff'}
-          anchorX="center"
-          anchorY="middle"
-          outlineWidth={0.05}
-          outlineColor="#000"
-        >
-          {project.name}
-        </Text>
-      )}
     </group>
   );
 };
@@ -248,22 +196,20 @@ const InteractiveCity = ({ activeProject, setActiveProject }) => {
   const { camera } = useThree();
   const controlsRef = useRef();
 
-  // Distribute the 6 projects across the 3 Islands
+  const MAP_SIZE = 200;
+
+  // Scatter the 6 projects across the 200x200 2D map texture
   const projectPositions = [
-    // Island 1: Downtown (Center) - y=1.3 for elevation step
-    [-6, 1.3, -4],
-    [6, 1.3, 8],
-    
-    // Island 2: Industrial (North West) - y=0.75 for flat box
-    [-52, 0.75, -42],
-    [-38, 0.75, -28],
-    
-    // Island 3: Creative (South East) - y=0.75 for flat cylinder
-    [35, 0.75, 25],
-    [52, 0.75, 32],
+    [-40, 0, -60],
+    [50, 0, -30],
+    [-20, 0, 10],
+    [30, 0, 40],
+    [-60, 0, 50],
+    [70, 0, -70],
   ];
 
-  const godViewPos = new THREE.Vector3(0, 70, 90);
+  // God View: Looking straight down from the sky
+  const godViewPos = new THREE.Vector3(0, 160, 1); // Slight Z offset prevents gimbal lock
   const godViewTarget = new THREE.Vector3(0, 0, 0);
 
   useEffect(() => {
@@ -282,8 +228,9 @@ const InteractiveCity = ({ activeProject, setActiveProject }) => {
       const pIndex = projects.findIndex(p => p.id === activeProject);
       const targetPos = new THREE.Vector3(...projectPositions[pIndex]);
       
-      // Calculate a cinematic view framing the project
-      const camPos = new THREE.Vector3(targetPos.x + 12, targetPos.y + 4, targetPos.z + 16);
+      // Calculate a cinematic 3D street-level view framing the project
+      // We swoop down from the 2D top-down view into 3D!
+      const camPos = new THREE.Vector3(targetPos.x + 15, targetPos.y + 6, targetPos.z + 20);
 
       controlsRef.current.enabled = false;
 
@@ -298,13 +245,14 @@ const InteractiveCity = ({ activeProject, setActiveProject }) => {
 
       gsap.to(controlsRef.current.target, {
         x: targetPos.x,
-        y: targetPos.y + 3,
+        y: targetPos.y + 4,
         z: targetPos.z,
         duration: 2.5,
         ease: 'power3.inOut',
         onUpdate: () => controlsRef.current.update()
       });
     } else {
+      // Fly back up to the 2D God View Map
       gsap.to(camera.position, {
         x: godViewPos.x,
         y: godViewPos.y,
@@ -330,24 +278,22 @@ const InteractiveCity = ({ activeProject, setActiveProject }) => {
 
   return (
     <>
-      <color attach="background" args={['#05070a']} />
+      <color attach="background" args={['#0a0f1a']} />
       
-      <fog attach="fog" args={['#05070a', 60, 200]} />
-      
-      <ambientLight intensity={0.6} />
+      {/* Soft lighting for the map */}
+      <ambientLight intensity={1.2} />
       <directionalLight 
-        position={[100, 100, -50]} 
-        intensity={2.5} 
-        color="#e0eaff"
+        position={[50, 100, 20]} 
+        intensity={2} 
+        color="#ffffff"
         castShadow 
         shadow-mapSize={[4096, 4096]} 
-        shadow-camera-left={-100}
-        shadow-camera-right={100}
-        shadow-camera-top={100}
-        shadow-camera-bottom={-100}
+        shadow-camera-left={-MAP_SIZE/2}
+        shadow-camera-right={MAP_SIZE/2}
+        shadow-camera-top={MAP_SIZE/2}
+        shadow-camera-bottom={-MAP_SIZE/2}
         shadow-bias={-0.0001}
       />
-      <directionalLight position={[-50, 20, 50]} intensity={1} color="#3b82f6" />
 
       <OrbitControls 
         ref={controlsRef}
@@ -355,17 +301,13 @@ const InteractiveCity = ({ activeProject, setActiveProject }) => {
         enablePan={true}
         enableRotate={true}
         maxPolarAngle={Math.PI / 2.1} 
-        minDistance={5}
-        maxDistance={150}
+        minDistance={10}
+        maxDistance={250}
       />
 
-      {/* The Ocean (Click to close project) */}
-      <mesh 
-        rotation={[-Math.PI / 2, 0, 0]} 
-        position={[0, -0.1, 0]} 
-        onClick={() => setActiveProject(null)}
-      >
-        <planeGeometry args={[500, 500]} />
+      {/* The Reflective Ocean underneath the map to make the edges look premium */}
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.2, 0]}>
+        <planeGeometry args={[MAP_SIZE * 3, MAP_SIZE * 3]} />
         <MeshReflectorMaterial
           blur={[400, 100]}
           resolution={1024}
@@ -380,10 +322,13 @@ const InteractiveCity = ({ activeProject, setActiveProject }) => {
         />
       </mesh>
 
-      {/* The GTA Open World Geography */}
-      <Islands />
+      {/* Click the map floor to close projects */}
+      <group onClick={() => setActiveProject(null)}>
+        {/* The Massive High-Res Texture Map */}
+        <TexturedMap size={MAP_SIZE} />
+      </group>
 
-      {/* Project Buildings on the Islands */}
+      {/* Project Buildings & Map Pins on the Map */}
       {projects.map((project, index) => (
         <ProjectLocation 
           key={project.id} 
