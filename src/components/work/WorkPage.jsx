@@ -2,15 +2,10 @@ import React, { useEffect, useRef, useState, useCallback } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Lenis from 'lenis';
-import WorkHero from './WorkHero';
-import WorkMarquee from './WorkMarquee';
-import ProjectsGallery from './ProjectsGallery';
-import WorkCTA from './WorkCTA';
 import WorkLoadingScreen from './WorkLoadingScreen';
 import { CustomCursor } from '../MicroInteractions';
 import Navbar from '../Navbar';
-import Footer from '../Footer';
-import ScrollToTop from '../ScrollToTop';
+import Work3DCanvas from '../work3d/Work3DCanvas';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -67,18 +62,12 @@ const WorkPage = () => {
     <div ref={pageRef} className="relative bg-background text-foreground overflow-x-hidden min-h-screen selection:bg-accent/30 selection:text-accent">
       <WorkLoadingScreen onComplete={handleLoadComplete} />
       <CustomCursor />
-      <ScrollToTop />
-      <div className="noise-overlay pointer-events-none z-[100]" />
-      <Navbar />
-      <main>
-        <WorkHero ready={loaded} />
-        <WorkMarquee />
-        <ProjectsGallery />
-        <WorkCTA />
-      </main>
-      <React.Suspense fallback={<div className="h-48 w-full bg-black" />}>
-        <Footer />
-      </React.Suspense>
+      {/* The 3D WebGL Experience */}
+      <Work3DCanvas ready={loaded} />
+
+      {/* Transparent dummy container to allow native browser scrolling */}
+      {/* This drives the useFrame scroll calculation in ServerRoom.jsx */}
+      <div style={{ height: '300vh' }} className="pointer-events-none relative z-10" />
     </div>
   );
 };
