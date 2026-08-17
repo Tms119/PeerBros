@@ -1,11 +1,15 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import { useThree } from '@react-three/fiber';
-import { RoundedBox } from '@react-three/drei';
+import { RoundedBox, MeshWobbleMaterial, useCursor } from '@react-three/drei';
 import * as THREE from 'three';
 
 export default function DeskEnvironment() {
   const { scene } = useThree();
   const targetObj = useRef(new THREE.Object3D());
+  
+  const [lampOn, setLampOn] = useState(true);
+  const [hovered, setHovered] = useState(false);
+  useCursor(hovered, 'pointer', 'auto');
 
   useEffect(() => {
     // Add the target object to the scene so the spotlight can track it
@@ -30,8 +34,22 @@ export default function DeskEnvironment() {
         <meshStandardMaterial color="#1f1a17" roughness={0.7} metalness={0.1} />
       </RoundedBox>
 
-      {/* Studio Lamp Prop */}
-      <group position={[-4.5, -0.5, -2.5]}>
+      {/* Studio Lamp Prop (Interactive) */}
+      <group 
+        position={[-4.5, -0.5, -2.5]}
+        onClick={(e) => {
+          e.stopPropagation();
+          setLampOn(!lampOn);
+        }}
+        onPointerOver={(e) => {
+          e.stopPropagation();
+          setHovered(true);
+        }}
+        onPointerOut={(e) => {
+          e.stopPropagation();
+          setHovered(false);
+        }}
+      >
         {/* Lamp Base */}
         <RoundedBox args={[1.2, 0.1, 1.2]} radius={0.6} smoothness={32} castShadow receiveShadow>
           <meshStandardMaterial color="#0a0a0a" metalness={0.5} roughness={0.4} />
@@ -64,7 +82,7 @@ export default function DeskEnvironment() {
         {/* Lightbulb (Glow) */}
         <mesh position={[1.9, 3.3, 0]}>
           <sphereGeometry args={[0.15, 16, 16]} />
-          <meshBasicMaterial color="#ffebd6" />
+          <meshBasicMaterial color={lampOn ? "#ffebd6" : "#222"} />
         </mesh>
 
         {/* The Volumetric Spotlight Casting Shadows */}
@@ -73,7 +91,7 @@ export default function DeskEnvironment() {
           target={targetObj.current}
           angle={Math.PI / 3}
           penumbra={0.4}
-          intensity={40} // High intensity for physically correct lighting
+          intensity={lampOn ? 40 : 0} // Toggle light intensity
           distance={20}
           color="#ffebd6"
           castShadow
@@ -82,11 +100,41 @@ export default function DeskEnvironment() {
         />
       </group>
 
-      {/* Desk Prop: Small Neon Decoration for scale */}
-      <group position={[4, -0.5, -2]}>
-        <mesh castShadow receiveShadow position={[0, 0.5, 0]}>
-          <icosahedronGeometry args={[0.5, 0]} />
-          <meshPhysicalMaterial color="#FF5F56" transmission={0.9} roughness={0.1} thickness={2} ior={1.5} />
+      {/* Desk Prop: Animated Plant */}
+      <group position={[4.5, -0.3, -2]}>
+        {/* Pot */}
+        <mesh position={[0, 0, 0]} castShadow receiveShadow>
+          <cylinderGeometry args={[0.4, 0.3, 0.8, 32]} />
+          <meshStandardMaterial color="#d4d4d8" roughness={0.9} metalness={0.1} />
+        </mesh>
+        
+        {/* Soil */}
+        <mesh position={[0, 0.4, 0]} rotation={[-Math.PI/2, 0, 0]}>
+          <circleGeometry args={[0.38, 16]} />
+          <meshStandardMaterial color="#1c1917" roughness={1} />
+        </mesh>
+
+        {/* Plant Stem */}
+        <mesh position={[0, 0.8, 0]} castShadow>
+          <cylinderGeometry args={[0.03, 0.05, 1.2, 8]} />
+          <meshStandardMaterial color="#4ade80" roughness={0.8} />
+        </mesh>
+        
+        {/* Main Leaves (Wobbling with wind) */}
+        <mesh position={[0, 1.4, 0]} castShadow receiveShadow>
+          <sphereGeometry args={[0.6, 32, 32]} />
+          <MeshWobbleMaterial factor={0.15} speed={1} color="#22c55e" roughness={0.8} />
+        </mesh>
+        
+        {/* Side Leaves */}
+        <mesh position={[0.4, 1.0, 0.2]} castShadow receiveShadow>
+          <sphereGeometry args={[0.3, 32, 32]} />
+          <MeshWobbleMaterial factor={0.2} speed={1.2} color="#16a34a" roughness={0.8} />
+        </mesh>
+        
+        <mesh position={[-0.3, 0.9, 0.3]} castShadow receiveShadow>
+          <sphereGeometry args={[0.25, 32, 32]} />
+          <MeshWobbleMaterial factor={0.3} speed={0.8} color="#15803d" roughness={0.8} />
         </mesh>
       </group>
     </group>

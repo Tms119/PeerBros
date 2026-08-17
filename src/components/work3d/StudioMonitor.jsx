@@ -33,14 +33,14 @@ export default function StudioMonitor({ activeProjectIndex }) {
         </RoundedBox>
 
         {/* Screen Display */}
-        <group position={[0, 1.6, -0.6]}>
-          {/* Outer Aluminum Case */}
-          <RoundedBox args={[4.4, 2.8, 0.15]} radius={0.05} smoothness={4} castShadow>
+        <group position={[0, 1.8, -0.6]}>
+          {/* Outer Aluminum Case (16:9 aspect ratio) */}
+          <RoundedBox args={[4.8, 2.7, 0.15]} radius={0.05} smoothness={4} castShadow>
             <meshStandardMaterial color="#888c8f" metalness={0.9} roughness={0.3} />
           </RoundedBox>
           
-          {/* Inner Black Bezel */}
-          <RoundedBox args={[4.3, 2.7, 0.17]} radius={0.02} smoothness={4} position={[0, 0, 0.01]}>
+          {/* Inner Black Bezel (Strict 16:9 bounds) */}
+          <RoundedBox args={[4.6, 2.59, 0.17]} radius={0.02} smoothness={4} position={[0, 0, 0.01]}>
             <meshStandardMaterial color="#050505" metalness={0.8} roughness={0.5} />
           </RoundedBox>
 
@@ -48,61 +48,61 @@ export default function StudioMonitor({ activeProjectIndex }) {
           <Html
             transform
             wrapperClass="studio-monitor-overlay"
-            distanceFactor={1.25}
+            distanceFactor={1.18}
             position={[0, 0, 0.1]} // Perfectly in front of bezel, zero clipping
             rotation-x={0}
           >
             <div 
-              className="w-[1280px] h-[780px] bg-[#0A0A0C] overflow-hidden flex flex-col p-16 transition-colors duration-1000"
+              className="w-[1024px] h-[576px] bg-[#0A0A0C] overflow-hidden flex flex-col p-10 transition-colors duration-1000"
               style={{
-                boxShadow: `inset 0 0 120px rgba(${project.accentRgb}, 0.15)`
+                boxShadow: `inset 0 0 100px rgba(${project.accentRgb}, 0.2)`
               }}
             >
               {/* Header */}
-              <div className="flex items-center justify-between mb-16">
-                <div className="flex items-center gap-6">
-                  <div className="w-4 h-4 rounded-full" style={{ background: project.accent }} />
-                  <span className="text-3xl font-mono tracking-widest text-white/50 uppercase">
+              <div className="flex items-center justify-between mb-8">
+                <div className="flex items-center gap-4">
+                  <div className="w-3 h-3 rounded-full" style={{ background: project.accent }} />
+                  <span className="text-2xl font-mono tracking-widest text-white/50 uppercase">
                     {project.category}
                   </span>
                 </div>
-                <span className="text-3xl font-mono text-white/30">
+                <span className="text-2xl font-mono text-white/30">
                   {project.id} / 06
                 </span>
               </div>
 
               {/* Content */}
-              <h1 className="text-9xl font-display font-black text-white tracking-tighter leading-none mb-10">
+              <h1 className="text-7xl font-display font-black text-white tracking-tighter leading-none mb-6">
                 {project.name}
               </h1>
               
-              <p className="text-5xl text-white/80 font-light leading-relaxed mb-12 max-w-4xl">
+              <p className="text-3xl text-white/80 font-light leading-relaxed mb-6 max-w-3xl">
                 {project.tagline}
               </p>
 
-              <p className="text-3xl text-white/60 leading-relaxed mb-auto max-w-5xl">
+              <p className="text-xl text-white/60 leading-relaxed mb-auto max-w-4xl line-clamp-3">
                 {project.description}
               </p>
 
               {/* Footer Action */}
-              <div className="flex items-center gap-10 mt-12 pt-12 border-t border-white/10">
+              <div className="flex items-center gap-8 mt-6 pt-6 border-t border-white/10 shrink-0">
                 <a
                   href={project.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-4 px-12 py-6 rounded-full font-bold text-3xl transition-all duration-300 hover:scale-105"
+                  className="flex items-center gap-3 px-8 py-4 rounded-full font-bold text-xl transition-all duration-300 hover:scale-105"
                   style={{
                     background: project.accent,
                     color: '#000',
-                    boxShadow: `0 0 50px rgba(${project.accentRgb}, 0.4)`,
+                    boxShadow: `0 0 40px rgba(${project.accentRgb}, 0.4)`,
                   }}
                 >
                   <span>Launch Live Platform</span>
-                  <ExternalLink size={28} />
+                  <ExternalLink size={20} />
                 </a>
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-3">
                   {project.tech.map((t, i) => (
-                    <span key={i} className="px-6 py-3 bg-white/5 rounded-xl text-2xl text-white/70 border border-white/10">
+                    <span key={i} className="px-4 py-2 bg-white/5 rounded-lg text-lg text-white/70 border border-white/10">
                       {t}
                     </span>
                   ))}
