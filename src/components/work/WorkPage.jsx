@@ -5,9 +5,8 @@ import { ChevronLeft, ChevronRight, ExternalLink } from 'lucide-react';
 import { projects } from '../../data/projects';
 import Navbar from '../Navbar';
 import WorkLoadingScreen from './WorkLoadingScreen';
-import MacBook from '../work3d/MacBook';
-import StudioDesk from '../work3d/StudioDesk';
-import FloatingElements from '../work3d/FloatingElements';
+import StudioMonitor from '../work3d/StudioMonitor';
+import DeskEnvironment from '../work3d/DeskEnvironment';
 
 // Cinematic Camera Controller
 const CameraController = ({ activeIndex }) => {
@@ -70,21 +69,20 @@ const WorkPage = () => {
           {/* Main 3D Canvas Area */}
           <div className="flex-1 relative w-full h-full min-h-0">
             {/* The 3D Engine Studio */}
-            <Canvas camera={{ position: [0, 0, 5], fov: 45 }}>
+            <Canvas shadows camera={{ position: [0, 0, 6], fov: 45 }}>
               <color attach="background" args={['#050508']} />
-              <fog attach="fog" args={['#050508', 4, 15]} />
+              <fog attach="fog" args={['#050508', 5, 20]} />
               
-              <ambientLight intensity={0.5} />
-              <directionalLight position={[10, 10, 5]} intensity={1.5} color="#ffffff" />
-              <directionalLight position={[-10, 5, -5]} intensity={0.5} color={activeProject.accent} />
-              <spotLight position={[0, 10, 0]} intensity={1} penumbra={1} />
+              <ambientLight intensity={0.2} />
+              
+              {/* Soft rim light from the back */}
+              <directionalLight position={[-5, 5, -5]} intensity={0.5} color={activeProject.accent} castShadow />
               
               <CameraController activeIndex={activeIndex} />
 
               <Suspense fallback={null}>
-                <FloatingElements />
-                <MacBook activeProjectIndex={activeIndex} />
-                <StudioDesk />
+                <DeskEnvironment />
+                <StudioMonitor activeProjectIndex={activeIndex} />
               </Suspense>
             </Canvas>
 
