@@ -67,7 +67,7 @@ const ProjectsGallery = () => {
             <div className="flex items-center gap-3 mb-3 sm:mb-4">
               <div className="h-px w-8 sm:w-12 bg-accent/60" />
               <span className="text-accent font-mono text-xs sm:text-sm tracking-[0.3em] uppercase">
-                Selected Work
+                Recent Work
               </span>
             </div>
             <h2 className="text-4xl sm:text-5xl lg:text-7xl font-display font-black text-white tracking-tighter leading-none">

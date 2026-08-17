@@ -200,7 +200,7 @@ const WorkHero = ({ ready }) => {
           className="text-white/50 text-sm sm:text-base md:text-lg font-light max-w-md mx-auto leading-relaxed"
           style={{ opacity: 0 }}
         >
-          6 projects. 6 different industries. All built to perform.
+          A selection of our recent work — across industries, built to perform.
         </p>
 
         {/* Scroll cue */}
@@ -222,7 +222,7 @@ const WorkHero = ({ ready }) => {
         {new Date().getFullYear()}
       </div>
       <div className="hidden md:block absolute bottom-8 left-8 text-white/10 font-mono text-xs">
-        006 PROJECTS
+        RECENT WORK
       </div>
     </section>
   );
