@@ -1,10 +1,33 @@
-import React, { useState, useCallback, Suspense } from 'react';
-import { Canvas } from '@react-three/fiber';
+import React, { useState, useCallback, Suspense, useEffect } from 'react';
+import { Canvas, useThree } from '@react-three/fiber';
+import gsap from 'gsap';
 import { ChevronLeft, ChevronRight, ExternalLink } from 'lucide-react';
 import { projects } from '../../data/projects';
 import Navbar from '../Navbar';
 import WorkLoadingScreen from './WorkLoadingScreen';
 import MacBook from '../work3d/MacBook';
+import StudioDesk from '../work3d/StudioDesk';
+import FloatingElements from '../work3d/FloatingElements';
+
+// Cinematic Camera Controller
+const CameraController = ({ activeIndex }) => {
+  const { camera } = useThree();
+  
+  useEffect(() => {
+    gsap.fromTo(
+      camera.position,
+      { z: 6.5, y: 1 },
+      { z: 5, y: 0, duration: 1.5, ease: 'power3.out' }
+    );
+    gsap.fromTo(
+      camera.rotation,
+      { x: -0.1 },
+      { x: 0, duration: 1.5, ease: 'power3.out' }
+    );
+  }, [activeIndex, camera]);
+
+  return null;
+};
 
 const WorkPage = () => {
   const [loaded, setLoaded] = useState(false);
@@ -12,13 +35,23 @@ const WorkPage = () => {
 
   const handleLoadComplete = useCallback(() => setLoaded(true), []);
 
-  const nextProject = () => {
+  const nextProject = useCallback(() => {
     setActiveIndex((prev) => (prev === projects.length - 1 ? 0 : prev + 1));
-  };
+  }, []);
 
-  const prevProject = () => {
+  const prevProject = useCallback(() => {
     setActiveIndex((prev) => (prev === 0 ? projects.length - 1 : prev - 1));
-  };
+  }, []);
+
+  // Keyboard Navigation
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'ArrowRight') nextProject();
+      if (e.key === 'ArrowLeft') prevProject();
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [nextProject, prevProject]);
 
   const activeProject = projects[activeIndex];
   const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
@@ -36,13 +69,22 @@ const WorkPage = () => {
         <>
           {/* Main 3D Canvas Area */}
           <div className="flex-1 relative w-full h-full min-h-0">
-            {/* The 3D Engine */}
+            {/* The 3D Engine Studio */}
             <Canvas camera={{ position: [0, 0, 5], fov: 45 }}>
               <color attach="background" args={['#050508']} />
+              <fog attach="fog" args={['#050508', 4, 15]} />
+              
               <ambientLight intensity={0.5} />
-              <directionalLight position={[10, 10, 5]} intensity={1} />
+              <directionalLight position={[10, 10, 5]} intensity={1.5} color="#ffffff" />
+              <directionalLight position={[-10, 5, -5]} intensity={0.5} color={activeProject.accent} />
+              <spotLight position={[0, 10, 0]} intensity={1} penumbra={1} />
+              
+              <CameraController activeIndex={activeIndex} />
+
               <Suspense fallback={null}>
+                <FloatingElements />
                 <MacBook activeProjectIndex={activeIndex} />
+                <StudioDesk />
               </Suspense>
             </Canvas>
 
@@ -60,6 +102,24 @@ const WorkPage = () => {
               >
                 <ChevronRight size={24} />
               </button>
+            </div>
+
+            {/* Bottom Progress UI (Dots) */}
+            <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-4 z-40">
+              <span className="text-white/40 font-mono text-xs tracking-widest">
+                {String(activeIndex + 1).padStart(2, '0')} / {String(projects.length).padStart(2, '0')}
+              </span>
+              <div className="flex items-center gap-2">
+                {projects.map((_, idx) => (
+                  <button
+                    key={idx}
+                    onClick={() => setActiveIndex(idx)}
+                    className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                      idx === activeIndex ? 'bg-white scale-125' : 'bg-white/20 hover:bg-white/50'
+                    }`}
+                  />
+                ))}
+              </div>
             </div>
           </div>
 

@@ -1,5 +1,5 @@
 import React, { useRef, useEffect } from 'react';
-import { Html, ContactShadows, Environment, Float, PresentationControls } from '@react-three/drei';
+import { Html, ContactShadows, Environment, Float, PresentationControls, RoundedBox } from '@react-three/drei';
 import * as THREE from 'three';
 import gsap from 'gsap';
 import { projects } from '../../data/projects';
@@ -36,31 +36,48 @@ export default function MacBook({ activeProjectIndex }) {
       >
         <Float rotationIntensity={0.4} floatIntensity={1} speed={1.5}>
           <group ref={laptopRef}>
-            {/* The actual 3D Laptop Model (Procedural) */}
+            {/* The actual 3D Laptop Model (High-Fidelity Procedural) */}
             <group position={[0, -0.5, 0]}>
               {/* Laptop Base */}
-              <mesh position={[0, -0.05, 0]}>
-                <boxGeometry args={[3.2, 0.1, 2.2]} />
-                <meshStandardMaterial color="#444" metalness={0.9} roughness={0.2} />
-              </mesh>
+              <group position={[0, -0.05, 0]}>
+                <RoundedBox args={[3.4, 0.1, 2.4]} radius={0.05} smoothness={4}>
+                  <meshStandardMaterial color="#2a2d30" metalness={0.8} roughness={0.3} />
+                </RoundedBox>
+                
+                {/* Trackpad */}
+                <RoundedBox position={[0, 0.051, 0.7]} args={[1.2, 0.01, 0.7]} radius={0.02} smoothness={4}>
+                  <meshStandardMaterial color="#222528" metalness={0.8} roughness={0.4} />
+                </RoundedBox>
+                
+                {/* Keyboard Indent */}
+                <RoundedBox position={[0, 0.051, -0.2]} args={[2.8, 0.01, 1.2]} radius={0.02} smoothness={4}>
+                  <meshStandardMaterial color="#0a0a0c" metalness={0.5} roughness={0.8} />
+                </RoundedBox>
+              </group>
               
               {/* Laptop Screen (hinged at the back edge) */}
-              <group position={[0, 0, -1.1]} rotation={[-0.4, 0, 0]}>
-                <mesh position={[0, 1, 0]}>
-                  <boxGeometry args={[3.2, 2, 0.1]} />
-                  <meshStandardMaterial color="#222" metalness={0.8} roughness={0.5} />
-                </mesh>
+              <group position={[0, 0, -1.2]} rotation={[-0.4, 0, 0]}>
+                <group position={[0, 1.1, 0]}>
+                  <RoundedBox args={[3.4, 2.2, 0.1]} radius={0.05} smoothness={4}>
+                    <meshStandardMaterial color="#2a2d30" metalness={0.8} roughness={0.3} />
+                  </RoundedBox>
+                  
+                  {/* Screen Bezel (Inner black area) */}
+                  <RoundedBox position={[0, 0, 0.02]} args={[3.3, 2.1, 0.08]} radius={0.04} smoothness={4}>
+                    <meshStandardMaterial color="#050505" metalness={0.5} roughness={0.8} />
+                  </RoundedBox>
+                </group>
                 
                 {/* The HTML Screen Overlay on the inner face */}
                 <Html
                   transform
                   wrapperClass="macbook-screen-overlay"
-                  distanceFactor={1.2}
-                  position={[0, 1, 0.06]}
+                  distanceFactor={1.22}
+                  position={[0, 1.1, 0.065]}
                   rotation-x={0}
                 >
                   <div 
-                    className="w-[1024px] h-[640px] bg-[#0A0A0C] border-[16px] border-black rounded-[16px] overflow-hidden flex flex-col p-12 transition-colors duration-1000"
+                    className="w-[1024px] h-[640px] bg-[#0A0A0C] overflow-hidden flex flex-col p-12 transition-colors duration-1000"
                     style={{
                       boxShadow: `inset 0 0 100px rgba(${project.accentRgb}, 0.1)`
                     }}
