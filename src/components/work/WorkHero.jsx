@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
@@ -13,10 +13,19 @@ const WorkHero = ({ ready }) => {
   const scrollRef = useRef(null);
   const particlesRef = useRef(null);
   const velocityListenerRef = useRef(null);
+  
+  const [isMobile, setIsMobile] = useState(false);
 
-  // ── Particle field — fires once on mount ───────────────────────
   useEffect(() => {
-    if (!particlesRef.current) return;
+    const checkMobile = () => setIsMobile(window.matchMedia('(max-width: 768px)').matches);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  // ── Particle field — fires once on mount (desktop only) ─────────
+  useEffect(() => {
+    if (!particlesRef.current || isMobile) return;
     const ctx = gsap.context(() => {
       Array.from(particlesRef.current.children).forEach((p) => {
         gsap.to(p, {
@@ -32,7 +41,7 @@ const WorkHero = ({ ready }) => {
       });
     }, particlesRef);
     return () => ctx.revert();
-  }, []);
+  }, [isMobile]);
 
   // ── Hero reveal — fires only when loading screen is DONE ───────
   useEffect(() => {
@@ -47,37 +56,37 @@ const WorkHero = ({ ready }) => {
       return;
 
     const ctx = gsap.context(() => {
-      // Short pause then reveal all lines cleanly
-      const tl = gsap.timeline({ delay: 0.15 });
+      // Much faster, tighter stagger to prevent perceived lag on mobile
+      const tl = gsap.timeline({ delay: 0.05 });
 
       tl.fromTo(
         line1Ref.current,
-        { y: 70, opacity: 0 },
-        { y: 0, opacity: 1, duration: 0.9, ease: 'power4.out' }
+        { y: 50, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.6, ease: 'power4.out' }
       )
         .fromTo(
           line2Ref.current,
-          { y: 50, opacity: 0 },
-          { y: 0, opacity: 1, duration: 0.8, ease: 'power4.out' },
-          '-=0.55'
+          { y: 40, opacity: 0 },
+          { y: 0, opacity: 1, duration: 0.5, ease: 'power4.out' },
+          '-=0.4'
         )
         .fromTo(
           subRef.current,
           { opacity: 0, y: 16 },
-          { opacity: 1, y: 0, duration: 0.7, ease: 'power3.out' },
-          '-=0.45'
+          { opacity: 1, y: 0, duration: 0.5, ease: 'power3.out' },
+          '-=0.3'
         )
         .fromTo(
           scrollRef.current,
           { opacity: 0 },
-          { opacity: 1, duration: 0.5 },
-          '-=0.3'
+          { opacity: 1, duration: 0.4 },
+          '-=0.2'
         );
 
       // Scroll-out fade
       gsap.to(sectionRef.current, {
         opacity: 0,
-        y: -50,
+        y: -30,
         ease: 'power2.in',
         scrollTrigger: {
           trigger: sectionRef.current,
@@ -88,24 +97,26 @@ const WorkHero = ({ ready }) => {
       });
     }, sectionRef);
 
-    // Velocity warp
-    let lastScrollY = window.scrollY;
-    const velocitySkew = () => {
-      const currentY = window.scrollY;
-      const velocity = currentY - lastScrollY;
-      lastScrollY = currentY;
-      if (headlineRef.current) {
-        gsap.to(headlineRef.current, {
-          skewY: velocity * -0.03,
-          scaleX: 1 + Math.abs(velocity) * 0.0008,
-          duration: 0.5,
-          ease: 'power3.out',
-          overwrite: 'auto',
-        });
-      }
-    };
-    velocityListenerRef.current = velocitySkew;
-    window.addEventListener('scroll', velocitySkew, { passive: true });
+    // Velocity warp (disable on mobile to save GPU layout thrashing)
+    if (!isMobile) {
+      let lastScrollY = window.scrollY;
+      const velocitySkew = () => {
+        const currentY = window.scrollY;
+        const velocity = currentY - lastScrollY;
+        lastScrollY = currentY;
+        if (headlineRef.current) {
+          gsap.to(headlineRef.current, {
+            skewY: velocity * -0.03,
+            scaleX: 1 + Math.abs(velocity) * 0.0008,
+            duration: 0.5,
+            ease: 'power3.out',
+            overwrite: 'auto',
+          });
+        }
+      };
+      velocityListenerRef.current = velocitySkew;
+      window.addEventListener('scroll', velocitySkew, { passive: true });
+    }
 
     return () => {
       ctx.revert();
@@ -113,7 +124,7 @@ const WorkHero = ({ ready }) => {
         window.removeEventListener('scroll', velocityListenerRef.current);
       }
     };
-  }, [ready]);
+  }, [ready, isMobile]);
 
   const particles = Array.from({ length: 40 });
 
@@ -123,30 +134,35 @@ const WorkHero = ({ ready }) => {
       id="work-hero"
       className="relative w-full min-h-[100svh] flex flex-col items-center justify-center overflow-hidden bg-background px-6"
     >
-      {/* Ambient glows */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] rounded-full bg-accent/5 blur-[120px] pointer-events-none" />
-      <div className="absolute top-1/3 left-1/4 w-[300px] h-[300px] rounded-full bg-purple-500/5 blur-[100px] pointer-events-none" />
+      {/* Ambient glows (lighter on mobile) */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] md:w-[600px] h-[200px] md:h-[400px] rounded-full bg-accent/5 blur-[80px] md:blur-[120px] pointer-events-none" />
+      
+      {!isMobile && (
+        <div className="absolute top-1/3 left-1/4 w-[300px] h-[300px] rounded-full bg-purple-500/5 blur-[100px] pointer-events-none" />
+      )}
 
-      {/* Particle field */}
-      <div
-        ref={particlesRef}
-        className="absolute inset-0 overflow-hidden pointer-events-none"
-        aria-hidden="true"
-      >
-        {particles.map((_, i) => (
-          <div
-            key={i}
-            className="absolute rounded-full bg-white"
-            style={{
-              width: `${Math.random() * 3 + 1}px`,
-              height: `${Math.random() * 3 + 1}px`,
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-              opacity: Math.random() * 0.3 + 0.05,
-            }}
-          />
-        ))}
-      </div>
+      {/* Particle field (Desktop only) */}
+      {!isMobile && (
+        <div
+          ref={particlesRef}
+          className="absolute inset-0 overflow-hidden pointer-events-none"
+          aria-hidden="true"
+        >
+          {particles.map((_, i) => (
+            <div
+              key={i}
+              className="absolute rounded-full bg-white"
+              style={{
+                width: `${Math.random() * 3 + 1}px`,
+                height: `${Math.random() * 3 + 1}px`,
+                left: `${Math.random() * 100}%`,
+                top: `${Math.random() * 100}%`,
+                opacity: Math.random() * 0.3 + 0.05,
+              }}
+            />
+          ))}
+        </div>
+      )}
 
       {/* Grid lines */}
       <div
@@ -164,19 +180,19 @@ const WorkHero = ({ ready }) => {
         className="relative z-10 text-center w-full max-w-6xl mx-auto will-change-transform"
       >
         {/* Label */}
-        <div className="flex items-center justify-center gap-3 mb-8 sm:mb-12">
-          <div className="h-px w-12 sm:w-20 bg-accent/50" />
+        <div className="flex items-center justify-center gap-3 mb-6 sm:mb-12">
+          <div className="h-px w-8 sm:w-20 bg-accent/50" />
           <span className="text-accent font-mono text-xs sm:text-sm tracking-[0.4em] uppercase">
             What We've Built
           </span>
-          <div className="h-px w-12 sm:w-20 bg-accent/50" />
+          <div className="h-px w-8 sm:w-20 bg-accent/50" />
         </div>
 
         {/* Headline line 1 */}
         <div className="overflow-hidden mb-2 sm:mb-3">
           <h1
             ref={line1Ref}
-            className="text-[15vw] sm:text-[12vw] md:text-[10vw] lg:text-[9vw] font-display font-black text-white tracking-tighter leading-none uppercase will-change-transform"
+            className="text-[14vw] sm:text-[12vw] md:text-[10vw] lg:text-[9vw] font-display font-black text-white tracking-tighter leading-none uppercase will-change-transform"
             style={{ opacity: 0 }}
           >
             OUR WORK
@@ -184,10 +200,10 @@ const WorkHero = ({ ready }) => {
         </div>
 
         {/* Headline line 2 */}
-        <div className="overflow-hidden mb-8 sm:mb-12">
+        <div className="overflow-hidden mb-6 sm:mb-12">
           <p
             ref={line2Ref}
-            className="text-[6vw] sm:text-[4.5vw] md:text-[3.5vw] lg:text-[3vw] font-display font-light text-white/30 tracking-wider uppercase leading-none will-change-transform"
+            className="text-[6.5vw] sm:text-[4.5vw] md:text-[3.5vw] lg:text-[3vw] font-display font-light text-white/30 tracking-wider uppercase leading-none will-change-transform"
             style={{ opacity: 0 }}
           >
             Speaks for Itself
@@ -197,7 +213,7 @@ const WorkHero = ({ ready }) => {
         {/* Subtitle */}
         <p
           ref={subRef}
-          className="text-white/50 text-sm sm:text-base md:text-lg font-light max-w-md mx-auto leading-relaxed"
+          className="text-white/50 text-sm sm:text-base md:text-lg font-light max-w-md mx-auto leading-relaxed px-4"
           style={{ opacity: 0 }}
         >
           A selection of our recent work, across industries, built to perform.
@@ -206,7 +222,7 @@ const WorkHero = ({ ready }) => {
         {/* Scroll cue */}
         <div
           ref={scrollRef}
-          className="mt-16 sm:mt-20 flex flex-col items-center gap-3"
+          className="mt-12 sm:mt-20 flex flex-col items-center gap-3"
           style={{ opacity: 0 }}
         >
           <span className="text-white/30 font-mono text-xs tracking-widest uppercase">Scroll</span>

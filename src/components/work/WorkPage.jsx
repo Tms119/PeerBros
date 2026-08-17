@@ -5,7 +5,6 @@ import Lenis from 'lenis';
 import WorkHero from './WorkHero';
 import WorkMarquee from './WorkMarquee';
 import ProjectsGallery from './ProjectsGallery';
-import WorkStats from './WorkStats';
 import WorkCTA from './WorkCTA';
 import WorkLoadingScreen from './WorkLoadingScreen';
 import { CustomCursor } from '../MicroInteractions';
@@ -75,7 +74,6 @@ const WorkPage = () => {
         <WorkHero ready={loaded} />
         <WorkMarquee />
         <ProjectsGallery />
-        <WorkStats />
         <WorkCTA />
       </main>
       <React.Suspense fallback={<div className="h-48 w-full bg-black" />}>
