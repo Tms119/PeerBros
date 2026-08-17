@@ -13,6 +13,9 @@ const WorkCTA = () => {
   const btnRef = useRef(null);
 
   useEffect(() => {
+    if (!sectionRef.current || !headlineRef.current || !subRef.current || !btnRef.current)
+      return;
+
     const ctx = gsap.context(() => {
       const tl = gsap.timeline({
         scrollTrigger: { trigger: sectionRef.current, start: 'top 70%' },
@@ -36,7 +39,7 @@ const WorkCTA = () => {
           '-=0.4'
         );
 
-      // Ambient pulse on the glow
+      // Ambient glow pulse
       gsap.to('.cta-glow', {
         scale: 1.1,
         opacity: 0.08,
@@ -88,16 +91,24 @@ const WorkCTA = () => {
           className="text-white/50 text-base sm:text-lg lg:text-xl max-w-xl mx-auto leading-relaxed mb-10 sm:mb-14"
           style={{ opacity: 0 }}
         >
-          Let's build something elite. Whether it's a SaaS platform, marketplace, or full digital transformation — PeerBros engineers it to win.
+          Let's build something elite. Whether it's a SaaS platform, marketplace, or full digital
+          transformation — PeerBros engineers it to win.
         </p>
 
-        <div ref={btnRef} className="flex flex-col sm:flex-row items-center justify-center gap-4" style={{ opacity: 0 }}>
+        <div
+          ref={btnRef}
+          className="flex flex-col sm:flex-row items-center justify-center gap-4"
+          style={{ opacity: 0 }}
+        >
           <MagneticButton
             href="mailto:peerbros.official@gmail.com"
             className="group flex items-center gap-3 px-8 sm:px-10 py-4 sm:py-5 rounded-full bg-white text-black font-bold text-base sm:text-lg hover:bg-accent transition-colors duration-300 interactive-hover w-full sm:w-auto justify-center"
           >
             <span>Book a Discovery Call</span>
-            <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform duration-300" />
+            <ArrowRight
+              size={18}
+              className="group-hover:translate-x-1 transition-transform duration-300"
+            />
           </MagneticButton>
 
           <MagneticButton

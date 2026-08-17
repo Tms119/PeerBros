@@ -11,7 +11,6 @@ class TextScramble {
     this.chars = '!<>-_\\/[]{}—=+*^?#ABCDEFGHIJKLMNOPQRSTUVWXYZ';
     this.update = this.update.bind(this);
   }
-
   setText(newText) {
     const old = this.el.innerText;
     const len = Math.max(old.length, newText.length);
@@ -29,7 +28,6 @@ class TextScramble {
     this.update();
     return promise;
   }
-
   update() {
     let output = '';
     let complete = 0;
@@ -43,7 +41,7 @@ class TextScramble {
           char = this.chars[Math.floor(Math.random() * this.chars.length)];
           this.queue[i].char = char;
         }
-        output += `<span class="text-accent/60">${char}</span>`;
+        output += `<span style="color:rgba(192,160,128,0.6)">${char}</span>`;
       } else {
         output += from;
       }
@@ -66,13 +64,24 @@ const WorkHero = () => {
   const line1Ref = useRef(null);
   const line2Ref = useRef(null);
   const particlesRef = useRef(null);
+  const scrambleRef = useRef(null);
+  const velocityListenerRef = useRef(null);
 
   useEffect(() => {
+    // Guard: ensure all critical refs are mounted
+    if (
+      !sectionRef.current ||
+      !line1Ref.current ||
+      !line2Ref.current ||
+      !subRef.current ||
+      !scrollRef.current
+    )
+      return;
+
     const ctx = gsap.context(() => {
-      // Particle field animation
+      // ── Particle field ──────────────────────────────────────────
       if (particlesRef.current) {
-        const particles = particlesRef.current.children;
-        Array.from(particles).forEach((p, i) => {
+        Array.from(particlesRef.current.children).forEach((p) => {
           gsap.to(p, {
             y: `${-30 - Math.random() * 60}px`,
             x: `${(Math.random() - 0.5) * 40}px`,
@@ -86,9 +95,8 @@ const WorkHero = () => {
         });
       }
 
-      // Staggered reveal
-      const tl = gsap.timeline({ delay: 1.8 }); // After loading screen
-
+      // ── Staggered hero reveal (after loading screen) ─────────────
+      const tl = gsap.timeline({ delay: 1.8 });
       tl.fromTo(
         line1Ref.current,
         { y: 80, opacity: 0, skewY: 4 },
@@ -111,32 +119,17 @@ const WorkHero = () => {
           { opacity: 0, y: 10 },
           { opacity: 1, y: 0, duration: 0.6 },
           '-=0.3'
-        );
+        )
+        .call(() => {
+          // Text scramble after reveal
+          if (line1Ref.current) {
+            const fx = new TextScramble(line1Ref.current);
+            scrambleRef.current = fx;
+            fx.setText('OUR WORK');
+          }
+        });
 
-      // Scramble headline after reveal
-      if (line1Ref.current) {
-        const scramble = new TextScramble(line1Ref.current);
-        setTimeout(() => scramble.setText('OUR WORK'), 2600);
-      }
-
-      // Scroll velocity skew effect
-      let lastScrollY = window.scrollY;
-      const velocitySkew = () => {
-        const currentY = window.scrollY;
-        const velocity = currentY - lastScrollY;
-        lastScrollY = currentY;
-        if (headlineRef.current) {
-          gsap.to(headlineRef.current, {
-            skewY: velocity * -0.04,
-            scaleX: 1 + Math.abs(velocity) * 0.001,
-            duration: 0.5,
-            ease: 'power3.out',
-          });
-        }
-      };
-      window.addEventListener('scroll', velocitySkew, { passive: true });
-
-      // ScrollTrigger: fade out hero as user scrolls
+      // ── Scroll-out fade ──────────────────────────────────────────
       gsap.to(sectionRef.current, {
         opacity: 0,
         y: -60,
@@ -148,14 +141,38 @@ const WorkHero = () => {
           scrub: true,
         },
       });
-
-      return () => window.removeEventListener('scroll', velocitySkew);
     }, sectionRef);
 
-    return () => ctx.revert();
+    // ── Scroll velocity warp (outside context so we can clean it up) ──
+    let lastScrollY = window.scrollY;
+    const velocitySkew = () => {
+      const currentY = window.scrollY;
+      const velocity = currentY - lastScrollY;
+      lastScrollY = currentY;
+      if (headlineRef.current) {
+        gsap.to(headlineRef.current, {
+          skewY: velocity * -0.04,
+          scaleX: 1 + Math.abs(velocity) * 0.001,
+          duration: 0.5,
+          ease: 'power3.out',
+          overwrite: 'auto',
+        });
+      }
+    };
+    velocityListenerRef.current = velocitySkew;
+    window.addEventListener('scroll', velocitySkew, { passive: true });
+
+    return () => {
+      ctx.revert();
+      if (velocityListenerRef.current) {
+        window.removeEventListener('scroll', velocityListenerRef.current);
+      }
+      if (scrambleRef.current) {
+        cancelAnimationFrame(scrambleRef.current.frameRequest);
+      }
+    };
   }, []);
 
-  // Generate particles
   const particles = Array.from({ length: 40 });
 
   return (
@@ -164,11 +181,11 @@ const WorkHero = () => {
       id="work-hero"
       className="relative w-full min-h-[100svh] flex flex-col items-center justify-center overflow-hidden bg-background px-6"
     >
-      {/* Ambient glow */}
+      {/* Ambient glows */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] rounded-full bg-accent/5 blur-[120px] pointer-events-none" />
       <div className="absolute top-1/3 left-1/4 w-[300px] h-[300px] rounded-full bg-purple-500/5 blur-[100px] pointer-events-none" />
 
-      {/* Particles */}
+      {/* Particle field */}
       <div ref={particlesRef} className="absolute inset-0 overflow-hidden pointer-events-none" aria-hidden="true">
         {particles.map((_, i) => (
           <div
@@ -196,7 +213,10 @@ const WorkHero = () => {
       />
 
       {/* Content */}
-      <div ref={headlineRef} className="relative z-10 text-center w-full max-w-6xl mx-auto will-change-transform">
+      <div
+        ref={headlineRef}
+        className="relative z-10 text-center w-full max-w-6xl mx-auto will-change-transform"
+      >
         {/* Label */}
         <div className="flex items-center justify-center gap-3 mb-8 sm:mb-12">
           <div className="h-px w-12 sm:w-20 bg-accent/50" />
@@ -206,7 +226,7 @@ const WorkHero = () => {
           <div className="h-px w-12 sm:w-20 bg-accent/50" />
         </div>
 
-        {/* Headline — clipped for reveal effect */}
+        {/* Line 1 headline */}
         <div className="overflow-hidden mb-2 sm:mb-4">
           <h1
             ref={line1Ref}
@@ -217,6 +237,7 @@ const WorkHero = () => {
           </h1>
         </div>
 
+        {/* Line 2 sub-headline */}
         <div className="overflow-hidden">
           <p
             ref={line2Ref}
@@ -247,7 +268,7 @@ const WorkHero = () => {
         </div>
       </div>
 
-      {/* Corner decorations - hidden on small screens */}
+      {/* Corner decorations */}
       <div className="hidden md:block absolute top-8 left-8 text-white/10 font-mono text-xs">
         portfolio.peerbros.com
       </div>

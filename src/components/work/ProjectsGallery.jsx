@@ -11,6 +11,7 @@ const ProjectsGallery = () => {
   const headerRef = useRef(null);
 
   useEffect(() => {
+    if (!sectionRef.current) return;
     const ctx = gsap.context(() => {
       // Stagger the cards on mobile/desktop
       const cards = gsap.utils.toArray('.project-card-wrap');

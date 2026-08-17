@@ -5,10 +5,10 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 gsap.registerPlugin(ScrollTrigger);
 
 const stats = [
-  { value: 6, label: 'Projects Delivered', suffix: '+', prefix: '' },
-  { value: 5, label: 'Industries Served', suffix: '+', prefix: '' },
-  { value: 100, label: 'Client Satisfaction', suffix: '%', prefix: '' },
-  { value: 3, label: 'Countries Reached', suffix: '+', prefix: '' },
+  { value: 6, label: 'Projects Delivered', suffix: '+' },
+  { value: 5, label: 'Industries Served', suffix: '+' },
+  { value: 100, label: 'Client Satisfaction', suffix: '%' },
+  { value: 3, label: 'Countries Reached', suffix: '+' },
 ];
 
 const WorkStats = () => {
@@ -16,7 +16,10 @@ const WorkStats = () => {
   const numberRefs = useRef([]);
 
   useEffect(() => {
+    if (!sectionRef.current) return;
+
     const ctx = gsap.context(() => {
+      // Animate stat numbers on scroll entry
       numberRefs.current.forEach((el, i) => {
         if (!el) return;
         const obj = { val: 0 };
@@ -32,24 +35,27 @@ const WorkStats = () => {
             once: true,
           },
           onUpdate: () => {
-            el.textContent = `${stats[i].prefix}${Math.round(obj.val)}${stats[i].suffix}`;
+            el.textContent = `${Math.round(obj.val)}${stats[i].suffix}`;
           },
         });
       });
 
-      // Section reveal
-      gsap.fromTo(
-        sectionRef.current.querySelectorAll('.stat-item'),
-        { y: 50, opacity: 0 },
-        {
-          y: 0,
-          opacity: 1,
-          duration: 0.8,
-          stagger: 0.15,
-          ease: 'power3.out',
-          scrollTrigger: { trigger: sectionRef.current, start: 'top 80%' },
-        }
-      );
+      // Staggered card reveal
+      const items = sectionRef.current.querySelectorAll('.stat-item');
+      if (items.length) {
+        gsap.fromTo(
+          items,
+          { y: 50, opacity: 0 },
+          {
+            y: 0,
+            opacity: 1,
+            duration: 0.8,
+            stagger: 0.15,
+            ease: 'power3.out',
+            scrollTrigger: { trigger: sectionRef.current, start: 'top 80%' },
+          }
+        );
+      }
     }, sectionRef);
 
     return () => ctx.revert();
@@ -66,9 +72,7 @@ const WorkStats = () => {
         <div className="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
         <div
           className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] opacity-[0.03]"
-          style={{
-            background: 'radial-gradient(ellipse at center, #c0a080 0%, transparent 70%)',
-          }}
+          style={{ background: 'radial-gradient(ellipse at center, #c0a080 0%, transparent 70%)' }}
         />
       </div>
 
