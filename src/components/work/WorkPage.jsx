@@ -2,10 +2,15 @@ import React, { useEffect, useRef, useState, useCallback } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Lenis from 'lenis';
+import WorkHero from './WorkHero';
+import WorkMarquee from './WorkMarquee';
+import ProjectsGallery from './ProjectsGallery';
+import WorkCTA from './WorkCTA';
 import WorkLoadingScreen from './WorkLoadingScreen';
 import { CustomCursor } from '../MicroInteractions';
 import Navbar from '../Navbar';
-import Work3DCanvas from '../work3d/Work3DCanvas';
+import Footer from '../Footer';
+import ScrollToTop from '../ScrollToTop';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -62,8 +67,18 @@ const WorkPage = () => {
     <div ref={pageRef} className="relative bg-background text-foreground overflow-x-hidden min-h-screen selection:bg-accent/30 selection:text-accent">
       <WorkLoadingScreen onComplete={handleLoadComplete} />
       <CustomCursor />
-      {/* The 3D WebGL Experience */}
-      <Work3DCanvas ready={loaded} />
+      <ScrollToTop />
+      <div className="noise-overlay pointer-events-none z-[100]" />
+      <Navbar />
+      <main>
+        <WorkHero ready={loaded} />
+        <WorkMarquee />
+        <ProjectsGallery />
+        <WorkCTA />
+      </main>
+      <React.Suspense fallback={<div className="h-48 w-full bg-black" />}>
+        <Footer />
+      </React.Suspense>
     </div>
   );
 };
