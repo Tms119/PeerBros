@@ -200,7 +200,7 @@ const WorkHero = ({ ready }) => {
           className="text-white/50 text-sm sm:text-base md:text-lg font-light max-w-md mx-auto leading-relaxed"
           style={{ opacity: 0 }}
         >
-          A selection of our recent work — across industries, built to perform.
+          A selection of our recent work, across industries, built to perform.
         </p>
 
         {/* Scroll cue */}

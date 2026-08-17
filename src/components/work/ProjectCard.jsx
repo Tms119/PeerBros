@@ -1,7 +1,17 @@
 import React, { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
-import { ExternalLink, ArrowRight } from 'lucide-react';
+import { ExternalLink, ArrowRight, Zap, ShoppingCart, TrendingUp, Globe, Package, Lock } from 'lucide-react';
 import { MagneticButton } from '../MicroInteractions';
+
+const IconMap = {
+  Zap,
+  ShoppingCart,
+  TrendingUp,
+  Globe,
+  Package,
+  Lock,
+};
+
 
 const ProjectCard = ({ project, index }) => {
   const cardRef = useRef(null);
@@ -180,7 +190,7 @@ const ProjectCard = ({ project, index }) => {
                   className="text-xs font-mono tracking-[0.3em] uppercase mb-1"
                   style={{ color: project.accent }}
                 >
-                  {project.id} — {project.category}
+                  {project.id} / {project.category}
                 </div>
                 <h2
                   ref={titleRef}
@@ -190,7 +200,9 @@ const ProjectCard = ({ project, index }) => {
                 </h2>
               </div>
             </div>
-            <div className="text-3xl sm:text-4xl flex-shrink-0">{project.category_icon}</div>
+            <div className="text-white/80 flex-shrink-0">
+              {IconMap[project.category_icon] && React.createElement(IconMap[project.category_icon], { size: 40, strokeWidth: 1.5, color: project.accent })}
+            </div>
           </div>
 
           {/* Tagline */}
