@@ -1,8 +1,7 @@
 import React, { useState, useCallback } from 'react';
 import WorkLoadingScreen from './WorkLoadingScreen';
 import { CustomCursor } from '../MicroInteractions';
-import Navbar from '../Navbar';
-import WorkCanvasMap from './WorkCanvasMap';
+import PeerOS from './PeerOS';
 
 const WorkPage = () => {
   const [loaded, setLoaded] = useState(false);
@@ -14,13 +13,8 @@ const WorkPage = () => {
       <CustomCursor />
       <div className="noise-overlay pointer-events-none z-[100]" />
       
-      {/* We keep Navbar on top */}
-      <div className="absolute top-0 left-0 w-full z-50">
-        <Navbar />
-      </div>
-      
-      {/* The Infinite Canvas */}
-      {loaded && <WorkCanvasMap />}
+      {/* The PeerOS Desktop */}
+      {loaded && <PeerOS />}
     </div>
   );
 };
