@@ -34,25 +34,115 @@ const AssetModel = ({ url, scale = [0.03, 0.03, 0.03] }) => {
   return <primitive ref={group} object={clonedScene} position={[0, 0, 0]} scale={scale} />;
 };
 
-// --- Floating Island / Pedestal ---
-const ProjectIsland = ({ project, position, activeProject, setActiveProject }) => {
+// --- Procedural Suspension Bridge ---
+const SuspensionBridge = ({ start, end, width = 4 }) => {
+  const vStart = new THREE.Vector3(...start);
+  const vEnd = new THREE.Vector3(...end);
+  const distance = vStart.distanceTo(vEnd);
+  
+  // Midpoint for the bridge structure
+  const midPoint = new THREE.Vector3().addVectors(vStart, vEnd).multiplyScalar(0.5);
+  
+  // Calculate angle
+  const angle = Math.atan2(vEnd.x - vStart.x, vEnd.z - vStart.z);
+
+  return (
+    <group position={[midPoint.x, 0.5, midPoint.z]} rotation={[0, angle, 0]}>
+      {/* Roadway */}
+      <mesh position={[0, 0, 0]} receiveShadow castShadow>
+        <boxGeometry args={[width, 0.5, distance]} />
+        <meshStandardMaterial color="#1f2229" roughness={0.9} />
+      </mesh>
+      
+      {/* Support Pillars */}
+      <mesh position={[-width/2 + 0.5, -5, distance * 0.25]} castShadow>
+        <cylinderGeometry args={[0.5, 0.5, 10, 8]} />
+        <meshStandardMaterial color="#333" />
+      </mesh>
+      <mesh position={[width/2 - 0.5, -5, distance * 0.25]} castShadow>
+        <cylinderGeometry args={[0.5, 0.5, 10, 8]} />
+        <meshStandardMaterial color="#333" />
+      </mesh>
+      <mesh position={[-width/2 + 0.5, -5, -distance * 0.25]} castShadow>
+        <cylinderGeometry args={[0.5, 0.5, 10, 8]} />
+        <meshStandardMaterial color="#333" />
+      </mesh>
+      <mesh position={[width/2 - 0.5, -5, -distance * 0.25]} castShadow>
+        <cylinderGeometry args={[0.5, 0.5, 10, 8]} />
+        <meshStandardMaterial color="#333" />
+      </mesh>
+
+      {/* Suspension Cables (Stylized) */}
+      <mesh position={[0, 2, 0]} rotation={[Math.PI / 2, 0, 0]}>
+        <cylinderGeometry args={[0.1, 0.1, distance, 4]} />
+        <meshStandardMaterial color="#ff4444" emissive="#ff0000" emissiveIntensity={0.5} />
+      </mesh>
+    </group>
+  );
+};
+
+// --- Open World Geography ---
+
+const Islands = () => {
+  return (
+    <group>
+      {/* Island 1: Downtown (Center) - Concrete */}
+      <group position={[0, 0, 0]}>
+        <mesh position={[0, 0, 0]} receiveShadow castShadow scale={[1, 1, 1.3]}>
+          <cylinderGeometry args={[25, 26, 1.5, 64]} />
+          <meshStandardMaterial color="#1a1c23" roughness={0.9} />
+        </mesh>
+        {/* Stepped elevation */}
+        <mesh position={[0, 0.8, 0]} receiveShadow castShadow scale={[1, 1, 1.2]}>
+          <cylinderGeometry args={[15, 16, 1, 32]} />
+          <meshStandardMaterial color="#22252e" roughness={0.9} />
+        </mesh>
+      </group>
+
+      {/* Island 2: Industrial (North West) - Darker, Rigid */}
+      <group position={[-45, 0, -35]}>
+        <mesh position={[0, 0, 0]} receiveShadow castShadow scale={[1.2, 1, 0.8]}>
+          <boxGeometry args={[35, 1.5, 35]} />
+          <meshStandardMaterial color="#111318" roughness={1} />
+        </mesh>
+      </group>
+
+      {/* Island 3: Creative (South East) - Lush/Green */}
+      <group position={[45, 0, 30]}>
+        <mesh position={[0, 0, 0]} receiveShadow castShadow scale={[1.4, 1, 1.1]}>
+          <cylinderGeometry args={[20, 22, 1.5, 64]} />
+          <meshStandardMaterial color="#20331e" roughness={0.8} />
+        </mesh>
+      </group>
+
+      {/* The Bridges Connecting the Islands */}
+      <SuspensionBridge start={[0, 0, 0]} end={[-45, 0, -35]} width={6} />
+      <SuspensionBridge start={[0, 0, 0]} end={[45, 0, 30]} width={6} />
+    </group>
+  );
+};
+
+
+// --- Project Placement on Islands ---
+const ProjectLocation = ({ project, position, activeProject, setActiveProject }) => {
   const [hovered, setHovered] = useState(false);
   const isActive = activeProject === project.id;
   const accentColor = new THREE.Color(project.accent);
   
-  const PEDESTAL_RADIUS = 7;
+  const BASE_SIZE = 8;
 
   return (
     <group position={position}>
-      {/* The Pedestal Base */}
-      <mesh position={[0, 0.5, 0]} receiveShadow castShadow>
-        <cylinderGeometry args={[PEDESTAL_RADIUS, PEDESTAL_RADIUS - 1, 1, 64]} />
-        <meshStandardMaterial color="#0f1115" roughness={0.1} metalness={0.8} />
+      
+      {/* Foundation Pad */}
+      <mesh position={[0, 0.1, 0]} receiveShadow castShadow>
+        <boxGeometry args={[BASE_SIZE, 0.2, BASE_SIZE]} />
+        <meshStandardMaterial color="#0a0c10" roughness={0.5} />
       </mesh>
 
       {/* Glowing Accent Ring */}
-      <mesh position={[0, 1.01, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-        <ringGeometry args={[PEDESTAL_RADIUS - 0.5, PEDESTAL_RADIUS, 64]} />
+      <mesh position={[0, 0.25, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+        <ringGeometry args={[BASE_SIZE/2 - 0.5, BASE_SIZE/2, 32]} />
         <meshBasicMaterial 
           color={accentColor} 
           transparent 
@@ -62,13 +152,13 @@ const ProjectIsland = ({ project, position, activeProject, setActiveProject }) =
       </mesh>
 
       {/* The 3D Asset Placeholder */}
-      <group position={[0, 1, 0]}>
+      <group position={[0, 0.2, 0]}>
         <AssetModel url="/LittlestTokyo.glb" />
       </group>
 
       {/* Interactive Raycast Shield */}
       <mesh 
-        position={[0, 6, 0]} 
+        position={[0, 5, 0]} 
         visible={false}
         onClick={(e) => {
           e.stopPropagation();
@@ -80,19 +170,19 @@ const ProjectIsland = ({ project, position, activeProject, setActiveProject }) =
         }}
         onPointerOut={() => setHovered(false)}
       >
-        <cylinderGeometry args={[PEDESTAL_RADIUS, PEDESTAL_RADIUS, 12, 16]} />
+        <boxGeometry args={[BASE_SIZE, 10, BASE_SIZE]} />
         <meshBasicMaterial />
       </mesh>
 
       {/* Large Project Description Box UI */}
       {isActive && (
         <Html
-          position={[-PEDESTAL_RADIUS - 3, 5, 0]}
+          position={[-BASE_SIZE - 2, 5, 0]}
           center
           zIndexRange={[100, 0]}
         >
           <div 
-            className="w-[360px] md:w-[420px] opacity-0 animate-in fade-in zoom-in duration-500 rounded-3xl overflow-hidden shadow-2xl"
+            className="w-[360px] md:w-[420px] opacity-0 animate-in fade-in slide-in-from-bottom-4 duration-500 rounded-3xl overflow-hidden shadow-2xl"
             style={{
               background: 'rgba(10, 12, 16, 0.85)',
               backdropFilter: 'blur(24px)',
@@ -136,7 +226,7 @@ const ProjectIsland = ({ project, position, activeProject, setActiveProject }) =
       {/* Billboard Name (God View) */}
       {!isActive && (
         <Text
-          position={[0, 10, 0]}
+          position={[0, 8, 0]}
           rotation={[-Math.PI / 4, 0, 0]}
           fontSize={1.5}
           color={hovered ? accentColor : '#fff'}
@@ -158,18 +248,22 @@ const InteractiveCity = ({ activeProject, setActiveProject }) => {
   const { camera } = useThree();
   const controlsRef = useRef();
 
-  // Arrange the 6 projects in a beautiful wide circle (The Archipelago)
-  const RADIUS = 35;
-  const projectPositions = projects.map((_, i) => {
-    const angle = (i / projects.length) * Math.PI * 2;
-    return new THREE.Vector3(
-      Math.cos(angle) * RADIUS,
-      0,
-      Math.sin(angle) * RADIUS
-    );
-  });
+  // Distribute the 6 projects across the 3 Islands
+  const projectPositions = [
+    // Island 1: Downtown (Center) - y=1.3 for elevation step
+    [-6, 1.3, -4],
+    [6, 1.3, 8],
+    
+    // Island 2: Industrial (North West) - y=0.75 for flat box
+    [-52, 0.75, -42],
+    [-38, 0.75, -28],
+    
+    // Island 3: Creative (South East) - y=0.75 for flat cylinder
+    [35, 0.75, 25],
+    [52, 0.75, 32],
+  ];
 
-  const godViewPos = new THREE.Vector3(0, 40, RADIUS * 2.5);
+  const godViewPos = new THREE.Vector3(0, 70, 90);
   const godViewTarget = new THREE.Vector3(0, 0, 0);
 
   useEffect(() => {
@@ -186,18 +280,10 @@ const InteractiveCity = ({ activeProject, setActiveProject }) => {
 
     if (activeProject) {
       const pIndex = projects.findIndex(p => p.id === activeProject);
-      const targetPos = projectPositions[pIndex];
+      const targetPos = new THREE.Vector3(...projectPositions[pIndex]);
       
-      // Calculate a cinematic view framing the island
-      // We look from slightly outside the circle inwards
-      const angle = (pIndex / projects.length) * Math.PI * 2;
-      const camOffset = new THREE.Vector3(
-        Math.cos(angle) * 15,
-        5,
-        Math.sin(angle) * 15
-      );
-      
-      const camPos = new THREE.Vector3().addVectors(targetPos, camOffset);
+      // Calculate a cinematic view framing the project
+      const camPos = new THREE.Vector3(targetPos.x + 12, targetPos.y + 4, targetPos.z + 16);
 
       controlsRef.current.enabled = false;
 
@@ -205,16 +291,16 @@ const InteractiveCity = ({ activeProject, setActiveProject }) => {
         x: camPos.x,
         y: camPos.y,
         z: camPos.z,
-        duration: 2,
+        duration: 2.5,
         ease: 'power3.inOut',
         onUpdate: () => camera.updateProjectionMatrix()
       });
 
       gsap.to(controlsRef.current.target, {
         x: targetPos.x,
-        y: targetPos.y + 4,
+        y: targetPos.y + 3,
         z: targetPos.z,
-        duration: 2,
+        duration: 2.5,
         ease: 'power3.inOut',
         onUpdate: () => controlsRef.current.update()
       });
@@ -223,7 +309,7 @@ const InteractiveCity = ({ activeProject, setActiveProject }) => {
         x: godViewPos.x,
         y: godViewPos.y,
         z: godViewPos.z,
-        duration: 2,
+        duration: 2.5,
         ease: 'power3.inOut',
         onUpdate: () => camera.updateProjectionMatrix()
       });
@@ -232,7 +318,7 @@ const InteractiveCity = ({ activeProject, setActiveProject }) => {
         x: godViewTarget.x,
         y: godViewTarget.y,
         z: godViewTarget.z,
-        duration: 2,
+        duration: 2.5,
         ease: 'power3.inOut',
         onUpdate: () => controlsRef.current.update(),
         onComplete: () => {
@@ -246,20 +332,19 @@ const InteractiveCity = ({ activeProject, setActiveProject }) => {
     <>
       <color attach="background" args={['#05070a']} />
       
-      {/* Cinematic Fog and Sky */}
-      <fog attach="fog" args={['#05070a', 40, RADIUS * 3.5]} />
+      <fog attach="fog" args={['#05070a', 60, 200]} />
       
       <ambientLight intensity={0.6} />
       <directionalLight 
-        position={[100, 50, -50]} 
-        intensity={2} 
+        position={[100, 100, -50]} 
+        intensity={2.5} 
         color="#e0eaff"
         castShadow 
         shadow-mapSize={[4096, 4096]} 
-        shadow-camera-left={-RADIUS * 2}
-        shadow-camera-right={RADIUS * 2}
-        shadow-camera-top={RADIUS * 2}
-        shadow-camera-bottom={-RADIUS * 2}
+        shadow-camera-left={-100}
+        shadow-camera-right={100}
+        shadow-camera-top={100}
+        shadow-camera-bottom={-100}
         shadow-bias={-0.0001}
       />
       <directionalLight position={[-50, 20, 50]} intensity={1} color="#3b82f6" />
@@ -269,18 +354,18 @@ const InteractiveCity = ({ activeProject, setActiveProject }) => {
         enableZoom={true}
         enablePan={true}
         enableRotate={true}
-        maxPolarAngle={Math.PI / 2.05} 
+        maxPolarAngle={Math.PI / 2.1} 
         minDistance={5}
-        maxDistance={RADIUS * 3}
+        maxDistance={150}
       />
 
-      {/* The Serene Ocean (Background Click to Close) */}
+      {/* The Ocean (Click to close project) */}
       <mesh 
         rotation={[-Math.PI / 2, 0, 0]} 
         position={[0, -0.1, 0]} 
         onClick={() => setActiveProject(null)}
       >
-        <planeGeometry args={[RADIUS * 10, RADIUS * 10]} />
+        <planeGeometry args={[500, 500]} />
         <MeshReflectorMaterial
           blur={[400, 100]}
           resolution={1024}
@@ -295,9 +380,12 @@ const InteractiveCity = ({ activeProject, setActiveProject }) => {
         />
       </mesh>
 
-      {/* Floating Project Islands */}
+      {/* The GTA Open World Geography */}
+      <Islands />
+
+      {/* Project Buildings on the Islands */}
       {projects.map((project, index) => (
-        <ProjectIsland 
+        <ProjectLocation 
           key={project.id} 
           project={project} 
           position={projectPositions[index]}
