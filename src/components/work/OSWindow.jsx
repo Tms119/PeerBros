@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useLayoutEffect } from 'react';
 import gsap from 'gsap';
 import { Draggable } from 'gsap/Draggable';
 import { Minus, Square, X, ExternalLink } from 'lucide-react';
@@ -18,6 +18,17 @@ const OSWindow = ({
   const dragInstance = useRef(null);
   const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
 
+  useLayoutEffect(() => {
+    if (!windowRef.current) return;
+    
+    // Mount animation
+    if (isMobile) {
+      gsap.fromTo(windowRef.current, { y: window.innerHeight, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5, ease: 'power3.out' });
+    } else {
+      gsap.fromTo(windowRef.current, { scale: 0.8, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.4, ease: 'back.out(1.2)' });
+    }
+  }, [isMobile]);
+
   useEffect(() => {
     if (!windowRef.current || isMobile) return;
 
@@ -27,6 +38,7 @@ const OSWindow = ({
       bounds: '.peer-os-desktop',
       onPress: onFocus,
       inertia: false,
+      edgeResistance: 0.8, // Snapping resistance
     })[0];
 
     return () => {
@@ -63,39 +75,49 @@ const OSWindow = ({
         boxShadow: `0 30px 60px rgba(0,0,0,0.5), 0 0 0 1px rgba(${project.accentRgb}, 0.2)`
       }}
     >
+      {/* Massive Close Button for Mobile */}
+      {isMobile && (
+        <button 
+          onClick={(e) => { e.stopPropagation(); onClose(); }}
+          className="absolute top-6 right-6 z-50 w-12 h-12 bg-white/10 backdrop-blur-xl border border-white/20 rounded-full flex items-center justify-center text-white active:bg-white/20"
+        >
+          <X size={24} />
+        </button>
+      )}
+
       {/* Title Bar (Draggable Area) */}
-      <div 
-        className="window-titlebar flex items-center justify-between px-4 py-3 bg-white/5 border-b border-white/10 select-none cursor-grab active:cursor-grabbing"
-      >
-        <div className="window-controls flex items-center gap-2">
-          <button 
-            onClick={(e) => { e.stopPropagation(); onClose(); }}
-            className="w-3 h-3 rounded-full bg-[#FF5F56] hover:bg-[#FF5F56]/80 flex items-center justify-center group"
-          >
-            <X size={8} className="opacity-0 group-hover:opacity-100 text-black" />
-          </button>
-          <button 
-            onClick={(e) => { e.stopPropagation(); onMinimize(); }}
-            className="w-3 h-3 rounded-full bg-[#FFBD2E] hover:bg-[#FFBD2E]/80 flex items-center justify-center group"
-          >
-            <Minus size={8} className="opacity-0 group-hover:opacity-100 text-black" />
-          </button>
-          {!isMobile && (
+      {!isMobile && (
+        <div 
+          className="window-titlebar flex items-center justify-between px-4 py-3 bg-white/5 border-b border-white/10 select-none cursor-grab active:cursor-grabbing"
+        >
+          <div className="window-controls flex items-center gap-2">
+            <button 
+              onClick={(e) => { e.stopPropagation(); onClose(); }}
+              className="w-3 h-3 rounded-full bg-[#FF5F56] hover:bg-[#FF5F56]/80 flex items-center justify-center group"
+            >
+              <X size={8} className="opacity-0 group-hover:opacity-100 text-black" />
+            </button>
+            <button 
+              onClick={(e) => { e.stopPropagation(); onMinimize(); }}
+              className="w-3 h-3 rounded-full bg-[#FFBD2E] hover:bg-[#FFBD2E]/80 flex items-center justify-center group"
+            >
+              <Minus size={8} className="opacity-0 group-hover:opacity-100 text-black" />
+            </button>
             <button 
               onClick={(e) => { e.stopPropagation(); onMaximize(); }}
               className="w-3 h-3 rounded-full bg-[#27C93F] hover:bg-[#27C93F]/80 flex items-center justify-center group"
             >
               <Square size={6} className="opacity-0 group-hover:opacity-100 text-black" />
             </button>
-          )}
+          </div>
+          
+          <div className="flex-1 text-center text-xs font-mono tracking-widest text-white/50 pointer-events-none">
+            {project.name.toLowerCase()}.exe
+          </div>
+          
+          <div className="w-[52px]" /> {/* Spacer for balance */}
         </div>
-        
-        <div className="flex-1 text-center text-xs font-mono tracking-widest text-white/50 pointer-events-none">
-          {project.name.toLowerCase()}.exe
-        </div>
-        
-        <div className="w-[52px]" /> {/* Spacer for balance */}
-      </div>
+      )}
 
       {/* Window Content */}
       <div className="flex-1 overflow-y-auto custom-scrollbar p-6 md:p-12">

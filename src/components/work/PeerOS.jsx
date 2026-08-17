@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import gsap from 'gsap';
 import { projects } from '../../data/projects';
 import OSWindow from './OSWindow';
 import * as LucideIcons from 'lucide-react';
@@ -8,10 +9,27 @@ const PeerOS = () => {
   const [activeZIndex, setActiveZIndex] = useState(10);
   const [time, setTime] = useState(new Date());
 
+  const dockRef = useRef(null);
+  const topBarRef = useRef(null);
+  const iconsRef = useRef([]);
+
   // Clock
   useEffect(() => {
     const timer = setInterval(() => setTime(new Date()), 60000);
     return () => clearInterval(timer);
+  }, []);
+
+  // Boot Sequence
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      gsap.fromTo(topBarRef.current, { y: -50, opacity: 0 }, { y: 0, opacity: 1, duration: 1, ease: 'power3.out' });
+      gsap.fromTo(dockRef.current, { y: 100, opacity: 0 }, { y: 0, opacity: 1, duration: 1, ease: 'power3.out', delay: 0.2 });
+      gsap.fromTo(iconsRef.current, 
+        { scale: 0.8, opacity: 0 }, 
+        { scale: 1, opacity: 1, duration: 0.8, stagger: 0.1, ease: 'back.out(1.5)', delay: 0.5 }
+      );
+    });
+    return () => ctx.revert();
   }, []);
 
   const openApp = (project) => {
@@ -78,11 +96,15 @@ const PeerOS = () => {
     <div className="peer-os-desktop relative w-screen h-[100svh] overflow-hidden bg-gradient-to-br from-[#0f0c29] via-[#302b63] to-[#24243e]">
       
       {/* Top Menu Bar */}
-      <div className="absolute top-0 left-0 w-full h-8 bg-black/40 backdrop-blur-md border-b border-white/10 z-50 flex items-center justify-between px-4 text-xs font-mono text-white/70">
+      <div ref={topBarRef} className="absolute top-0 left-0 w-full h-8 bg-black/40 backdrop-blur-md border-b border-white/10 z-50 flex items-center justify-between px-4 text-xs font-mono text-white/70">
         <div className="flex items-center gap-4">
-          <LucideIcons.Command size={14} className="text-white" />
-          <span className="font-bold text-white">PeerOS v1.0</span>
-          <a href="/" className="hover:text-white transition-colors cursor-pointer hidden md:inline">Home</a>
+          <LucideIcons.Command size={14} className="text-white hidden md:block" />
+          <span className="font-bold text-white hidden md:inline">PeerOS v1.0</span>
+          <a href="/" className="hover:text-white transition-colors cursor-pointer flex items-center gap-1">
+            <LucideIcons.ChevronLeft size={16} className="md:hidden" />
+            <span className="md:hidden font-bold">Home</span>
+            <span className="hidden md:inline">Home</span>
+          </a>
           <span className="hidden md:inline cursor-pointer hover:text-white transition-colors">File</span>
           <span className="hidden md:inline cursor-pointer hover:text-white transition-colors">View</span>
           <span className="hidden md:inline cursor-pointer hover:text-white transition-colors">Help</span>
@@ -97,12 +119,13 @@ const PeerOS = () => {
       </div>
 
       {/* Desktop Grid (Shortcuts) */}
-      <div className="absolute top-12 left-4 bottom-24 flex flex-col gap-6 p-4">
-        {projects.map(project => (
+      <div className="absolute top-12 left-4 md:bottom-24 bottom-4 right-4 md:right-auto flex flex-row md:flex-col flex-wrap content-start gap-6 md:gap-6 p-4 md:w-28 w-full z-0">
+        {projects.map((project, index) => (
           <button
             key={`desktop-${project.id}`}
+            ref={el => iconsRef.current[index] = el}
             onClick={() => openApp(project)}
-            className="group flex flex-col items-center gap-2 w-20 outline-none"
+            className="group flex flex-col items-center gap-2 w-20 md:w-20 outline-none"
           >
             <div 
               className="w-14 h-14 rounded-xl bg-black/40 backdrop-blur-md border border-white/10 flex items-center justify-center transition-all duration-300 group-hover:bg-white/10 group-focus:bg-white/20 group-focus:border-white/40"
@@ -134,7 +157,7 @@ const PeerOS = () => {
       })}
 
       {/* Dock (Taskbar) */}
-      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-50">
+      <div ref={dockRef} className="hidden md:block absolute bottom-4 left-1/2 -translate-x-1/2 z-50">
         <div className="flex items-end gap-2 p-2 bg-black/40 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl">
           {projects.map(project => {
             const isOpen = windows.some(w => w.projectId === project.id);
