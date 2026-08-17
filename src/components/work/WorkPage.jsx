@@ -89,7 +89,7 @@ const WorkPage = () => {
   const handleLoadComplete = useCallback(() => setLoaded(true), []);
 
   return (
-    <div className="relative bg-background text-foreground overflow-x-hidden min-h-screen selection:bg-accent/30 selection:text-accent">
+    <div className="relative bg-transparent text-foreground overflow-x-hidden min-h-screen selection:bg-accent/30 selection:text-accent">
       <WorkLoadingScreen onComplete={handleLoadComplete} />
       <CustomCursor />
       <div className="noise-overlay pointer-events-none z-[100]" />
