@@ -64,10 +64,6 @@ const WorkPage = () => {
       <CustomCursor />
       {/* The 3D WebGL Experience */}
       <Work3DCanvas ready={loaded} />
-
-      {/* Transparent dummy container to allow native browser scrolling */}
-      {/* This drives the useFrame scroll calculation in ServerRoom.jsx */}
-      <div style={{ height: '300vh' }} className="pointer-events-none relative z-10" />
     </div>
   );
 };

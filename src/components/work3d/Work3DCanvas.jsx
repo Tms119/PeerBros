@@ -1,7 +1,7 @@
 import React, { Suspense, useState, useEffect } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { Preload } from '@react-three/drei';
-import ServerRoom from './ServerRoom';
+import InteractiveCity from './InteractiveCity';
 
 const Work3DCanvas = ({ ready }) => {
   const [dpr, setDpr] = useState(1);
@@ -30,13 +30,8 @@ const Work3DCanvas = ({ ready }) => {
           depth: true
         }}
       >
-        <color attach="background" args={['#050508']} />
-        
-        {/* Very dense fog to create atmosphere and hide the end of the aisle */}
-        <fog attach="fog" args={['#050508', 5, 40]} />
-
         <Suspense fallback={null}>
-          <ServerRoom />
+          <InteractiveCity />
           <Preload all />
         </Suspense>
       </Canvas>
