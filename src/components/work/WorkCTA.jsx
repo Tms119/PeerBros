@@ -69,7 +69,7 @@ const WorkCTA = () => {
         <div className="flex items-center justify-center gap-3 mb-8 sm:mb-12">
           <div className="h-px w-8 sm:w-12 bg-accent/50" />
           <span className="text-accent/70 font-mono text-xs tracking-[0.4em] uppercase">
-            Start a Project
+            Work With Us
           </span>
           <div className="h-px w-8 sm:w-12 bg-accent/50" />
         </div>
@@ -81,8 +81,8 @@ const WorkCTA = () => {
             className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-display font-black text-white tracking-tighter leading-none will-change-transform"
             style={{ opacity: 0 }}
           >
-            Ready to Join<br />
-            <span className="text-accent">Our Portfolio?</span>
+            Want to be<br />
+            <span className="text-accent">Next?</span>
           </h2>
         </div>
 
@@ -91,8 +91,8 @@ const WorkCTA = () => {
           className="text-white/50 text-base sm:text-lg lg:text-xl max-w-xl mx-auto leading-relaxed mb-10 sm:mb-14"
           style={{ opacity: 0 }}
         >
-          Let's build something elite. Whether it's a SaaS platform, marketplace, or full digital
-          transformation — PeerBros engineers it to win.
+          We don't take every project. We take the right ones and build them properly.
+          If you want your name on this page, let's talk.
         </p>
 
         <div
@@ -104,7 +104,7 @@ const WorkCTA = () => {
             href="mailto:peerbros.official@gmail.com"
             className="group flex items-center gap-3 px-8 sm:px-10 py-4 sm:py-5 rounded-full bg-white text-black font-bold text-base sm:text-lg hover:bg-accent transition-colors duration-300 interactive-hover w-full sm:w-auto justify-center"
           >
-            <span>Book a Discovery Call</span>
+            <span>Let's Talk</span>
             <ArrowRight
               size={18}
               className="group-hover:translate-x-1 transition-transform duration-300"
@@ -115,7 +115,7 @@ const WorkCTA = () => {
             href="/"
             className="flex items-center gap-2 px-8 sm:px-10 py-4 sm:py-5 rounded-full border border-white/20 text-white/70 font-medium text-base sm:text-lg hover:border-accent/60 hover:text-white transition-colors duration-300 interactive-hover w-full sm:w-auto justify-center"
           >
-            Back to Home
+            ← Back to Home
           </MagneticButton>
         </div>
       </div>

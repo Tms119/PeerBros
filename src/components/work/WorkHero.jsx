@@ -221,7 +221,7 @@ const WorkHero = () => {
         <div className="flex items-center justify-center gap-3 mb-8 sm:mb-12">
           <div className="h-px w-12 sm:w-20 bg-accent/50" />
           <span className="text-accent font-mono text-xs sm:text-sm tracking-[0.4em] uppercase">
-            PeerBros Portfolio
+            What We've Built
           </span>
           <div className="h-px w-12 sm:w-20 bg-accent/50" />
         </div>
@@ -254,7 +254,7 @@ const WorkHero = () => {
           className="mt-8 sm:mt-12 text-white/50 text-sm sm:text-base md:text-lg font-light max-w-lg mx-auto leading-relaxed"
           style={{ opacity: 0 }}
         >
-          6 industries. 6 elite builds. Each one engineered to dominate its market.
+          6 projects. 6 different industries. All built to perform.
         </p>
 
         {/* Scroll cue */}

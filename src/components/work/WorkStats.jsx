@@ -5,10 +5,10 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 gsap.registerPlugin(ScrollTrigger);
 
 const stats = [
-  { value: 6, label: 'Projects Delivered', suffix: '+' },
-  { value: 5, label: 'Industries Served', suffix: '+' },
+  { value: 6, label: 'Projects Shipped', suffix: '+' },
+  { value: 5, label: 'Industries', suffix: '+' },
   { value: 100, label: 'Client Satisfaction', suffix: '%' },
-  { value: 3, label: 'Countries Reached', suffix: '+' },
+  { value: 3, label: 'Countries', suffix: '+' },
 ];
 
 const WorkStats = () => {
@@ -19,7 +19,6 @@ const WorkStats = () => {
     if (!sectionRef.current) return;
 
     const ctx = gsap.context(() => {
-      // Animate stat numbers on scroll entry
       numberRefs.current.forEach((el, i) => {
         if (!el) return;
         const obj = { val: 0 };
@@ -40,7 +39,6 @@ const WorkStats = () => {
         });
       });
 
-      // Staggered card reveal
       const items = sectionRef.current.querySelectorAll('.stat-item');
       if (items.length) {
         gsap.fromTo(
@@ -66,7 +64,6 @@ const WorkStats = () => {
       ref={sectionRef}
       className="relative w-full py-16 sm:py-24 lg:py-32 px-4 sm:px-6 overflow-hidden bg-obsidian"
     >
-      {/* Background decoration */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
         <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
         <div className="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
@@ -77,16 +74,14 @@ const WorkStats = () => {
       </div>
 
       <div className="max-w-7xl mx-auto relative z-10">
-        {/* Label */}
         <div className="flex items-center gap-3 mb-10 sm:mb-16 justify-center">
           <div className="h-px w-8 sm:w-12 bg-accent/50" />
           <span className="text-accent/70 font-mono text-xs tracking-[0.4em] uppercase">
-            By the Numbers
+            The Numbers
           </span>
           <div className="h-px w-8 sm:w-12 bg-accent/50" />
         </div>
 
-        {/* Stats grid */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-px bg-white/[0.04] rounded-2xl overflow-hidden border border-white/[0.06]">
           {stats.map((stat, i) => (
             <div

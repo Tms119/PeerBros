@@ -75,7 +75,7 @@ const ProjectsGallery = () => {
             </h2>
           </div>
           <p className="text-white/40 text-sm sm:text-base max-w-xs leading-relaxed">
-            Six industries. Six elite builds. Each one proof of what we're capable of.
+            Real clients. Real problems. Real results.
           </p>
         </div>
       </div>
