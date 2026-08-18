@@ -173,3 +173,41 @@
     transform: translateY(0px);
   }
 }
+
+/* Pathway Node Pulse Ring — expands outward when node activates */
+@keyframes pulse-ring {
+  0% {
+    transform: scale(1);
+    opacity: 0.6;
+  }
+  100% {
+    transform: scale(2.4);
+    opacity: 0;
+  }
+}
+
+.pathway-node-pulse {
+  animation: pulse-ring 1.2s ease-out forwards;
+}
+
+/* Pathway label — centered on the connector line */
+.pathway-label-text {
+  pointer-events: none;
+  user-select: none;
+  white-space: nowrap;
+}
+
+/* Pathway card — smooth expand/collapse */
+.pathway-card {
+  transform-origin: top center;
+}
+
+/* Pulse dot glow — CSS radial breathing effect */
+@keyframes pulse-glow {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.pathway-pulse-dot {
+  animation: pulse-glow 1.2s ease-in-out infinite;
+}
