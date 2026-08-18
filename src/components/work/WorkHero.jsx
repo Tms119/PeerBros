@@ -6,6 +6,14 @@ gsap.registerPlugin(ScrollTrigger);
 
 const WorkHero = ({ ready }) => {
   const sectionRef = useRef(null);
+  const headlineRef = useRef(null);
+  const line1Ref = useRef(null);
+  const line2Ref = useRef(null);
+  const subRef = useRef(null);
+  const scrollRef = useRef(null);
+  const particlesRef = useRef(null);
+  const velocityListenerRef = useRef(null);
+  
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
@@ -15,65 +23,110 @@ const WorkHero = ({ ready }) => {
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
-  // Hero reveal and scroll-driven thread animation
+  // ── Particle field — fires once on mount (desktop only) ─────────
   useEffect(() => {
-    if (!ready || !sectionRef.current) return;
+    if (!particlesRef.current || isMobile) return;
+    const ctx = gsap.context(() => {
+      Array.from(particlesRef.current.children).forEach((p) => {
+        gsap.to(p, {
+          y: `${-30 - Math.random() * 60}px`,
+          x: `${(Math.random() - 0.5) * 40}px`,
+          opacity: Math.random() * 0.6 + 0.1,
+          duration: 3 + Math.random() * 4,
+          repeat: -1,
+          yoyo: true,
+          ease: 'sine.inOut',
+          delay: Math.random() * 4,
+        });
+      });
+    }, particlesRef);
+    return () => ctx.revert();
+  }, [isMobile]);
+
+  // ── Hero reveal — fires only when loading screen is DONE ───────
+  useEffect(() => {
+    if (!ready) return;
+    if (
+      !sectionRef.current ||
+      !line1Ref.current ||
+      !line2Ref.current ||
+      !subRef.current ||
+      !scrollRef.current
+    )
+      return;
 
     const ctx = gsap.context(() => {
-      // 1. Initial Load Reveal
-      const tl = gsap.timeline({ delay: 0.1 });
+      // Much faster, tighter stagger to prevent perceived lag on mobile
+      const tl = gsap.timeline({ delay: 0.05 });
 
-      tl.fromTo('.hero-text-line', 
-        { y: 100, opacity: 0, rotateX: -15 },
-        { y: 0, opacity: 1, rotateX: 0, duration: 1.2, stagger: 0.15, ease: 'power4.out', transformOrigin: "50% 100%" }
+      tl.fromTo(
+        line1Ref.current,
+        { y: 50, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.6, ease: 'power4.out' }
       )
-      .fromTo('.hero-sub',
-        { y: 20, opacity: 0 },
-        { y: 0, opacity: 1, duration: 0.8, ease: 'power3.out' },
-        "-=0.8"
-      )
-      .fromTo('.corner-spec',
-        { opacity: 0 },
-        { opacity: 1, duration: 1, ease: 'power2.out', stagger: 0.1 },
-        "-=0.6"
-      )
-      // Draw the vertical thread downward
-      .fromTo('.hero-thread',
-        { strokeDashoffset: 1500 },
-        { strokeDashoffset: 0, duration: 1.5, ease: 'power3.inOut' },
-        "-=1.0"
-      );
+        .fromTo(
+          line2Ref.current,
+          { y: 40, opacity: 0 },
+          { y: 0, opacity: 1, duration: 0.5, ease: 'power4.out' },
+          '-=0.4'
+        )
+        .fromTo(
+          subRef.current,
+          { opacity: 0, y: 16 },
+          { opacity: 1, y: 0, duration: 0.5, ease: 'power3.out' },
+          '-=0.3'
+        )
+        .fromTo(
+          scrollRef.current,
+          { opacity: 0 },
+          { opacity: 1, duration: 0.4 },
+          '-=0.2'
+        );
 
-      // 2. Scroll Parallax (Move text up slightly while scrolling)
-      gsap.to('.hero-text-wrapper', {
-        y: -100,
+      // Scroll-out fade
+      gsap.to(sectionRef.current, {
         opacity: 0,
-        ease: 'none',
+        y: -30,
+        ease: 'power2.in',
         scrollTrigger: {
           trigger: sectionRef.current,
           start: 'top top',
           end: 'bottom top',
           scrub: true,
-        }
+        },
       });
-
-      // 3. Move the thread down as we scroll, creating the "continuous" feel
-      // It pushes down out of the hero to connect with the marquee/gallery
-      gsap.to('.hero-thread', {
-        y: 200,
-        ease: 'none',
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: 'top top',
-          end: 'bottom top',
-          scrub: true,
-        }
-      });
-
     }, sectionRef);
 
-    return () => ctx.revert();
-  }, [ready]);
+    // Velocity warp (disable on mobile to save GPU layout thrashing)
+    if (!isMobile) {
+      let lastScrollY = window.scrollY;
+      const velocitySkew = () => {
+        const currentY = window.scrollY;
+        const velocity = currentY - lastScrollY;
+        lastScrollY = currentY;
+        if (headlineRef.current) {
+          gsap.to(headlineRef.current, {
+            skewY: velocity * -0.03,
+            scaleX: 1 + Math.abs(velocity) * 0.0008,
+            duration: 0.5,
+            ease: 'power3.out',
+            overwrite: 'auto',
+          });
+        }
+      };
+      velocityListenerRef.current = velocitySkew;
+      window.addEventListener('scroll', velocitySkew, { passive: true });
+    }
+
+    return () => {
+      ctx.revert();
+      if (velocityListenerRef.current) {
+        window.removeEventListener('scroll', velocityListenerRef.current);
+      }
+    };
+  }, [ready, isMobile]);
+
+  const particles = Array.from({ length: 40 });
 
   return (
     <section
@@ -81,84 +134,111 @@ const WorkHero = ({ ready }) => {
       id="work-hero"
       className="relative w-full min-h-[100svh] flex flex-col items-center justify-center overflow-hidden bg-background px-6"
     >
-      {/* Structural Grid Background (Precise, Engineering Feel) */}
+      {/* Ambient glows (lighter on mobile) */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] md:w-[600px] h-[200px] md:h-[400px] rounded-full bg-accent/5 blur-[80px] md:blur-[120px] pointer-events-none" />
+      
+      {!isMobile && (
+        <div className="absolute top-1/3 left-1/4 w-[300px] h-[300px] rounded-full bg-purple-500/5 blur-[100px] pointer-events-none" />
+      )}
+
+      {/* Particle field (Desktop only) */}
+      {!isMobile && (
+        <div
+          ref={particlesRef}
+          className="absolute inset-0 overflow-hidden pointer-events-none"
+          aria-hidden="true"
+        >
+          {particles.map((_, i) => (
+            <div
+              key={i}
+              className="absolute rounded-full bg-white"
+              style={{
+                width: `${Math.random() * 3 + 1}px`,
+                height: `${Math.random() * 3 + 1}px`,
+                left: `${Math.random() * 100}%`,
+                top: `${Math.random() * 100}%`,
+                opacity: Math.random() * 0.3 + 0.05,
+              }}
+            />
+          ))}
+        </div>
+      )}
+
+      {/* Grid lines */}
       <div
         className="absolute inset-0 pointer-events-none opacity-[0.03]"
         style={{
           backgroundImage:
             'linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px)',
-          backgroundSize: '100px 100px',
-          backgroundPosition: 'center center',
+          backgroundSize: '80px 80px',
         }}
       />
-      
-      {/* Dark gradient fade at the bottom to transition smoothly to next section */}
-      <div className="absolute inset-0 bg-gradient-to-b from-background via-transparent to-background pointer-events-none" />
 
-      {/* The Continuous Thread (SVG Vertical Line) */}
-      <svg className="absolute inset-0 w-full h-full pointer-events-none z-0">
-        <line
-          x1="50%" y1="65%" x2="50%" y2="150%"
-          stroke="rgba(192, 160, 128, 0.7)" // Champagne accent color to match Gallery
-          strokeWidth="2.5"
-          className="hero-thread"
-          style={{ 
-            strokeDasharray: 1500, 
-            strokeDashoffset: 1500,
-            filter: 'drop-shadow(0 0 6px rgba(192,160,128,0.4))' 
-          }}
-        />
-      </svg>
-
-      {/* Main Content */}
-      <div className="hero-text-wrapper relative z-10 text-center w-full max-w-6xl mx-auto flex flex-col items-center">
-        
-        {/* Top Label */}
-        <div className="flex items-center justify-center gap-4 mb-10">
-          <div className="w-1.5 h-1.5 bg-accent rounded-full animate-pulse shadow-[0_0_8px_rgba(192,160,128,0.8)]" />
-          <span className="text-accent font-mono text-[10px] sm:text-xs tracking-[0.4em] uppercase">
-            Portfolio & Case Studies
+      {/* Content */}
+      <div
+        ref={headlineRef}
+        className="relative z-10 text-center w-full max-w-6xl mx-auto will-change-transform"
+      >
+        {/* Label */}
+        <div className="flex items-center justify-center gap-3 mb-6 sm:mb-12">
+          <div className="h-px w-8 sm:w-20 bg-accent/50" />
+          <span className="text-accent font-mono text-xs sm:text-sm tracking-[0.4em] uppercase">
+            What We've Built
           </span>
-          <div className="w-1.5 h-1.5 bg-accent rounded-full animate-pulse shadow-[0_0_8px_rgba(192,160,128,0.8)]" />
+          <div className="h-px w-8 sm:w-20 bg-accent/50" />
         </div>
 
-        {/* Razor-Sharp Typography */}
-        <div className="overflow-hidden" style={{ perspective: 1000 }}>
-          <h1 className="hero-text-line text-[13vw] sm:text-[11vw] md:text-[9vw] lg:text-[8.5vw] font-display font-black text-white tracking-tighter leading-[0.9] uppercase">
-            Systems Built
-          </h1>
-        </div>
-        <div className="overflow-hidden mb-10 sm:mb-12" style={{ perspective: 1000 }}>
-          <h1 className="hero-text-line text-[13vw] sm:text-[11vw] md:text-[9vw] lg:text-[8.5vw] font-display font-black text-white/30 tracking-tighter leading-[0.9] uppercase">
-            To Scale
+        {/* Headline line 1 */}
+        <div className="overflow-hidden mb-2 sm:mb-3">
+          <h1
+            ref={line1Ref}
+            className="text-[14vw] sm:text-[12vw] md:text-[10vw] lg:text-[9vw] font-display font-black text-white tracking-tighter leading-none uppercase will-change-transform"
+            style={{ opacity: 0 }}
+          >
+            OUR WORK
           </h1>
         </div>
 
-        {/* Explanatory Subtitle */}
-        <p className="hero-sub text-white/50 text-sm sm:text-base md:text-lg font-light max-w-xl mx-auto leading-relaxed px-4">
-          We don't just design interfaces. We engineer automated workflows, resilient infrastructure, and digital platforms that drive serious growth.
+        {/* Headline line 2 */}
+        <div className="overflow-hidden mb-6 sm:mb-12">
+          <p
+            ref={line2Ref}
+            className="text-[6.5vw] sm:text-[4.5vw] md:text-[3.5vw] lg:text-[3vw] font-display font-light text-white/30 tracking-wider uppercase leading-none will-change-transform"
+            style={{ opacity: 0 }}
+          >
+            Speaks for Itself
+          </p>
+        </div>
+
+        {/* Subtitle */}
+        <p
+          ref={subRef}
+          className="text-white/50 text-sm sm:text-base md:text-lg font-light max-w-md mx-auto leading-relaxed px-4"
+          style={{ opacity: 0 }}
+        >
+          A selection of our recent work, across industries, built to perform.
         </p>
 
-        {/* Scroll Cue attached to thread */}
-        <div className="hero-sub mt-16 sm:mt-24 flex flex-col items-center gap-2">
-          <span className="text-white/40 font-mono text-[9px] tracking-[0.3em] uppercase">Scroll to explore</span>
+        {/* Scroll cue */}
+        <div
+          ref={scrollRef}
+          className="mt-12 sm:mt-20 flex flex-col items-center gap-3"
+          style={{ opacity: 0 }}
+        >
+          <span className="text-white/30 font-mono text-xs tracking-widest uppercase">Scroll</span>
+          <div className="w-px h-10 sm:h-16 bg-gradient-to-b from-white/30 to-transparent" />
         </div>
       </div>
 
-      {/* Corner Technical Details (Auxia Editorial Style) */}
-      <div className="corner-spec hidden md:flex absolute top-10 left-10 text-white/20 font-mono text-[9px] tracking-[0.3em] uppercase flex-col gap-1">
-        <span>SYS.ENV // PEERBROS</span>
-        <span>STATUS // OPERATIONAL</span>
+      {/* Corner decorations */}
+      <div className="hidden md:block absolute top-8 left-8 text-white/10 font-mono text-xs">
+        portfolio.peerbros.com
       </div>
-      
-      <div className="corner-spec hidden md:flex absolute top-10 right-10 text-white/20 font-mono text-[9px] tracking-[0.3em] uppercase flex-col gap-1 text-right">
-        <span>YEAR // {new Date().getFullYear()}</span>
-        <span>VERSION // 2.0.4</span>
+      <div className="hidden md:block absolute top-8 right-8 text-white/10 font-mono text-xs">
+        {new Date().getFullYear()}
       </div>
-      
-      <div className="corner-spec hidden md:flex absolute bottom-10 left-10 text-white/20 font-mono text-[9px] tracking-[0.3em] uppercase items-center gap-2">
-        <div className="w-1 h-1 bg-white/40 rounded-full animate-pulse" />
-        INITIATING ARCHITECTURE SEQUENCE
+      <div className="hidden md:block absolute bottom-8 left-8 text-white/10 font-mono text-xs">
+        RECENT WORK
       </div>
     </section>
   );
