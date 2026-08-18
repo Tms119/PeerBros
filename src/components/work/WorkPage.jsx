@@ -77,9 +77,7 @@ const WorkPage = () => {
         <ProjectsGallery />
         <WorkCTA />
       </main>
-      <React.Suspense fallback={<div className="h-48 w-full bg-black" />}>
-        <Footer />
-      </React.Suspense>
+      <Footer />
     </div>
   );
 };

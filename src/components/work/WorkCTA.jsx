@@ -59,7 +59,7 @@ const WorkCTA = () => {
       className="relative w-full py-20 sm:py-32 lg:py-40 px-4 sm:px-6 bg-background overflow-hidden"
     >
       {/* Glow */}
-      <div className="cta-glow absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[400px] bg-accent rounded-full blur-[120px] opacity-[0.06] pointer-events-none will-change-transform" />
+      <div className="cta-glow absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[400px] bg-accent rounded-full blur-[120px] opacity-[0.06] pointer-events-none will-change-transform" style={{ transform: 'translate(-50%, -50%) translateZ(0)' }} />
 
       {/* Top border */}
       <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-accent/20 to-transparent" />
