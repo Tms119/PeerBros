@@ -33,7 +33,7 @@
   right: -50%;
   bottom: -50%;
   width: 200%;
-  height: 200vh;
+  height: 200%;
   background: transparent url('https://upload.wikimedia.org/wikipedia/commons/7/76/1k_Dissolve_Noise_Texture.png') repeat 0 0;
   background-repeat: repeat;
   animation: bg-animation .2s infinite;
@@ -43,6 +43,14 @@
   z-index: 50;
   will-change: transform;
   transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+/* Disable noise overlay on mobile — position:fixed repaints on every scroll frame in Safari/Android */
+@media (max-width: 768px) {
+  .noise-overlay {
+    display: none;
+  }
 }
 
 @keyframes bg-animation {

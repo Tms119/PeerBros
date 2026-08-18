@@ -72,7 +72,7 @@ export const projects = [
       'cPanel & product plan pages',
       'Live chat & support integration',
     ],
-    tech: ['React', 'Node.js', 'Linux', 'CloudFlare'],
+    tech: ['React', 'Node.js', 'AWS', 'CloudFlare'],
     category_icon: 'Globe',
   },
   {
