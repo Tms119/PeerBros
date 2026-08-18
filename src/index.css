@@ -40,6 +40,8 @@
   visibility: visible;
   pointer-events: none;
   z-index: 50;
+  will-change: transform;
+  transform: translateZ(0);
 }
 
 @keyframes bg-animation {

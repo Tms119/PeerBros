@@ -13,6 +13,7 @@ import Footer from '../Footer';
 import ScrollToTop from '../ScrollToTop';
 
 gsap.registerPlugin(ScrollTrigger);
+ScrollTrigger.config({ ignoreMobileResize: true });
 
 const WorkPage = () => {
   const [loaded, setLoaded] = useState(false);

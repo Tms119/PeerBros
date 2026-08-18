@@ -20,6 +20,7 @@ const Footer = lazy(() => import('./components/Footer'));
 const WorkPage = lazy(() => import('./components/work/WorkPage'));
 
 gsap.registerPlugin(ScrollTrigger);
+ScrollTrigger.config({ ignoreMobileResize: true });
 
 const LoadingFallback = () => (
   <div className="h-[100svh] w-full bg-black flex items-center justify-center text-white/50 text-sm font-mono tracking-widest uppercase">
