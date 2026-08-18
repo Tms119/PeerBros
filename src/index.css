@@ -7,6 +7,7 @@
 @layer base {
   body {
     @apply bg-background text-foreground font-sans overflow-x-hidden antialiased selection:bg-accent/30 selection:text-accent;
+    overscroll-behavior-y: none;
   }
 
   h1,
