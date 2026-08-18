@@ -10,12 +10,12 @@ export const projects = [
     accent: '#7C6FE0',
     accentRgb: '124, 111, 224',
     features: [
-      'Custom SaaS dashboard & UI',
-      'AI email sequence builder',
-      'Multichannel campaign system',
-      'User auth & subscription billing',
+      'Crypto gateway integration',
+      'Custom browser extension',
+      'Subscription tracking',
+      'Hierarchy admin access',
     ],
-    tech: ['React', 'Node.js', 'PostgreSQL', 'OpenAI'],
+    tech: ['React', 'Node.js', 'PostgreSQL', 'Web3'],
     category_icon: 'Zap',
   },
   {
@@ -31,10 +31,10 @@ export const projects = [
     features: [
       'Full marketplace architecture',
       'Seller dashboard & payout system',
-      'Stripe powered checkout flow',
+      'Full crypto checkout flow with email',
       'Product search & filtering engine',
     ],
-    tech: ['Next.js', 'Stripe', 'MySQL', 'AWS S3'],
+    tech: ['Next.js', 'Web3', 'Node.js', 'PostgreSQL'],
     category_icon: 'ShoppingCart',
   },
   {
@@ -72,7 +72,7 @@ export const projects = [
       'cPanel & product plan pages',
       'Live chat & support integration',
     ],
-    tech: ['PHP', 'cPanel', 'Linux', 'CloudFlare'],
+    tech: ['React', 'Node.js', 'Linux', 'CloudFlare'],
     category_icon: 'Globe',
   },
   {
@@ -91,7 +91,7 @@ export const projects = [
       'Custom quote request system',
       'Mobile optimised responsive site',
     ],
-    tech: ['WordPress', 'WooCommerce', 'PHP', 'GSAP'],
+    tech: ['Next.js', 'React', 'Tailwind', 'GSAP'],
     category_icon: 'Package',
   },
   {
