@@ -24,13 +24,13 @@ const Footer = () => {
     }, []);
 
     return (
-        <footer ref={containerRef} className="relative bg-black pt-32 pb-12 px-6 overflow-hidden md:min-h-screen flex flex-col justify-between">
+        <footer ref={containerRef} className="relative bg-black pt-32 pb-12 px-6 overflow-hidden md:min-h-screen flex flex-col justify-between" style={{ transform: 'translateZ(0)', WebkitTransform: 'translateZ(0)' }}>
             {/* Massive Background Glow */}
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] md:w-[1000px] h-[600px] md:h-[1000px] bg-accent/20 blur-[60px] md:blur-[200px] rounded-full pointer-events-none opacity-50 will-change-transform" style={{ transform: 'translate(-50%, -50%) translateZ(0)' }} />
 
             <div className="max-w-7xl mx-auto w-full relative z-10 flex-grow flex flex-col items-center justify-center text-center">
 
-                <h2 className="text-5xl md:text-8xl lg:text-[10rem] font-display font-bold text-white tracking-tighter leading-[0.85] mb-8 md:mb-12 footer-reveal md:mix-blend-difference">
+                <h2 className="text-5xl md:text-8xl lg:text-[10rem] font-display font-bold text-white tracking-tighter leading-[0.85] mb-8 md:mb-12 footer-reveal">
                     Stop <span className="italic font-light text-white/50">Losing</span> <br />
                     Time and Money.
                 </h2>
