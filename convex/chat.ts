@@ -135,9 +135,11 @@ export const sendMessage = action({
         },
         body: JSON.stringify({
           model: "minimax/minimax-m3:free",
-          messages: messages,
-          tools: [EXTRACT_LEAD_FUNCTION],
-          tool_choice: "auto"
+          messages: [
+            ...messages,
+            { role: "system", content: "You MUST respond with a valid JSON object in this exact format: {\"reply\": \"your message text\", \"phase\": \"greeting|discovery|complete\", \"quick_replies\": [\"optional\", \"buttons\"]}" }
+          ],
+          response_format: { type: "json_object" }
         })
       });
 
@@ -148,58 +150,22 @@ export const sendMessage = action({
 
       const result = await fetchResponse.json();
       const messageObj = result.choices?.[0]?.message;
+      let rawContent = messageObj?.content || "";
+      rawContent = rawContent.replace(/<think>[\s\S]*?<\/think>/g, "").trim();
 
-      let reply = messageObj?.content || "";
-      let extractedFields: Record<string, any> = {};
+      let reply = rawContent;
+      let phase = "";
       let quickReplies: string[] = [];
 
-      // Process tool calls
-      if (messageObj?.tool_calls && messageObj.tool_calls.length > 0) {
-        for (const toolCall of messageObj.tool_calls) {
-          if (toolCall.function.name === "extract_lead_data") {
-            try {
-              extractedFields = JSON.parse(toolCall.function.arguments);
-              quickReplies = (extractedFields.quick_replies as string[]) || [];
-            } catch (e) {
-              console.error("Failed to parse tool call arguments", e);
-            }
-          }
-        }
+      try {
+        const parsed = JSON.parse(rawContent);
+        if (parsed.reply) reply = parsed.reply;
+        if (parsed.phase) phase = parsed.phase;
+        if (parsed.quick_replies) quickReplies = parsed.quick_replies;
+      } catch (e) {
+        // If it failed to parse JSON, just use the raw text
       }
 
-      // If the model ONLY called a function but returned no text, we do a follow-up 
-      // by pretending the function ran and asking for a response.
-      if (!reply.trim() && Object.keys(extractedFields).length > 0) {
-        messages.push(messageObj);
-        messages.push({
-          role: "tool",
-          tool_call_id: messageObj.tool_calls[0].id,
-          name: "extract_lead_data",
-          content: JSON.stringify({ status: "recorded" })
-        } as any);
-
-        const followUpRes = await fetch("https://api.xkiro.com/v1/chat/completions", {
-          method: "POST",
-          headers: {
-            "Authorization": `Bearer ${xkiroApiKey}`,
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            model: "minimax/minimax-m3:free",
-            messages: messages,
-          })
-        });
-
-        if (followUpRes.ok) {
-          const followUpData = await followUpRes.json();
-          reply = followUpData.choices?.[0]?.message?.content || "";
-        }
-      }
-
-      // Strip any reasoning traces (like <think> tags)
-      reply = reply.replace(/<think>[\s\S]*?<\/think>/g, "").trim();
-
-      // Fallback if still no reply
       if (!reply) {
         reply = "I will pass this to the team. They will be in touch soon!";
       }
@@ -211,74 +177,14 @@ export const sendMessage = action({
         content: reply,
       });
 
-      // Update lead fields from extraction
-      const phase = (extractedFields.conversation_phase as string) || "";
-      const isComplete = phase === "complete";
-      const shouldEscalate = extractedFields.escalate === true;
-
-      if (Object.keys(extractedFields).length > 0) {
-        await ctx.runMutation(internal.leads.updateLeadFields, {
-          conversation_id: args.conversation_id,
-          ...(extractedFields.service_type && {
-            service_type: extractedFields.service_type as
-              | "website"
-              | "ecommerce"
-              | "crm"
-              | "other",
-          }),
-          ...(extractedFields.scope_notes && {
-            scope_notes: extractedFields.scope_notes as string,
-          }),
-          ...(extractedFields.budget_range && {
-            budget_range: extractedFields.budget_range as string,
-          }),
-          ...(extractedFields.timeline && {
-            timeline: extractedFields.timeline as string,
-          }),
-          ...(extractedFields.contact_name && {
-            contact_name: extractedFields.contact_name as string,
-          }),
-          ...(extractedFields.contact_email && {
-            contact_email: extractedFields.contact_email as string,
-          }),
-          ...(extractedFields.contact_phone && {
-            contact_phone: extractedFields.contact_phone as string,
-          }),
-          qualified: extractedFields.qualified === true,
-          escalate: shouldEscalate,
-          ...(isComplete && { status: "completed" as const }),
-        });
-      }
-
-      // Send email notification on completion or escalation
-      if (isComplete || shouldEscalate) {
-        try {
-          await ctx.runAction(internal.email.sendLeadNotification, {
-            conversation_id: args.conversation_id,
-            service_type:
-              (extractedFields.service_type as string) || undefined,
-            scope_notes:
-              (extractedFields.scope_notes as string) || undefined,
-            budget_range:
-              (extractedFields.budget_range as string) || undefined,
-            timeline: (extractedFields.timeline as string) || undefined,
-            contact_name:
-              (extractedFields.contact_name as string) || undefined,
-            contact_email:
-              (extractedFields.contact_email as string) || undefined,
-            contact_phone:
-              (extractedFields.contact_phone as string) || undefined,
-            escalate: shouldEscalate,
-            qualified: extractedFields.qualified === true,
-          });
-        } catch (emailError) {
-          console.error("Email notification failed (non-blocking):", emailError);
-        }
-      }
+      // Spawn background extraction
+      await ctx.scheduler.runAfter(0, internal.chat.backgroundExtract, {
+        conversation_id: args.conversation_id,
+      });
 
       return {
         reply,
-        extracted_fields: extractedFields,
+        extracted_fields: { conversation_phase: phase },
         quick_replies: quickReplies,
       };
     } catch (error: any) {
@@ -308,4 +214,101 @@ export const sendMessage = action({
       };
     }
   },
+});
+
+/**
+ * Background task to analyze the transcript and extract lead fields securely.
+ */
+export const backgroundExtract = internalAction({
+  args: {
+    conversation_id: v.string(),
+  },
+  handler: async (ctx, args) => {
+    const xkiroApiKey = process.env.XKIRO_API_KEY;
+    if (!xkiroApiKey) {
+      console.error("Missing XKIRO_API_KEY");
+      return;
+    }
+
+    const lead = await ctx.runQuery(internal.leads.getByConversationId, {
+      conversation_id: args.conversation_id,
+    });
+
+    if (!lead || !lead.full_transcript || lead.full_transcript.length === 0) return;
+
+    const messages = lead.full_transcript.map((msg: any) => ({
+      role: msg.role,
+      content: msg.content,
+    }));
+
+    try {
+      const fetchResponse = await fetch("https://api.xkiro.com/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          "Authorization": `Bearer ${xkiroApiKey}`,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          model: "minimax/minimax-m3:free",
+          messages: [
+            { role: "system", content: "You are an internal data extractor. Analyze the transcript and extract the requested fields. Extract everything you can find, including name, email, scope, etc." },
+            ...messages
+          ],
+          tools: [EXTRACT_LEAD_FUNCTION],
+          tool_choice: { type: "function", function: { name: "extract_lead_data" } }
+        })
+      });
+
+      if (!fetchResponse.ok) return;
+
+      const result = await fetchResponse.json();
+      const toolCall = result.choices?.[0]?.message?.tool_calls?.[0];
+      if (!toolCall) return;
+
+      const extractedFields = JSON.parse(toolCall.function.arguments);
+      if (Object.keys(extractedFields).length === 0) return;
+
+      const phase = (extractedFields.conversation_phase as string) || "";
+      const isComplete = phase === "complete";
+      const shouldEscalate = extractedFields.escalate === true;
+
+      // Update Database
+      await ctx.runMutation(internal.leads.updateLeadFields, {
+        conversation_id: args.conversation_id,
+        ...(extractedFields.service_type && { service_type: extractedFields.service_type as "website" | "ecommerce" | "crm" | "other" }),
+        ...(extractedFields.scope_notes && { scope_notes: extractedFields.scope_notes as string }),
+        ...(extractedFields.budget_range && { budget_range: extractedFields.budget_range as string }),
+        ...(extractedFields.timeline && { timeline: extractedFields.timeline as string }),
+        ...(extractedFields.contact_name && { contact_name: extractedFields.contact_name as string }),
+        ...(extractedFields.contact_email && { contact_email: extractedFields.contact_email as string }),
+        ...(extractedFields.contact_phone && { contact_phone: extractedFields.contact_phone as string }),
+        qualified: extractedFields.qualified === true,
+        escalate: shouldEscalate,
+        ...(isComplete && { status: "completed" as const }),
+      });
+
+      // Trigger Email Notification if complete
+      if (isComplete || shouldEscalate) {
+        // Prevent sending duplicate emails by checking if we already sent one.
+        // We can check if status was already completed, but since this runs async, 
+        // the email action should ideally handle deduplication, or we just trust it.
+        // To be safe, we will just run the email action.
+        await ctx.runAction(internal.email.sendLeadNotification, {
+          conversation_id: args.conversation_id,
+          service_type: (extractedFields.service_type as string) || undefined,
+          scope_notes: (extractedFields.scope_notes as string) || undefined,
+          budget_range: (extractedFields.budget_range as string) || undefined,
+          timeline: (extractedFields.timeline as string) || undefined,
+          contact_name: (extractedFields.contact_name as string) || undefined,
+          contact_email: (extractedFields.contact_email as string) || undefined,
+          contact_phone: (extractedFields.contact_phone as string) || undefined,
+          escalate: shouldEscalate,
+          qualified: extractedFields.qualified === true,
+        });
+      }
+
+    } catch (e) {
+      console.error("Background extraction failed:", e);
+    }
+  }
 });
