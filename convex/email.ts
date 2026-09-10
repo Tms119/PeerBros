@@ -137,32 +137,44 @@ export const sendAdminCredentialsEmail = internalAction({
     }
 
     try {
-      const resend = new Resend(resendApiKey);
       const siteUrl = process.env.VITE_URL || 'https://peerbros.com';
-
-      await resend.emails.send({
-        from: "PeerBros System <onboarding@resend.dev>", // Replace with your verified domain
-        to: args.email,
-        subject: "PeerBros Admin Credentials",
-        html: `
-          <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
-            <h2 style="color: #111;">PeerBros Admin Setup Complete</h2>
-            <p style="color: #444; font-size: 16px;">
-              Your admin account has been created. You can now log into the dashboard to view captured leads and chat histories.
-            </p>
-            
-            <div style="background: #f4f4f5; padding: 20px; border-radius: 8px; margin: 20px 0;">
-              <p style="margin: 0 0 10px 0;"><strong>Dashboard URL:</strong> <a href="${siteUrl}/admin">${siteUrl}/admin</a></p>
-              <p style="margin: 0 0 10px 0;"><strong>Email:</strong> ${args.email}</p>
-              <p style="margin: 0;"><strong>Password:</strong> ${args.password}</p>
-            </div>
-            
-            <p style="color: #666; font-size: 14px;">
-              Please keep these credentials secure.
-            </p>
+      const htmlBody = `
+        <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
+          <h2 style="color: #111;">PeerBros Admin Setup Complete</h2>
+          <p style="color: #444; font-size: 16px;">
+            Your admin account has been created. You can now log into the dashboard to view captured leads and chat histories.
+          </p>
+          
+          <div style="background: #f4f4f5; padding: 20px; border-radius: 8px; margin: 20px 0;">
+            <p style="margin: 0 0 10px 0;"><strong>Dashboard URL:</strong> <a href="${siteUrl}/admin">${siteUrl}/admin</a></p>
+            <p style="margin: 0 0 10px 0;"><strong>Email:</strong> ${args.email}</p>
+            <p style="margin: 0;"><strong>Password:</strong> ${args.password}</p>
           </div>
-        `,
+          
+          <p style="color: #666; font-size: 14px;">
+            Please keep these credentials secure.
+          </p>
+        </div>
+      `;
+
+      const response = await fetch("https://api.resend.com/emails", {
+        method: "POST",
+        headers: {
+          "Authorization": `Bearer ${resendApiKey}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          from: "PeerBros System <onboarding@resend.dev>",
+          to: [args.email],
+          subject: "PeerBros Admin Credentials",
+          html: htmlBody,
+        }),
       });
+
+      if (!response.ok) {
+        console.error("Resend API error:", response.status, await response.text());
+        return;
+      }
       
       console.log(`Credentials email sent to ${args.email}`);
     } catch (error) {
