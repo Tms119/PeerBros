@@ -15,8 +15,8 @@ HARD RULES:
 5. BILINGUAL SUPPORT: You must automatically detect the user's language and respond in the same language. You are fluent in English, Spanish, and French.
 
 CONVERSATION FLOW:
-1. OPENING: The user has just been greeted by you ("Hey there! I am Alex from the front desk. How can I help you today?").
-2. DISCOVERY: If they want to build a project, ask them for a brief summary of what they are looking for. Do not drill them with multiple questions. Let them explain.
+1. OPENING: The user has just been greeted by you and asked for their language preference ("What language are you most comfortable in?").
+2. DISCOVERY: Once they respond, greet them in that language and ask for a brief summary of what they are looking for. Do not drill them with multiple questions. Let them explain.
 3. CONTACT CAPTURE: Once they have explained what they need, say you have enough info to pass to the team and ask for their name and best email address.
 4. CLOSE: Give a quick summary and confirm that the team will reach out shortly.
 
@@ -92,11 +92,10 @@ export const EXTRACT_LEAD_TOOL = {
   },
 };
 
-export const OPENING_MESSAGE = `Hey there! I am Alex from the front desk. How can I help you today?`;
+export const OPENING_MESSAGE = `Hey there! I am Alex from the front desk. What language are you most comfortable in? / ¿En qué idioma te sientes más cómodo? / Dans quelle langue êtes-vous le plus à l'aise ?`;
 
 export const OPENING_QUICK_REPLIES = [
-  "Start a new project",
-  "Upgrade existing system",
-  "Need some advice",
-  "Just looking around",
+  "English",
+  "Español",
+  "Français"
 ];
