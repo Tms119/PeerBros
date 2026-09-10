@@ -26,10 +26,13 @@ export function useChatState() {
   const [isTyping, setIsTyping] = useState(false);
   const [isSending, setIsSending] = useState(false);
   const [isFallbackMode, setIsFallbackMode] = useState(false);
+  const [fallbackStep, setFallbackStep] = useState(0);
+  const [fallbackData, setFallbackData] = useState({ name: '', email: '', service_type: '', notes: '' });
   const [conversationId] = useState(() => generateId());
   const messagesEndRef = useRef(null);
 
   const sendMessageAction = useAction(api.chat.sendMessage);
+  const submitFallbackAction = useAction(api.fallback.submitFallbackLead);
 
   // Auto-scroll to bottom when messages change
   useEffect(() => {
@@ -42,7 +45,7 @@ export function useChatState() {
    * Send a message and handle the bot response with typing delay.
    */
   const sendMessage = useCallback(async (text) => {
-    if (!text.trim() || isSending || isFallbackMode) return;
+    if (!text.trim() || isSending) return;
 
     const userMessage = { role: 'user', content: text.trim() };
     const currentMessages = [...messages, userMessage];
@@ -52,13 +55,59 @@ export function useChatState() {
     setQuickReplies([]);
     setIsSending(true);
 
+    // If we're in the conversational fallback flow, handle it locally
+    if (isFallbackMode) {
+      setTimeout(() => setIsTyping(true), 400);
+
+      const delay = 800 + Math.random() * 500;
+      setTimeout(async () => {
+        setIsTyping(false);
+        if (fallbackStep === 1) {
+          setFallbackData(prev => ({ ...prev, name: text.trim() }));
+          setFallbackStep(2);
+          setMessages(prev => [...prev, { role: 'assistant', content: "Got it! And what is the best email to reach you at?" }]);
+        } else if (fallbackStep === 2) {
+          setFallbackData(prev => ({ ...prev, email: text.trim() }));
+          setFallbackStep(3);
+          setMessages(prev => [...prev, { role: 'assistant', content: "Perfect. What kind of project are you looking to build?" }]);
+          setQuickReplies(["Website", "Ecommerce", "CRM", "Other"]);
+        } else if (fallbackStep === 3) {
+          setFallbackData(prev => ({ ...prev, service_type: text.trim().toLowerCase() }));
+          setFallbackStep(4);
+          setMessages(prev => [...prev, { role: 'assistant', content: "Awesome. Any quick details or notes you want to share before I pass this to the team?" }]);
+        } else if (fallbackStep === 4) {
+          const finalNotes = text.trim();
+          setFallbackData(prev => ({ ...prev, notes: finalNotes }));
+          setFallbackStep(5);
+          
+          try {
+            await submitFallbackAction({
+              conversation_id: conversationId,
+              name: fallbackData.name,
+              email: fallbackData.email,
+              service_type: fallbackData.service_type || 'other',
+              notes: finalNotes,
+            });
+          } catch (err) {
+            console.error("Fallback submission failed:", err);
+          }
+
+          setMessages(prev => [...prev, { role: 'assistant', content: "All set! Thanks for sharing that. Our team will review your details and reach out to you shortly." }]);
+        } else if (fallbackStep >= 5) {
+          setMessages(prev => [...prev, { role: 'assistant', content: "Your details have already been submitted. We will be in touch soon!" }]);
+        }
+        setIsSending(false);
+      }, delay);
+      
+      return; // Exit early so we don't call the Gemini API
+    }
+
     // Show typing indicator after a brief pause
     const typingDelay = 300 + Math.random() * 400;
     setTimeout(() => setIsTyping(true), typingDelay);
 
     try {
-      // Build history (exclude the opening bot message from API history
-      // since it's part of the system prompt behavior)
+      // Build history (exclude the opening bot message from API history)
       const history = currentMessages.slice(1, -1).map((m) => ({
         role: m.role,
         content: m.content,
@@ -70,19 +119,20 @@ export function useChatState() {
         history,
       });
 
-      // Simulate typing delay (600ms - 1.5s)
+      // Simulate typing delay
       const responseDelay = 600 + Math.random() * 900;
       await new Promise((resolve) => setTimeout(resolve, responseDelay));
 
       setIsTyping(false);
+
+      if (result.rate_limited || result.error) {
+        throw new Error("API Failure or Rate Limit");
+      }
+
       setMessages((prev) => [
         ...prev,
         { role: 'assistant', content: result.reply },
       ]);
-
-      if (result.rate_limited || result.error) {
-        setIsFallbackMode(true);
-      }
 
       // Set quick replies if provided
       if (result.quick_replies && result.quick_replies.length > 0) {
@@ -91,18 +141,19 @@ export function useChatState() {
     } catch (error) {
       console.error('Chat error:', error);
       setIsTyping(false);
+      setIsFallbackMode(true);
+      setFallbackStep(1);
       setMessages((prev) => [
         ...prev,
         {
           role: 'assistant',
-          content: "Hmm, something glitched on my end. Please leave your details below and we'll reach out!",
+          content: "Looks like our system is super busy right now! Let's just do this step by step so I can get your info to the team. First, what is your name?",
         },
       ]);
-      setIsFallbackMode(true);
     } finally {
       setIsSending(false);
     }
-  }, [messages, isSending, isFallbackMode, conversationId, sendMessageAction]);
+  }, [messages, isSending, isFallbackMode, fallbackStep, fallbackData, conversationId, sendMessageAction, submitFallbackAction]);
 
   /**
    * Handle quick reply selection.

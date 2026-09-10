@@ -269,7 +269,7 @@ export const sendMessage = action({
         error?.message?.includes("quota")
       ) {
         return {
-          reply: "We're getting a lot of chats right now — give me just a sec and try again! 🙏",
+          reply: "",
           extracted_fields: {},
           quick_replies: [],
           rate_limited: true,

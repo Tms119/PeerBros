@@ -1,10 +1,9 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { MessageCircle, X, Send, RotateCcw } from 'lucide-react';
-import ChatBubble from './ChatBubble';
-import QuickReplies from './QuickReplies';
-import TypingIndicator from './TypingIndicator';
-import FallbackForm from './FallbackForm';
-import { useChatState } from './useChatState';
+import React, { useState, useRef, useEffect } from "react";
+import { MessageCircle, X, Send, RotateCcw } from "lucide-react";
+import ChatBubble from "./ChatBubble";
+import QuickReplies from "./QuickReplies";
+import TypingIndicator from "./TypingIndicator";
+import { useChatState } from "./useChatState";
 
 /**
  * ChatWidget — floating bubble that expands into a full chat panel.
@@ -12,7 +11,7 @@ import { useChatState } from './useChatState';
  */
 const ChatWidget = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [inputValue, setInputValue] = useState('');
+  const [inputValue, setInputValue] = useState("");
   const [hasInteracted, setHasInteracted] = useState(false);
   const inputRef = useRef(null);
 
@@ -25,7 +24,6 @@ const ChatWidget = () => {
     handleQuickReply,
     resetChat,
     messagesEndRef,
-    isFallbackMode,
     conversationId,
   } = useChatState();
 
@@ -40,8 +38,8 @@ const ChatWidget = () => {
   useEffect(() => {
     if (hasInteracted) return;
     const timer = setTimeout(() => {
-      const bubble = document.getElementById('chat-bubble-btn');
-      if (bubble) bubble.classList.add('chat-bubble-attention');
+      const bubble = document.getElementById("chat-bubble-btn");
+      if (bubble) bubble.classList.add("chat-bubble-attention");
     }, 5000);
     return () => clearTimeout(timer);
   }, [hasInteracted]);
@@ -49,8 +47,8 @@ const ChatWidget = () => {
   const handleOpen = () => {
     setIsOpen(true);
     setHasInteracted(true);
-    const bubble = document.getElementById('chat-bubble-btn');
-    if (bubble) bubble.classList.remove('chat-bubble-attention');
+    const bubble = document.getElementById("chat-bubble-btn");
+    if (bubble) bubble.classList.remove("chat-bubble-attention");
   };
 
   const handleClose = () => {
@@ -61,11 +59,11 @@ const ChatWidget = () => {
     e.preventDefault();
     if (!inputValue.trim() || isSending) return;
     sendMessage(inputValue);
-    setInputValue('');
+    setInputValue("");
   };
 
   const handleKeyDown = (e) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
+    if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
       handleSubmit(e);
     }
@@ -98,7 +96,9 @@ const ChatWidget = () => {
               </div>
               <div>
                 <h3 className="chat-header-name">Alex</h3>
-                <p className="chat-header-status">PeerBros · Usually replies instantly</p>
+                <p className="chat-header-status">
+                  PeerBros · Usually replies instantly
+                </p>
               </div>
             </div>
             <div className="chat-header-actions">
@@ -136,39 +136,33 @@ const ChatWidget = () => {
               />
             )}
 
-            {isFallbackMode && (
-              <FallbackForm conversationId={conversationId} />
-            )}
-            
             <div ref={messagesEndRef} />
           </div>
 
-          {/* Input Area (Hidden in Fallback Mode) */}
-          {!isFallbackMode && (
-            <form className="chat-input-area" onSubmit={handleSubmit}>
-              <input
-                ref={inputRef}
-                type="text"
-                className="chat-input"
-                placeholder="Type a message..."
-                value={inputValue}
-                onChange={(e) => setInputValue(e.target.value)}
-                onKeyDown={handleKeyDown}
-                disabled={isSending}
-                id="chat-input-field"
-                autoComplete="off"
-              />
-              <button
-                type="submit"
-                className="chat-send-btn"
-                disabled={!inputValue.trim() || isSending}
-                aria-label="Send message"
-                id="chat-send-btn"
-              >
-                <Send size={18} />
-              </button>
-            </form>
-          )}
+          {/* Input Area */}
+          <form className="chat-input-area" onSubmit={handleSubmit}>
+            <input
+              ref={inputRef}
+              type="text"
+              className="chat-input"
+              placeholder="Type a message..."
+              value={inputValue}
+              onChange={(e) => setInputValue(e.target.value)}
+              onKeyDown={handleKeyDown}
+              disabled={isSending}
+              id="chat-input-field"
+              autoComplete="off"
+            />
+            <button
+              type="submit"
+              className="chat-send-btn"
+              disabled={!inputValue.trim() || isSending}
+              aria-label="Send message"
+              id="chat-send-btn"
+            >
+              <Send size={18} />
+            </button>
+          </form>
 
           {/* Footer */}
           <div className="chat-footer">
