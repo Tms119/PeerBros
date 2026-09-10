@@ -99,7 +99,7 @@ export function useChatState() {
             console.error("Fallback submission failed:", err);
           }
 
-          setMessages(prev => [...prev, { role: 'assistant', content: "All set! Thanks for sharing that. Our team will review your details and reach out to you shortly.", isSuccess: true }]);
+          setMessages(prev => [...prev, { role: 'assistant', content: "All set! I will pass this directly to the team and they will reach out to you shortly.", isSuccess: true }]);
         } else if (fallbackStep >= 5) {
           setMessages(prev => [...prev, { role: 'assistant', content: "Your details have already been submitted. We will be in touch soon!" }]);
         }
@@ -157,7 +157,7 @@ export function useChatState() {
         ...prev,
         {
           role: 'assistant',
-          content: "Looks like our system is super busy right now! Let's just do this step by step so I can get your info to the team. First, what is your name?",
+          content: "Our system is a bit busy right now. I can take a message for the team though. First off, what is your name?",
         },
       ]);
     } finally {
