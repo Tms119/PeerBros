@@ -119,3 +119,54 @@ export const sendLeadNotification = internalAction({
     }
   },
 });
+
+/**
+ * Send an email with admin dashboard credentials.
+ */
+export const sendAdminCredentialsEmail = internalAction({
+  args: {
+    email: v.string(),
+    password: v.string(),
+  },
+  handler: async (ctx, args) => {
+    const resendApiKey = process.env.RESEND_API_KEY;
+
+    if (!resendApiKey) {
+      console.warn("RESEND_API_KEY not configured. Skipping email notification.");
+      return;
+    }
+
+    try {
+      const resend = new Resend(resendApiKey);
+      const siteUrl = process.env.VITE_URL || 'https://peerbros.com';
+
+      await resend.emails.send({
+        from: "PeerBros System <onboarding@resend.dev>", // Replace with your verified domain
+        to: args.email,
+        subject: "PeerBros Admin Credentials",
+        html: `
+          <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
+            <h2 style="color: #111;">PeerBros Admin Setup Complete</h2>
+            <p style="color: #444; font-size: 16px;">
+              Your admin account has been created. You can now log into the dashboard to view captured leads and chat histories.
+            </p>
+            
+            <div style="background: #f4f4f5; padding: 20px; border-radius: 8px; margin: 20px 0;">
+              <p style="margin: 0 0 10px 0;"><strong>Dashboard URL:</strong> <a href="${siteUrl}/admin">${siteUrl}/admin</a></p>
+              <p style="margin: 0 0 10px 0;"><strong>Email:</strong> ${args.email}</p>
+              <p style="margin: 0;"><strong>Password:</strong> ${args.password}</p>
+            </div>
+            
+            <p style="color: #666; font-size: 14px;">
+              Please keep these credentials secure.
+            </p>
+          </div>
+        `,
+      });
+      
+      console.log(`Credentials email sent to ${args.email}`);
+    } catch (error) {
+      console.error("Failed to send credentials email:", error);
+    }
+  },
+});

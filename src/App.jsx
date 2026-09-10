@@ -29,6 +29,8 @@ const LoadingFallback = () => (
   </div>
 );
 
+const AdminLayout = lazy(() => import('./components/admin/AdminLayout'));
+
 // Homepage layout (existing site — untouched)
 function HomePage() {
   const appRef = useRef(null);
@@ -114,6 +116,14 @@ function App() {
           element={
             <Suspense fallback={<div className="fixed inset-0 bg-[#050508]" />}>
               <WorkPage />
+            </Suspense>
+          }
+        />
+        <Route
+          path="/admin"
+          element={
+            <Suspense fallback={<div className="fixed inset-0 bg-[#050508]" />}>
+              <AdminLayout />
             </Suspense>
           }
         />

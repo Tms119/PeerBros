@@ -118,3 +118,12 @@ export const getByConversationId = query({
       .first();
   },
 });
+
+/**
+ * Get all leads for the admin dashboard, ordered by newest first.
+ */
+export const getAllLeads = query({
+  handler: async (ctx) => {
+    return await ctx.db.query("leads").withIndex("by_created_at").order("desc").collect();
+  },
+});
