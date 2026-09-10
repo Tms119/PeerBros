@@ -18,6 +18,7 @@ const Process = lazy(() => import('./components/Process'));
 const Stats = lazy(() => import('./components/Stats'));
 const Footer = lazy(() => import('./components/Footer'));
 const WorkPage = lazy(() => import('./components/work/WorkPage'));
+const ChatWidget = lazy(() => import('./components/chat/ChatWidget'));
 
 gsap.registerPlugin(ScrollTrigger);
 ScrollTrigger.config({ ignoreMobileResize: true });
@@ -117,6 +118,9 @@ function App() {
           }
         />
       </Routes>
+      <Suspense fallback={null}>
+        <ChatWidget />
+      </Suspense>
     </BrowserRouter>
   );
 }
