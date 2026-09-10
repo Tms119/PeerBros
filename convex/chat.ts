@@ -137,7 +137,7 @@ export const sendMessage = action({
           model: "minimax/minimax-m3:free",
           messages: [
             ...messages,
-            { role: "system", content: "You MUST respond with a valid JSON object in this exact format: {\"reply\": \"your message text\", \"phase\": \"greeting|discovery|complete\", \"quick_replies\": [\"optional\", \"buttons\"]}" }
+            { role: "system", content: "If you have collected enough info and are ending the conversation, append [COMPLETE] to the end of your message." }
           ]
         })
       });
@@ -151,21 +151,13 @@ export const sendMessage = action({
       const messageObj = result.choices?.[0]?.message;
       let rawContent = messageObj?.content || "";
       rawContent = rawContent.replace(/<think>[\s\S]*?<\/think>/g, "").trim();
-      
-      // Strip markdown JSON code blocks if the model wrapped its response
-      const jsonStr = rawContent.replace(/^```json\s*/i, "").replace(/\s*```$/i, "").trim();
 
       let reply = rawContent;
       let phase = "";
-      let quickReplies: string[] = [];
 
-      try {
-        const parsed = JSON.parse(jsonStr);
-        if (parsed.reply) reply = parsed.reply;
-        if (parsed.phase) phase = parsed.phase;
-        if (parsed.quick_replies) quickReplies = parsed.quick_replies;
-      } catch (e) {
-        // If it failed to parse JSON, just use the raw text
+      if (reply.includes("[COMPLETE]")) {
+        phase = "complete";
+        reply = reply.replace("[COMPLETE]", "").trim();
       }
 
       if (!reply) {
@@ -187,7 +179,7 @@ export const sendMessage = action({
       return {
         reply,
         extracted_fields: { conversation_phase: phase },
-        quick_replies: quickReplies,
+        quick_replies: [],
       };
     } catch (error: any) {
       console.error("API Error:", error);
