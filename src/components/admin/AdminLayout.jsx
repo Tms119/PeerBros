@@ -2,9 +2,11 @@ import { useState, useEffect } from 'react';
 import { useMutation } from 'convex/react';
 import { api } from '../../../convex/_generated/api';
 import AdminDashboard from './AdminDashboard';
+import AdminSettings from './AdminSettings';
 import { motion } from 'framer-motion';
 
 export default function AdminLayout() {
+  const [activeTab, setActiveTab] = useState('leads');
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -96,8 +98,22 @@ export default function AdminLayout() {
       {/* Admin Navbar */}
       <nav className="border-b border-white/10 bg-black/50 backdrop-blur-md sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-6">
             <span className="text-xl font-bold tracking-tight">PeerBros <span className="text-white/40 font-normal">| Admin</span></span>
+            <div className="hidden sm:flex gap-1 ml-4 border-l border-white/10 pl-6">
+              <button
+                onClick={() => setActiveTab('leads')}
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${activeTab === 'leads' ? 'bg-white/10 text-white' : 'text-white/60 hover:text-white hover:bg-white/5'}`}
+              >
+                Leads
+              </button>
+              <button
+                onClick={() => setActiveTab('settings')}
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${activeTab === 'settings' ? 'bg-white/10 text-white' : 'text-white/60 hover:text-white hover:bg-white/5'}`}
+              >
+                Settings
+              </button>
+            </div>
           </div>
           <button 
             onClick={handleLogout}
@@ -108,9 +124,29 @@ export default function AdminLayout() {
         </div>
       </nav>
 
+      {/* Mobile Tabs */}
+      <div className="sm:hidden flex border-b border-white/10 bg-[#0a0a0a]">
+        <button
+          onClick={() => setActiveTab('leads')}
+          className={`flex-1 py-3 text-sm font-medium ${activeTab === 'leads' ? 'text-white border-b-2 border-white' : 'text-white/60'}`}
+        >
+          Leads
+        </button>
+        <button
+          onClick={() => setActiveTab('settings')}
+          className={`flex-1 py-3 text-sm font-medium ${activeTab === 'settings' ? 'text-white border-b-2 border-white' : 'text-white/60'}`}
+        >
+          Settings
+        </button>
+      </div>
+
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <AdminDashboard />
+        {activeTab === 'leads' ? (
+          <AdminDashboard />
+        ) : (
+          <AdminSettings currentAdminEmail={localStorage.getItem('peerbros_admin_auth')} />
+        )}
       </main>
     </div>
   );
