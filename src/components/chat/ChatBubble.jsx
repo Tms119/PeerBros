@@ -11,7 +11,6 @@ const ChatBubble = ({ role, content }) => {
   return (
     <div
       className={`chat-bubble ${isBot ? 'chat-bubble-bot' : 'chat-bubble-user'}`}
-      id={`chat-msg-${Date.now()}`}
     >
       {isBot && (
         <span className="chat-bubble-label">Alex</span>

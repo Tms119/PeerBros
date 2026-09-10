@@ -11,6 +11,7 @@
 import type * as auth from "../auth.js";
 import type * as chat from "../chat.js";
 import type * as email from "../email.js";
+import type * as fallback from "../fallback.js";
 import type * as leads from "../leads.js";
 import type * as systemPrompt from "../systemPrompt.js";
 
@@ -24,6 +25,7 @@ declare const fullApi: ApiFromModules<{
   auth: typeof auth;
   chat: typeof chat;
   email: typeof email;
+  fallback: typeof fallback;
   leads: typeof leads;
   systemPrompt: typeof systemPrompt;
 }>;

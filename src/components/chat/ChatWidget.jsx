@@ -3,6 +3,7 @@ import { MessageCircle, X, Send, RotateCcw } from 'lucide-react';
 import ChatBubble from './ChatBubble';
 import QuickReplies from './QuickReplies';
 import TypingIndicator from './TypingIndicator';
+import FallbackForm from './FallbackForm';
 import { useChatState } from './useChatState';
 
 /**
@@ -24,6 +25,8 @@ const ChatWidget = () => {
     handleQuickReply,
     resetChat,
     messagesEndRef,
+    isFallbackMode,
+    conversationId,
   } = useChatState();
 
   // Focus input when panel opens
@@ -133,33 +136,39 @@ const ChatWidget = () => {
               />
             )}
 
+            {isFallbackMode && (
+              <FallbackForm conversationId={conversationId} />
+            )}
+            
             <div ref={messagesEndRef} />
           </div>
 
-          {/* Input Area */}
-          <form className="chat-input-area" onSubmit={handleSubmit}>
-            <input
-              ref={inputRef}
-              type="text"
-              className="chat-input"
-              placeholder="Type a message..."
-              value={inputValue}
-              onChange={(e) => setInputValue(e.target.value)}
-              onKeyDown={handleKeyDown}
-              disabled={isSending}
-              id="chat-input-field"
-              autoComplete="off"
-            />
-            <button
-              type="submit"
-              className="chat-send-btn"
-              disabled={!inputValue.trim() || isSending}
-              aria-label="Send message"
-              id="chat-send-btn"
-            >
-              <Send size={18} />
-            </button>
-          </form>
+          {/* Input Area (Hidden in Fallback Mode) */}
+          {!isFallbackMode && (
+            <form className="chat-input-area" onSubmit={handleSubmit}>
+              <input
+                ref={inputRef}
+                type="text"
+                className="chat-input"
+                placeholder="Type a message..."
+                value={inputValue}
+                onChange={(e) => setInputValue(e.target.value)}
+                onKeyDown={handleKeyDown}
+                disabled={isSending}
+                id="chat-input-field"
+                autoComplete="off"
+              />
+              <button
+                type="submit"
+                className="chat-send-btn"
+                disabled={!inputValue.trim() || isSending}
+                aria-label="Send message"
+                id="chat-send-btn"
+              >
+                <Send size={18} />
+              </button>
+            </form>
+          )}
 
           {/* Footer */}
           <div className="chat-footer">

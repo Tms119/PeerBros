@@ -126,7 +126,15 @@ const WorkHero = ({ ready }) => {
     };
   }, [ready, isMobile]);
 
-  const particles = Array.from({ length: 40 });
+  // eslint-disable-next-line react-hooks/purity
+  const particles = React.useMemo(() => 
+    Array.from({ length: 40 }).map(() => ({
+      size: Math.random() * 3 + 1,
+      x: Math.random() * 100,
+      y: Math.random() * 100,
+      opacity: Math.random() * 0.3 + 0.05
+    })), 
+  []);
 
   return (
     <section
@@ -148,16 +156,16 @@ const WorkHero = ({ ready }) => {
           className="absolute inset-0 overflow-hidden pointer-events-none"
           aria-hidden="true"
         >
-          {particles.map((_, i) => (
+          {particles.map((particle, i) => (
             <div
               key={i}
               className="absolute rounded-full bg-white"
               style={{
-                width: `${Math.random() * 3 + 1}px`,
-                height: `${Math.random() * 3 + 1}px`,
-                left: `${Math.random() * 100}%`,
-                top: `${Math.random() * 100}%`,
-                opacity: Math.random() * 0.3 + 0.05,
+                width: `${particle.size}px`,
+                height: `${particle.size}px`,
+                left: `${particle.x}%`,
+                top: `${particle.y}%`,
+                opacity: particle.opacity,
               }}
             />
           ))}

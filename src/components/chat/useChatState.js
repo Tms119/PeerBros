@@ -25,6 +25,7 @@ export function useChatState() {
   const [quickReplies, setQuickReplies] = useState(OPENING_QUICK_REPLIES);
   const [isTyping, setIsTyping] = useState(false);
   const [isSending, setIsSending] = useState(false);
+  const [isFallbackMode, setIsFallbackMode] = useState(false);
   const [conversationId] = useState(() => generateId());
   const messagesEndRef = useRef(null);
 
@@ -35,13 +36,13 @@ export function useChatState() {
     if (messagesEndRef.current) {
       messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
     }
-  }, [messages, isTyping]);
+  }, [messages, isTyping, isFallbackMode]);
 
   /**
    * Send a message and handle the bot response with typing delay.
    */
   const sendMessage = useCallback(async (text) => {
-    if (!text.trim() || isSending) return;
+    if (!text.trim() || isSending || isFallbackMode) return;
 
     const userMessage = { role: 'user', content: text.trim() };
     const currentMessages = [...messages, userMessage];
@@ -79,6 +80,10 @@ export function useChatState() {
         { role: 'assistant', content: result.reply },
       ]);
 
+      if (result.rate_limited || result.error) {
+        setIsFallbackMode(true);
+      }
+
       // Set quick replies if provided
       if (result.quick_replies && result.quick_replies.length > 0) {
         setQuickReplies(result.quick_replies);
@@ -90,13 +95,14 @@ export function useChatState() {
         ...prev,
         {
           role: 'assistant',
-          content: "Hmm, something glitched on my end. Mind trying that again?",
+          content: "Hmm, something glitched on my end. Please leave your details below and we'll reach out!",
         },
       ]);
+      setIsFallbackMode(true);
     } finally {
       setIsSending(false);
     }
-  }, [messages, isSending, conversationId, sendMessageAction]);
+  }, [messages, isSending, isFallbackMode, conversationId, sendMessageAction]);
 
   /**
    * Handle quick reply selection.
@@ -113,6 +119,7 @@ export function useChatState() {
     setQuickReplies(OPENING_QUICK_REPLIES);
     setIsTyping(false);
     setIsSending(false);
+    setIsFallbackMode(false);
   }, []);
 
   return {
@@ -120,6 +127,7 @@ export function useChatState() {
     quickReplies,
     isTyping,
     isSending,
+    isFallbackMode,
     sendMessage,
     handleQuickReply,
     resetChat,
