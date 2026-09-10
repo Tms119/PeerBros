@@ -137,7 +137,7 @@ export const sendMessage = action({
           model: "minimax/minimax-m3:free",
           messages: messages,
           tools: [EXTRACT_LEAD_FUNCTION],
-          tool_choice: { type: "function", function: { name: "extract_lead_data" } }
+          tool_choice: "auto"
         })
       });
 
@@ -201,7 +201,7 @@ export const sendMessage = action({
 
       // Fallback if still no reply
       if (!reply) {
-        reply = "I'll pass this to the team — they'll be in touch soon!";
+        reply = "I will pass this to the team. They will be in touch soon!";
       }
 
       // Save bot reply to transcript
