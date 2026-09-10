@@ -1,7 +1,8 @@
 "use node";
 
-import { action } from "./_generated/server";
-import { internal } from "./_generated/api";
+import { action, internalAction } from "./_generated/server";
+import { internal, api } from "./_generated/api";
+declare const process: any;
 import { v } from "convex/values";
 import { SYSTEM_PROMPT } from "./systemPrompt";
 
@@ -228,7 +229,7 @@ export const backgroundExtract = internalAction({
       return;
     }
 
-    const lead = await ctx.runQuery(internal.leads.getByConversationId, {
+    const lead = await ctx.runQuery(api.leads.getByConversationId, {
       conversation_id: args.conversation_id,
     });
 

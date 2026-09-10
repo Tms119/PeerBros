@@ -2,6 +2,7 @@
 
 import { internalAction } from "./_generated/server";
 import { v } from "convex/values";
+declare const process: any;
 
 /**
  * Send email notification via Resend when a lead is completed or escalated.
