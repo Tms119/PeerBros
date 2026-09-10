@@ -137,7 +137,7 @@ export const sendMessage = action({
           model: "minimax/minimax-m3:free",
           messages: messages,
           tools: [EXTRACT_LEAD_FUNCTION],
-          tool_choice: "auto"
+          tool_choice: { type: "function", function: { name: "extract_lead_data" } }
         })
       });
 
