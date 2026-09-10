@@ -121,9 +121,9 @@ const ChatWidget = () => {
           </div>
 
           {/* Messages Area */}
-          <div className="chat-messages" id="chat-messages">
+          <div className="chat-messages" id="chat-messages" data-lenis-prevent="true">
             {messages.map((msg, i) => (
-              <ChatBubble key={i} role={msg.role} content={msg.content} />
+              <ChatBubble key={i} role={msg.role} content={msg.content} isSuccess={msg.isSuccess} />
             ))}
 
             {isTyping && <TypingIndicator />}

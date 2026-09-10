@@ -3,88 +3,86 @@
 import { action } from "./_generated/server";
 import { internal } from "./_generated/api";
 import { v } from "convex/values";
-import { GoogleGenerativeAI, SchemaType } from "@google/generative-ai";
 import { SYSTEM_PROMPT } from "./systemPrompt";
 
 /**
- * Gemini function declaration for structured lead extraction.
- * Uses Google's native schema format (different from OpenAI's).
+ * Standard OpenAI-compatible function declaration for structured lead extraction.
  */
 const EXTRACT_LEAD_FUNCTION = {
-  name: "extract_lead_data",
-  description:
-    "Extract and track structured lead information gathered from the conversation so far. Call this with every response.",
-  parameters: {
-    type: SchemaType.OBJECT,
-    properties: {
-      service_type: {
-        type: SchemaType.STRING,
-        format: "enum",
-        description: "The type of service: website, ecommerce, crm, or other.",
-        enum: ["website", "ecommerce", "crm", "other"],
+  type: "function",
+  function: {
+    name: "extract_lead_data",
+    description:
+      "Extract and track structured lead information gathered from the conversation so far. Call this with every response.",
+    parameters: {
+      type: "object",
+      properties: {
+        service_type: {
+          type: "string",
+          description: "The type of service: website, ecommerce, crm, or other.",
+          enum: ["website", "ecommerce", "crm", "other"],
+        },
+        scope_notes: {
+          type: "string",
+          description: "Free-text summary of what the visitor needs.",
+        },
+        budget_range: {
+          type: "string",
+          description: "The visitor's stated budget range, if provided.",
+        },
+        timeline: {
+          type: "string",
+          description: "The visitor's stated timeline, if provided.",
+        },
+        contact_name: {
+          type: "string",
+          description: "The visitor's name, if provided.",
+        },
+        contact_email: {
+          type: "string",
+          description: "The visitor's email address, if provided.",
+        },
+        contact_phone: {
+          type: "string",
+          description: "The visitor's phone number, if provided.",
+        },
+        escalate: {
+          type: "boolean",
+          description:
+            "Set to true if visitor asked about pricing, needs human help, is frustrated, or the request is too complex.",
+        },
+        qualified: {
+          type: "boolean",
+          description:
+            "Set to true once you have enough info to pass to the team (service type + scope + contact info).",
+        },
+        conversation_phase: {
+          type: "string",
+          description: "The current phase of the conversation.",
+          enum: [
+            "greeting",
+            "discovery",
+            "budget",
+            "contact",
+            "summary",
+            "complete",
+          ],
+        },
+        quick_replies: {
+          type: "array",
+          items: { type: "string" },
+          description:
+            "Suggested quick-reply buttons to show. Use for service selection, yes/no, or clear choices.",
+        },
       },
-      scope_notes: {
-        type: SchemaType.STRING,
-        description: "Free-text summary of what the visitor needs.",
-      },
-      budget_range: {
-        type: SchemaType.STRING,
-        description: "The visitor's stated budget range, if provided.",
-      },
-      timeline: {
-        type: SchemaType.STRING,
-        description: "The visitor's stated timeline, if provided.",
-      },
-      contact_name: {
-        type: SchemaType.STRING,
-        description: "The visitor's name, if provided.",
-      },
-      contact_email: {
-        type: SchemaType.STRING,
-        description: "The visitor's email address, if provided.",
-      },
-      contact_phone: {
-        type: SchemaType.STRING,
-        description: "The visitor's phone number, if provided.",
-      },
-      escalate: {
-        type: SchemaType.BOOLEAN,
-        description:
-          "Set to true if visitor asked about pricing, needs human help, is frustrated, or the request is too complex.",
-      },
-      qualified: {
-        type: SchemaType.BOOLEAN,
-        description:
-          "Set to true once you have enough info to pass to the team (service type + scope + contact info).",
-      },
-      conversation_phase: {
-        type: SchemaType.STRING,
-        format: "enum",
-        description: "The current phase of the conversation.",
-        enum: [
-          "greeting",
-          "discovery",
-          "budget",
-          "contact",
-          "summary",
-          "complete",
-        ],
-      },
-      quick_replies: {
-        type: SchemaType.ARRAY,
-        items: { type: SchemaType.STRING },
-        description:
-          "Suggested quick-reply buttons to show. Use for service selection, yes/no, or clear choices.",
-      },
+      required: ["conversation_phase"],
     },
-    required: ["conversation_phase"],
-  },
+  }
 };
 
 /**
- * Main chat action: receives a user message, calls Gemini with function
- * calling, returns the bot reply + extracted lead fields, and persists
- * everything to the database.
+ * Main chat action: receives a user message, calls xKiro (OpenAI API format),
+ * returns the bot reply + extracted lead fields, and persists to DB.
  */
 export const sendMessage = action({
   args: {
@@ -98,11 +96,11 @@ export const sendMessage = action({
     ),
   },
   handler: async (ctx, args) => {
-    const geminiApiKey = process.env.GEMINI_API_KEY;
+    const xkiroApiKey = process.env.XKIRO_API_KEY;
 
-    if (!geminiApiKey) {
+    if (!xkiroApiKey) {
       throw new Error(
-        "GEMINI_API_KEY not configured. Set it with: npx convex env set GEMINI_API_KEY=your_key"
+        "XKIRO_API_KEY not configured. Set it with: npx convex env set XKIRO_API_KEY=your_key"
       );
     }
 
@@ -118,63 +116,87 @@ export const sendMessage = action({
       content: args.message,
     });
 
-    // Build chat history for Gemini
-    // Gemini uses "user" and "model" roles (not "assistant")
-    const history = args.history.map((msg) => ({
-      role: msg.role === "assistant" ? "model" : "user",
-      parts: [{ text: msg.content }],
-    }));
+    // Build chat history for OpenAI format
+    const messages = [
+      { role: "system", content: SYSTEM_PROMPT },
+      ...args.history.map((msg) => ({
+        role: msg.role,
+        content: msg.content,
+      })),
+      { role: "user", content: args.message }
+    ];
 
     try {
-      const genAI = new GoogleGenerativeAI(geminiApiKey);
-      const model = genAI.getGenerativeModel({
-        model: "gemini-2.5-flash",
-        systemInstruction: SYSTEM_PROMPT,
-        tools: [{ functionDeclarations: [EXTRACT_LEAD_FUNCTION as any] }],
+      const fetchResponse = await fetch("https://api.xkiro.com/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          "Authorization": `Bearer ${xkiroApiKey}`,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          model: "minimax/minimax-m3:free",
+          messages: messages,
+          tools: [EXTRACT_LEAD_FUNCTION],
+          tool_choice: "auto"
+        })
       });
 
-      const chat = model.startChat({ history: history as any });
-      const result = await chat.sendMessage(args.message);
-      const response = result.response;
+      if (!fetchResponse.ok) {
+        const errBody = await fetchResponse.text();
+        throw new Error(`xKiro API error: ${fetchResponse.status} ${errBody}`);
+      }
 
-      let reply = "";
+      const result = await fetchResponse.json();
+      const messageObj = result.choices?.[0]?.message;
+
+      let reply = messageObj?.content || "";
       let extractedFields: Record<string, any> = {};
       let quickReplies: string[] = [];
 
-      // Process the response parts
-      for (const candidate of response.candidates || []) {
-        for (const part of candidate.content?.parts || []) {
-          // Text content
-          if (part.text) {
-            reply += part.text;
-          }
-          // Function call (structured extraction)
-          if (part.functionCall && part.functionCall.name === "extract_lead_data") {
-            extractedFields = (part.functionCall.args as Record<string, any>) || {};
-            quickReplies = (extractedFields.quick_replies as string[]) || [];
+      // Process tool calls
+      if (messageObj?.tool_calls && messageObj.tool_calls.length > 0) {
+        for (const toolCall of messageObj.tool_calls) {
+          if (toolCall.function.name === "extract_lead_data") {
+            try {
+              extractedFields = JSON.parse(toolCall.function.arguments);
+              quickReplies = (extractedFields.quick_replies as string[]) || [];
+            } catch (e) {
+              console.error("Failed to parse tool call arguments", e);
+            }
           }
         }
       }
 
-      // If Gemini returned ONLY a function call (no text), do a follow-up
-      // by sending the function response back to get the conversational reply
+      // If the model ONLY called a function but returned no text, we do a follow-up 
+      // by pretending the function ran and asking for a response.
       if (!reply.trim() && Object.keys(extractedFields).length > 0) {
-        try {
-          const followUp = await chat.sendMessage([
-            {
-              functionResponse: {
-                name: "extract_lead_data",
-                response: { status: "recorded" },
-              },
-            },
-          ]);
-          reply = followUp.response.text() || "";
-        } catch (followUpError) {
-          console.error("Follow-up call failed:", followUpError);
+        messages.push(messageObj);
+        messages.push({
+          role: "tool",
+          tool_call_id: messageObj.tool_calls[0].id,
+          name: "extract_lead_data",
+          content: JSON.stringify({ status: "recorded" })
+        } as any);
+
+        const followUpRes = await fetch("https://api.xkiro.com/v1/chat/completions", {
+          method: "POST",
+          headers: {
+            "Authorization": `Bearer ${xkiroApiKey}`,
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            model: "minimax/minimax-m3:free",
+            messages: messages,
+          })
+        });
+
+        if (followUpRes.ok) {
+          const followUpData = await followUpRes.json();
+          reply = followUpData.choices?.[0]?.message?.content || "";
         }
       }
 
-      // Strip any reasoning traces
+      // Strip any reasoning traces (like <think> tags)
       reply = reply.replace(/<think>[\s\S]*?<\/think>/g, "").trim();
 
       // Fallback if still no reply
@@ -189,7 +211,7 @@ export const sendMessage = action({
         content: reply,
       });
 
-      // Update lead fields from extraction (only if we got structured data)
+      // Update lead fields from extraction
       const phase = (extractedFields.conversation_phase as string) || "";
       const isComplete = phase === "complete";
       const shouldEscalate = extractedFields.escalate === true;
@@ -260,13 +282,14 @@ export const sendMessage = action({
         quick_replies: quickReplies,
       };
     } catch (error: any) {
-      console.error("Gemini API error:", error);
+      console.error("API Error:", error);
 
-      // Rate limit handling
+      // Trigger fallback mode on API failure or Rate Limit
       if (
         error?.status === 429 ||
         error?.message?.includes("rate") ||
-        error?.message?.includes("quota")
+        error?.message?.includes("quota") ||
+        error?.message?.includes("xKiro API error")
       ) {
         return {
           reply: "",

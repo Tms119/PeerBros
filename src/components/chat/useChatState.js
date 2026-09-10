@@ -67,7 +67,14 @@ export function useChatState() {
           setFallbackStep(2);
           setMessages(prev => [...prev, { role: 'assistant', content: "Got it! And what is the best email to reach you at?" }]);
         } else if (fallbackStep === 2) {
-          setFallbackData(prev => ({ ...prev, email: text.trim() }));
+          const emailInput = text.trim();
+          const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+          if (!emailRegex.test(emailInput)) {
+            setMessages(prev => [...prev, { role: 'assistant', content: "That doesn't look like a valid email address. Could you double-check it for me?" }]);
+            setIsSending(false);
+            return;
+          }
+          setFallbackData(prev => ({ ...prev, email: emailInput }));
           setFallbackStep(3);
           setMessages(prev => [...prev, { role: 'assistant', content: "Perfect. What kind of project are you looking to build?" }]);
           setQuickReplies(["Website", "Ecommerce", "CRM", "Other"]);
@@ -92,7 +99,7 @@ export function useChatState() {
             console.error("Fallback submission failed:", err);
           }
 
-          setMessages(prev => [...prev, { role: 'assistant', content: "All set! Thanks for sharing that. Our team will review your details and reach out to you shortly." }]);
+          setMessages(prev => [...prev, { role: 'assistant', content: "All set! Thanks for sharing that. Our team will review your details and reach out to you shortly.", isSuccess: true }]);
         } else if (fallbackStep >= 5) {
           setMessages(prev => [...prev, { role: 'assistant', content: "Your details have already been submitted. We will be in touch soon!" }]);
         }
@@ -129,9 +136,12 @@ export function useChatState() {
         throw new Error("API Failure or Rate Limit");
       }
 
+      const phase = result.extracted_fields?.conversation_phase;
+      const isComplete = phase === "complete";
+
       setMessages((prev) => [
         ...prev,
-        { role: 'assistant', content: result.reply },
+        { role: 'assistant', content: result.reply, isSuccess: isComplete },
       ]);
 
       // Set quick replies if provided
