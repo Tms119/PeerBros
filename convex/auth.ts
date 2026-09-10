@@ -51,7 +51,7 @@ export const initAdmin = internalMutation({
     email: v.string(),
     password: v.string(),
   },
-  handler: async (ctx, args) => {
+  handler: async (ctx, args): Promise<{ success: boolean; message?: string }> => {
     const existing = await ctx.db
       .query("admins")
       .withIndex("by_email", (q) => q.eq("email", args.email))
@@ -80,12 +80,12 @@ export const setupAdmin = action({
     email: v.string(),
     password: v.string(),
   },
-  handler: async (ctx, args) => {
+  handler: async (ctx, args): Promise<{ success: boolean; message?: string }> => {
     // 1. Initialize admin in DB
-    const initResult = await ctx.runMutation(internal.auth.initAdmin, {
+    const initResult = (await ctx.runMutation(internal.auth.initAdmin, {
       email: args.email,
       password: args.password,
-    });
+    })) as { success: boolean; message?: string };
 
     if (!initResult.success) {
       return { success: false, message: initResult.message };

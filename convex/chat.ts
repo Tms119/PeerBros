@@ -19,6 +19,7 @@ const EXTRACT_LEAD_FUNCTION = {
     properties: {
       service_type: {
         type: SchemaType.STRING,
+        format: "enum",
         description: "The type of service: website, ecommerce, crm, or other.",
         enum: ["website", "ecommerce", "crm", "other"],
       },
@@ -58,6 +59,7 @@ const EXTRACT_LEAD_FUNCTION = {
       },
       conversation_phase: {
         type: SchemaType.STRING,
+        format: "enum",
         description: "The current phase of the conversation.",
         enum: [
           "greeting",
@@ -128,7 +130,7 @@ export const sendMessage = action({
       const model = genAI.getGenerativeModel({
         model: "gemini-2.5-flash",
         systemInstruction: SYSTEM_PROMPT,
-        tools: [{ functionDeclarations: [EXTRACT_LEAD_FUNCTION] }],
+        tools: [{ functionDeclarations: [EXTRACT_LEAD_FUNCTION as any] }],
       });
 
       const chat = model.startChat({ history: history as any });
@@ -136,7 +138,7 @@ export const sendMessage = action({
       const response = result.response;
 
       let reply = "";
-      let extractedFields: Record<string, unknown> = {};
+      let extractedFields: Record<string, any> = {};
       let quickReplies: string[] = [];
 
       // Process the response parts
@@ -148,7 +150,7 @@ export const sendMessage = action({
           }
           // Function call (structured extraction)
           if (part.functionCall && part.functionCall.name === "extract_lead_data") {
-            extractedFields = part.functionCall.args || {};
+            extractedFields = (part.functionCall.args as Record<string, any>) || {};
             quickReplies = (extractedFields.quick_replies as string[]) || [];
           }
         }
