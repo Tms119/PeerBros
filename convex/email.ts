@@ -128,7 +128,7 @@ export const sendAdminCredentialsEmail = internalAction({
     email: v.string(),
     password: v.string(),
   },
-  handler: async (ctx, args) => {
+  handler: async (_ctx, args) => {
     const resendApiKey = process.env.RESEND_API_KEY;
 
     if (!resendApiKey) {
