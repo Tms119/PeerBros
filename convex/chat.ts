@@ -97,11 +97,11 @@ export const sendMessage = action({
     ),
   },
   handler: async (ctx, args) => {
-    const xkiroApiKey = process.env.XKIRO_API_KEY;
+    const minimaxApiKey = process.env.MINIMAX_API_KEY;
 
-    if (!xkiroApiKey) {
+    if (!minimaxApiKey) {
       throw new Error(
-        "XKIRO_API_KEY not configured. Set it with: npx convex env set XKIRO_API_KEY=your_key"
+        "MINIMAX_API_KEY not configured. Set it with: npx convex env set MINIMAX_API_KEY=your_key"
       );
     }
 
@@ -128,9 +128,8 @@ export const sendMessage = action({
     ];
 
     const MODELS = [
-      "minimax/minimax-m3:free",
-      "qwen/qwen3.7-plus:free",
-      "qwen/qwen3-max:free"
+      "minimax-m3",
+      "abab6.5s-chat"
     ];
 
     let reply = "";
@@ -139,10 +138,10 @@ export const sendMessage = action({
 
     for (const model of MODELS) {
       try {
-        const fetchResponse = await fetch("https://api.xkiro.com/v1/chat/completions", {
+        const fetchResponse = await fetch("https://api.minimax.chat/v1/chat/completions", {
           method: "POST",
           headers: {
-            "Authorization": `Bearer ${xkiroApiKey}`,
+            "Authorization": `Bearer ${minimaxApiKey}`,
             "Content-Type": "application/json"
           },
           body: JSON.stringify({
@@ -156,7 +155,7 @@ export const sendMessage = action({
 
         if (!fetchResponse.ok) {
           const errBody = await fetchResponse.text();
-          throw new Error(`xKiro API error: ${fetchResponse.status} ${errBody}`);
+          throw new Error(`Minimax API error: ${fetchResponse.status} ${errBody}`);
         }
 
         const result = await fetchResponse.json();
@@ -223,9 +222,9 @@ export const backgroundExtract = internalAction({
     conversation_id: v.string(),
   },
   handler: async (ctx, args) => {
-    const xkiroApiKey = process.env.XKIRO_API_KEY;
-    if (!xkiroApiKey) {
-      console.error("Missing XKIRO_API_KEY");
+    const minimaxApiKey = process.env.MINIMAX_API_KEY;
+    if (!minimaxApiKey) {
+      console.error("Missing MINIMAX_API_KEY");
       return;
     }
 
@@ -241,17 +240,16 @@ export const backgroundExtract = internalAction({
     }));
 
     const MODELS = [
-      "minimax/minimax-m3:free",
-      "qwen/qwen3.7-plus:free",
-      "qwen/qwen3-max:free"
+      "minimax-m3",
+      "abab6.5s-chat"
     ];
 
     for (const model of MODELS) {
       try {
-        const fetchResponse = await fetch("https://api.xkiro.com/v1/chat/completions", {
+        const fetchResponse = await fetch("https://api.minimax.chat/v1/chat/completions", {
           method: "POST",
           headers: {
-            "Authorization": `Bearer ${xkiroApiKey}`,
+            "Authorization": `Bearer ${minimaxApiKey}`,
             "Content-Type": "application/json"
           },
           body: JSON.stringify({
