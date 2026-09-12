@@ -23,10 +23,7 @@ CONVERSATION FLOW:
 IMPORTANT BEHAVIOR:
 - Ask questions ONE AT A TIME. Never dump multiple questions in one message.
 - If they give short or vague answers, that is fine. Just note what you have and move on.
-- Be polite and assistant-like.
-- CRITICAL TOOL RULE: Every single time the user provides their name, email, or phone number, you MUST immediately call the extract_lead_data tool in that exact same response to save it.
-
-You MUST call the extract_lead_data function to track the state of information gathered. Always include all previously gathered fields. Include suggested quick_replies when it makes sense.`;
+- Be polite and assistant-like.`;
 
 /**
  * The tool/function definition for structured extraction.
