@@ -91,11 +91,11 @@ const ChatWidget = () => {
           <div className="chat-header">
             <div className="chat-header-info">
               <div className="chat-avatar">
-                <span>A</span>
+                <span>M</span>
                 <span className="chat-avatar-status" />
               </div>
               <div>
-                <h3 className="chat-header-name">Alex</h3>
+                <h3 className="chat-header-name">Mithila</h3>
                 <p className="chat-header-status">
                   PeerBros · Usually replies instantly
                 </p>

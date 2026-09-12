@@ -15,7 +15,7 @@ const ChatBubble = ({ role, content, isSuccess }) => {
       className={`chat-bubble ${isBot ? 'chat-bubble-bot' : 'chat-bubble-user'}`}
     >
       {isBot && (
-        <span className="chat-bubble-label">Alex</span>
+        <span className="chat-bubble-label">Mithila</span>
       )}
       <p className="chat-bubble-text">{content}</p>
       {isSuccess && <SuccessTick />}
