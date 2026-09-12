@@ -138,7 +138,7 @@ export const sendMessage = action({
 
     for (const model of MODELS) {
       try {
-        const fetchResponse = await fetch("https://api.minimax.chat/v1/chat/completions", {
+        const fetchResponse = await fetch("https://api.minimaxi.chat/v1/chat/completions", {
           method: "POST",
           headers: {
             "Authorization": `Bearer ${minimaxApiKey}`,
@@ -246,7 +246,7 @@ export const backgroundExtract = internalAction({
 
     for (const model of MODELS) {
       try {
-        const fetchResponse = await fetch("https://api.minimax.chat/v1/chat/completions", {
+        const fetchResponse = await fetch("https://api.minimaxi.chat/v1/chat/completions", {
           method: "POST",
           headers: {
             "Authorization": `Bearer ${minimaxApiKey}`,
