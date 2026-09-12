@@ -8,7 +8,7 @@ const QuickReplies = ({ replies, onSelect, disabled }) => {
   if (!replies || replies.length === 0) return null;
 
   return (
-    <div className="quick-replies" id="chat-quick-replies">
+    <div className="chat-quick-replies" id="chat-quick-replies">
       {replies.map((text, i) => (
         <button
           key={`${text}-${i}`}
