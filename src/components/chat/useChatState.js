@@ -26,6 +26,8 @@ export function useChatState() {
   const [isTyping, setIsTyping] = useState(false);
   const [isSending, setIsSending] = useState(false);
   const [isMuted, setIsMuted] = useState(true); // Default to muted for better UX
+  const [isCallMode, setIsCallMode] = useState(false);
+  const [isBotSpeaking, setIsBotSpeaking] = useState(false);
   const [isFallbackMode, setIsFallbackMode] = useState(false);
   const [fallbackStep, setFallbackStep] = useState(0);
   const [fallbackData, setFallbackData] = useState({ name: '', email: '', service_type: '', notes: '' });
@@ -146,15 +148,20 @@ export function useChatState() {
         { role: 'assistant', content: result.reply, isSuccess: isComplete },
       ]);
 
-      // Handle TTS if not muted
-      if (!isMuted) {
+      // Handle TTS if not muted or in call mode
+      if (!isMuted || isCallMode) {
         generateSpeechAction({ text: result.reply })
           .then((url) => {
             if (url) {
               const audio = new Audio(url);
-              audio.play().catch(e => console.error("Audio play failed:", e));
+              audio.onplay = () => setIsBotSpeaking(true);
+              audio.onended = () => setIsBotSpeaking(false);
+              audio.play().catch(e => {
+                console.error("Audio play failed:", e);
+                setIsBotSpeaking(false);
+              });
               
-              // We could also update the message with the audioUrl for replaying
+              // Update the message with the audioUrl for replaying
               setMessages(prev => {
                 const newMsgs = [...prev];
                 newMsgs[newMsgs.length - 1].audioUrl = url;
@@ -162,7 +169,10 @@ export function useChatState() {
               });
             }
           })
-          .catch(err => console.error("Speech gen failed:", err));
+          .catch(err => {
+            console.error("Speech gen failed:", err);
+            setIsBotSpeaking(false);
+          });
       }
 
       // Set quick replies if provided
@@ -211,6 +221,9 @@ export function useChatState() {
     isSending,
     isMuted,
     setIsMuted,
+    isCallMode,
+    setIsCallMode,
+    isBotSpeaking,
     isFallbackMode,
     sendMessage,
     handleQuickReply,

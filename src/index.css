@@ -756,3 +756,161 @@
     max-height: 560px;
   }
 }
+
+/* --- Call Mode Interface --- */
+.call-mode-interface {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  background: rgba(10, 10, 10, 0.95);
+  overflow: hidden;
+}
+
+.call-avatar-container {
+  position: relative;
+  width: 120px;
+  height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 24px;
+}
+
+.call-avatar {
+  position: relative;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #c0a080 0%, #8a6a50 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Outfit', sans-serif;
+  font-weight: 700;
+  font-size: 40px;
+  color: #0a0a0a;
+  z-index: 10;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+}
+
+.call-avatar-pulse {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100px;
+  height: 100px;
+  margin-top: -50px;
+  margin-left: -50px;
+  border-radius: 50%;
+  background: rgba(192, 160, 128, 0.15);
+  border: 1px solid rgba(192, 160, 128, 0.3);
+  opacity: 0;
+  z-index: 5;
+}
+
+.speaking .call-avatar-pulse.ring-1 {
+  animation: call-pulse 1.8s ease-out infinite;
+}
+
+.speaking .call-avatar-pulse.ring-2 {
+  animation: call-pulse 1.8s ease-out infinite 0.6s;
+}
+
+.listening .call-avatar-pulse.ring-1 {
+  background: rgba(34, 197, 94, 0.15);
+  border-color: rgba(34, 197, 94, 0.3);
+  animation: call-pulse 2s ease-out infinite;
+}
+
+@keyframes call-pulse {
+  0% { transform: scale(1); opacity: 0.8; }
+  100% { transform: scale(2.5); opacity: 0; }
+}
+
+.call-status-text {
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.5);
+  letter-spacing: 0.02em;
+  margin-bottom: auto;
+}
+
+.call-live-caption {
+  position: absolute;
+  bottom: 120px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80%;
+  text-align: center;
+  font-family: 'Inter', sans-serif;
+  font-size: 16px;
+  line-height: 1.4;
+  color: #fff;
+  background: rgba(0, 0, 0, 0.4);
+  padding: 12px 20px;
+  border-radius: 16px;
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  animation: fadeIn 0.3s ease;
+}
+
+.call-controls {
+  position: absolute;
+  bottom: 32px;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.call-mic-btn {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.call-mic-btn:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.2);
+  transform: scale(1.05);
+}
+
+.call-mic-btn.recording {
+  background: rgba(34, 197, 94, 0.2);
+  color: #22c55e;
+  animation: pulse-glow 1.5s infinite;
+}
+
+.call-hangup-btn {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: #ef4444;
+  color: #fff;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 16px rgba(239, 68, 68, 0.4);
+}
+
+.call-hangup-btn:hover {
+  background: #dc2626;
+  transform: scale(1.05);
+}
+
+.active-call {
+  color: #c0a080 !important;
+  background: rgba(192, 160, 128, 0.1) !important;
+}

@@ -12,7 +12,7 @@ HARD RULES:
 2. NEVER talk about pricing or estimates unless the user explicitly asks. If they do ask, tell them you will discuss it with the team, and immediately ask for their email address so the team can reach out with details.
 3. NEVER output large clumps of text. Keep all your responses extremely short (1-3 sentences maximum). If you write more than one sentence, you MUST use double newlines (paragraphs) to create visual gaps and line spacing for better readability.
 4. NEVER invent or guess information you don't have.
-5. BILINGUAL SUPPORT: You must automatically detect the user's language and respond in the same language. You are fluent in English, Spanish, and French.
+5. BILINGUAL SUPPORT: You must automatically detect the user's language and respond in the same language. You are fluent in English, Spanish, French, and Bangla.
 
 CONVERSATION FLOW:
 1. OPENING: The user has just been greeted and asked to select their language from the quick replies. NEVER ask them about their language preference again.
@@ -89,10 +89,11 @@ export const EXTRACT_LEAD_TOOL = {
   },
 };
 
-export const OPENING_MESSAGE = `Hey there! 👋 I'm Mithila from the front desk. What language are you most comfortable in? / ¿En qué idioma te sientes más cómodo? / Dans quelle langue êtes-vous le plus à l'aise ?`;
+export const OPENING_MESSAGE = `Hey there! I'm Mithila from the front desk. What language are you most comfortable in? / ¿En qué idioma te sientes más cómodo? / Dans quelle langue êtes-vous le plus à l'aise ? / আপনি কোন ভাষায় কথা বলতে স্বাচ্ছন্দ্য বোধ করেন?`;
 
 export const OPENING_QUICK_REPLIES = [
   "English",
   "Español",
-  "Français"
+  "Français",
+  "বাংলা"
 ];
