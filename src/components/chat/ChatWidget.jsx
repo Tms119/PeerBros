@@ -51,6 +51,20 @@ const ChatWidget = () => {
     return () => clearTimeout(timer);
   }, [hasInteracted]);
 
+  // Auto-listen in Call Mode
+  useEffect(() => {
+    if (isCallMode && !isBotSpeaking && !isSending && !isAudioLoading && !isTyping && !isRecording) {
+      const timer = setTimeout(() => {
+        // Find the mic button and click it to ensure we use the same handler
+        const micBtn = document.getElementById("call-mic-button");
+        if (micBtn && !micBtn.disabled) {
+          micBtn.click();
+        }
+      }, 800); // Wait a short breath after she stops speaking before listening
+      return () => clearTimeout(timer);
+    }
+  }, [isCallMode, isBotSpeaking, isSending, isAudioLoading, isTyping, isRecording]);
+
   const handleOpen = () => {
     setIsOpen(true);
     setHasInteracted(true);
@@ -218,6 +232,7 @@ const ChatWidget = () => {
 
               <div className="call-controls">
                 <button
+                  id="call-mic-button"
                   className={`call-mic-btn ${isRecording ? 'recording' : ''}`}
                   onClick={handleMicClick}
                   disabled={isSending || isBotSpeaking || isAudioLoading || isTyping}
