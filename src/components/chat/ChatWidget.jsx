@@ -15,6 +15,7 @@ const ChatWidget = () => {
   const [hasInteracted, setHasInteracted] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
   const inputRef = useRef(null);
+  const recognitionRef = useRef(null);
 
   const {
     messages,
@@ -92,6 +93,12 @@ const ChatWidget = () => {
   };
 
   const handleMicClick = () => {
+    if (isRecording && recognitionRef.current) {
+      recognitionRef.current.stop();
+      setIsRecording(false);
+      return;
+    }
+
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (!SpeechRecognition) {
       alert("Voice input is not supported in this browser. Please try Chrome or Safari.");
@@ -106,28 +113,47 @@ const ChatWidget = () => {
 
     const recognition = new SpeechRecognition();
     recognition.lang = langCode;
-    recognition.interimResults = false;
+    // Use continuous mode so it doesn't aggressively stop, but we will handle manual stops
+    recognition.continuous = true; 
+    recognition.interimResults = true;
     
     recognition.onstart = () => setIsRecording(true);
     recognition.onresult = (event) => {
-      const transcript = event.results[0][0].transcript;
-      setInputValue(prev => prev ? prev + " " + transcript : transcript);
+      let finalTranscript = '';
+      let interimTranscript = '';
       
-      // If we are in call mode, auto send it after a short delay
-      if (isCallMode) {
-         setTimeout(() => {
-           sendMessage(transcript);
-           setInputValue("");
-         }, 500);
+      for (let i = event.resultIndex; i < event.results.length; ++i) {
+        if (event.results[i].isFinal) {
+          finalTranscript += event.results[i][0].transcript;
+        } else {
+          interimTranscript += event.results[i][0].transcript;
+        }
+      }
+      
+      if (finalTranscript) {
+        setInputValue("");
+        if (isCallMode) {
+           sendMessage(finalTranscript);
+           recognition.stop();
+        } else {
+           setInputValue(prev => prev ? prev + " " + finalTranscript : finalTranscript);
+        }
+      } else {
+        setInputValue(interimTranscript);
       }
     };
     recognition.onerror = (e) => {
-      console.error("Speech recognition error:", e);
+      console.error("Speech recognition error:", e.error);
       setIsRecording(false);
     };
     recognition.onend = () => setIsRecording(false);
     
-    recognition.start();
+    recognitionRef.current = recognition;
+    try {
+      recognition.start();
+    } catch (e) {
+      console.error("Failed to start recognition:", e);
+    }
   };
 
   const toggleCallMode = () => {
