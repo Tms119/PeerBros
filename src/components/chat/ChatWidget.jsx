@@ -16,6 +16,7 @@ const ChatWidget = () => {
   const [isRecording, setIsRecording] = useState(false);
   const inputRef = useRef(null);
   const recognitionRef = useRef(null);
+  const silenceTimerRef = useRef(null);
 
   const {
     messages,
@@ -141,12 +142,33 @@ const ChatWidget = () => {
       } else {
         setInputValue(interimTranscript);
       }
+
+      // Fix for browsers getting stuck: auto-stop if silent for 2.5 seconds
+      if (silenceTimerRef.current) clearTimeout(silenceTimerRef.current);
+      if (isCallMode) {
+        silenceTimerRef.current = setTimeout(() => {
+          recognition.stop();
+        }, 2500);
+      }
     };
     recognition.onerror = (e) => {
       console.error("Speech recognition error:", e.error);
       setIsRecording(false);
+      if (silenceTimerRef.current) clearTimeout(silenceTimerRef.current);
     };
-    recognition.onend = () => setIsRecording(false);
+    recognition.onend = () => {
+      setIsRecording(false);
+      if (silenceTimerRef.current) clearTimeout(silenceTimerRef.current);
+      
+      setInputValue((prev) => {
+        if (isCallMode && prev.trim()) {
+          // Use setTimeout to ensure we don't interfere with React state batching if it conflicts with useChatState
+          setTimeout(() => sendMessage(prev), 0);
+          return "";
+        }
+        return prev;
+      });
+    };
     
     recognitionRef.current = recognition;
     try {
