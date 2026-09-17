@@ -223,6 +223,36 @@ export function useChatState() {
     setIsFallbackMode(false);
   }, []);
 
+  /**
+   * Play an initial greeting when entering call mode
+   */
+  const playGreeting = useCallback(() => {
+    setIsAudioLoading(true);
+    generateSpeechAction({ text: "Hi! How can I help you today?" })
+      .then((url) => {
+        if (url) {
+          const audio = new Audio(url);
+          audio.onplay = () => {
+            setIsAudioLoading(false);
+            setIsBotSpeaking(true);
+          };
+          audio.onended = () => setIsBotSpeaking(false);
+          audio.play().catch(e => {
+            console.error("Greeting audio play failed:", e);
+            setIsAudioLoading(false);
+            setIsBotSpeaking(false);
+          });
+        } else {
+          setIsAudioLoading(false);
+        }
+      })
+      .catch(err => {
+        console.error("Greeting speech gen failed:", err);
+        setIsAudioLoading(false);
+        setIsBotSpeaking(false);
+      });
+  }, [generateSpeechAction]);
+
   return {
     messages,
     quickReplies,
@@ -238,6 +268,7 @@ export function useChatState() {
     sendMessage,
     handleQuickReply,
     resetChat,
+    playGreeting,
     messagesEndRef,
     conversationId,
   };

@@ -30,6 +30,7 @@ const ChatWidget = () => {
     sendMessage,
     handleQuickReply,
     resetChat,
+    playGreeting,
     messagesEndRef,
     conversationId,
   } = useChatState();
@@ -133,6 +134,7 @@ const ChatWidget = () => {
     setIsCallMode(!isCallMode);
     if (!isCallMode) {
       setIsMuted(false); // Unmute when entering call mode
+      playGreeting(); // Introduce herself!
     }
   };
 
