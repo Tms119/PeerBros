@@ -25,6 +25,7 @@ export function useChatState() {
   const [quickReplies, setQuickReplies] = useState(OPENING_QUICK_REPLIES);
   const [isTyping, setIsTyping] = useState(false);
   const [isSending, setIsSending] = useState(false);
+  const [isMuted, setIsMuted] = useState(true); // Default to muted for better UX
   const [isFallbackMode, setIsFallbackMode] = useState(false);
   const [fallbackStep, setFallbackStep] = useState(0);
   const [fallbackData, setFallbackData] = useState({ name: '', email: '', service_type: '', notes: '' });
@@ -33,6 +34,7 @@ export function useChatState() {
 
   const sendMessageAction = useAction(api.chat.sendMessage);
   const submitFallbackAction = useAction(api.fallback.submitFallbackLead);
+  const generateSpeechAction = useAction(api.audio.generateSpeech);
 
   // Auto-scroll to bottom when messages change
   useEffect(() => {
@@ -144,6 +146,25 @@ export function useChatState() {
         { role: 'assistant', content: result.reply, isSuccess: isComplete },
       ]);
 
+      // Handle TTS if not muted
+      if (!isMuted) {
+        generateSpeechAction({ text: result.reply })
+          .then((url) => {
+            if (url) {
+              const audio = new Audio(url);
+              audio.play().catch(e => console.error("Audio play failed:", e));
+              
+              // We could also update the message with the audioUrl for replaying
+              setMessages(prev => {
+                const newMsgs = [...prev];
+                newMsgs[newMsgs.length - 1].audioUrl = url;
+                return newMsgs;
+              });
+            }
+          })
+          .catch(err => console.error("Speech gen failed:", err));
+      }
+
       // Set quick replies if provided
       if (result.quick_replies && result.quick_replies.length > 0) {
         setQuickReplies(result.quick_replies);
@@ -188,6 +209,8 @@ export function useChatState() {
     quickReplies,
     isTyping,
     isSending,
+    isMuted,
+    setIsMuted,
     isFallbackMode,
     sendMessage,
     handleQuickReply,

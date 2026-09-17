@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { MessageCircle, X, Send, RotateCcw } from "lucide-react";
+import { MessageCircle, X, Send, RotateCcw, Volume2, VolumeX, Mic } from "lucide-react";
 import ChatBubble from "./ChatBubble";
 import QuickReplies from "./QuickReplies";
 import TypingIndicator from "./TypingIndicator";
@@ -13,6 +13,7 @@ const ChatWidget = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [inputValue, setInputValue] = useState("");
   const [hasInteracted, setHasInteracted] = useState(false);
+  const [isRecording, setIsRecording] = useState(false);
   const inputRef = useRef(null);
 
   const {
@@ -20,6 +21,8 @@ const ChatWidget = () => {
     quickReplies,
     isTyping,
     isSending,
+    isMuted,
+    setIsMuted,
     sendMessage,
     handleQuickReply,
     resetChat,
@@ -69,6 +72,30 @@ const ChatWidget = () => {
     }
   };
 
+  const handleMicClick = () => {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+      alert("Voice input is not supported in this browser. Please try Chrome or Safari.");
+      return;
+    }
+    const recognition = new SpeechRecognition();
+    recognition.lang = 'en-US';
+    recognition.interimResults = false;
+    
+    recognition.onstart = () => setIsRecording(true);
+    recognition.onresult = (event) => {
+      const transcript = event.results[0][0].transcript;
+      setInputValue(prev => prev ? prev + " " + transcript : transcript);
+    };
+    recognition.onerror = (e) => {
+      console.error("Speech recognition error:", e);
+      setIsRecording(false);
+    };
+    recognition.onend = () => setIsRecording(false);
+    
+    recognition.start();
+  };
+
   return (
     <>
       {/* Chat Bubble Button */}
@@ -102,6 +129,14 @@ const ChatWidget = () => {
               </div>
             </div>
             <div className="chat-header-actions">
+              <button
+                className="chat-header-btn"
+                onClick={() => setIsMuted(!isMuted)}
+                aria-label={isMuted ? "Unmute voice" : "Mute voice"}
+                title={isMuted ? "Turn Voice On" : "Turn Voice Off"}
+              >
+                {isMuted ? <VolumeX size={16} /> : <Volume2 size={16} />}
+              </button>
               <button
                 className="chat-header-btn"
                 onClick={resetChat}
@@ -153,6 +188,16 @@ const ChatWidget = () => {
               id="chat-input-field"
               autoComplete="off"
             />
+            <button
+              type="button"
+              className={`chat-mic-btn ${isRecording ? 'recording' : ''}`}
+              onClick={handleMicClick}
+              disabled={isSending || isRecording}
+              aria-label="Voice input"
+              title="Dictate message"
+            >
+              <Mic size={18} />
+            </button>
             <button
               type="submit"
               className="chat-send-btn"
