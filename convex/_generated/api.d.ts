@@ -8,7 +8,6 @@
  * @module
  */
 
-import type * as audio from "../audio.js";
 import type * as auth from "../auth.js";
 import type * as chat from "../chat.js";
 import type * as email from "../email.js";
@@ -23,7 +22,6 @@ import type {
 } from "convex/server";
 
 declare const fullApi: ApiFromModules<{
-  audio: typeof audio;
   auth: typeof auth;
   chat: typeof chat;
   email: typeof email;

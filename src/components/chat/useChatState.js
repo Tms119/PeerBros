@@ -25,10 +25,6 @@ export function useChatState() {
   const [quickReplies, setQuickReplies] = useState(OPENING_QUICK_REPLIES);
   const [isTyping, setIsTyping] = useState(false);
   const [isSending, setIsSending] = useState(false);
-  const [isMuted, setIsMuted] = useState(true); // Default to muted for better UX
-  const [isCallMode, setIsCallMode] = useState(false);
-  const [isBotSpeaking, setIsBotSpeaking] = useState(false);
-  const [isAudioLoading, setIsAudioLoading] = useState(false);
   const [isFallbackMode, setIsFallbackMode] = useState(false);
   const [fallbackStep, setFallbackStep] = useState(0);
   const [fallbackData, setFallbackData] = useState({ name: '', email: '', service_type: '', notes: '' });
@@ -37,7 +33,6 @@ export function useChatState() {
 
   const sendMessageAction = useAction(api.chat.sendMessage);
   const submitFallbackAction = useAction(api.fallback.submitFallbackLead);
-  const generateSpeechAction = useAction(api.audio.generateSpeech);
 
   // Auto-scroll to bottom when messages change
   useEffect(() => {
@@ -149,41 +144,6 @@ export function useChatState() {
         { role: 'assistant', content: result.reply, isSuccess: isComplete },
       ]);
 
-      // Handle TTS if not muted or in call mode
-      if (!isMuted || isCallMode) {
-        setIsAudioLoading(true);
-        generateSpeechAction({ text: result.reply })
-          .then((url) => {
-            if (url) {
-              const audio = new Audio(url);
-              audio.onplay = () => {
-                setIsAudioLoading(false);
-                setIsBotSpeaking(true);
-              };
-              audio.onended = () => setIsBotSpeaking(false);
-              audio.play().catch(e => {
-                console.error("Audio play failed:", e);
-                setIsAudioLoading(false);
-                setIsBotSpeaking(false);
-              });
-              
-              // Update the message with the audioUrl for replaying
-              setMessages(prev => {
-                const newMsgs = [...prev];
-                newMsgs[newMsgs.length - 1].audioUrl = url;
-                return newMsgs;
-              });
-            } else {
-              setIsAudioLoading(false);
-            }
-          })
-          .catch(err => {
-            console.error("Speech gen failed:", err);
-            setIsAudioLoading(false);
-            setIsBotSpeaking(false);
-          });
-      }
-
       // Set quick replies if provided
       if (result.quick_replies && result.quick_replies.length > 0) {
         setQuickReplies(result.quick_replies);
@@ -223,52 +183,17 @@ export function useChatState() {
     setIsFallbackMode(false);
   }, []);
 
-  /**
-   * Play an initial greeting when entering call mode
-   */
-  const playGreeting = useCallback(() => {
-    setIsAudioLoading(true);
-    generateSpeechAction({ text: "Hi! How can I help you today?" })
-      .then((url) => {
-        if (url) {
-          const audio = new Audio(url);
-          audio.onplay = () => {
-            setIsAudioLoading(false);
-            setIsBotSpeaking(true);
-          };
-          audio.onended = () => setIsBotSpeaking(false);
-          audio.play().catch(e => {
-            console.error("Greeting audio play failed:", e);
-            setIsAudioLoading(false);
-            setIsBotSpeaking(false);
-          });
-        } else {
-          setIsAudioLoading(false);
-        }
-      })
-      .catch(err => {
-        console.error("Greeting speech gen failed:", err);
-        setIsAudioLoading(false);
-        setIsBotSpeaking(false);
-      });
-  }, [generateSpeechAction]);
+
 
   return {
     messages,
     quickReplies,
     isTyping,
     isSending,
-    isMuted,
-    setIsMuted,
-    isCallMode,
-    setIsCallMode,
-    isBotSpeaking,
-    isAudioLoading,
     isFallbackMode,
     sendMessage,
     handleQuickReply,
     resetChat,
-    playGreeting,
     messagesEndRef,
     conversationId,
   };
