@@ -10,9 +10,10 @@ export const generateSpeech = action({
   },
   handler: async (ctx, args) => {
     const minimaxApiKey = process.env.MINIMAX_API_KEY;
+    const minimaxGroupId = process.env.MINIMAX_GROUP_ID;
 
-    if (!minimaxApiKey) {
-      throw new Error("MINIMAX_API_KEY not configured.");
+    if (!minimaxApiKey || !minimaxGroupId) {
+      throw new Error("MINIMAX_API_KEY or MINIMAX_GROUP_ID not configured.");
     }
 
     // Minimax T2A v2 configuration
@@ -33,7 +34,7 @@ export const generateSpeech = action({
     };
 
     try {
-      const fetchResponse = await fetch("https://api.minimaxi.chat/v1/t2a_v2", {
+      const fetchResponse = await fetch(`https://api.minimaxi.chat/v1/t2a_v2?GroupId=${minimaxGroupId}`, {
         method: "POST",
         headers: {
           "Authorization": `Bearer ${minimaxApiKey}`,
