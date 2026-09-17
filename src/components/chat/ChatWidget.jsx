@@ -26,6 +26,7 @@ const ChatWidget = () => {
     isCallMode,
     setIsCallMode,
     isBotSpeaking,
+    isAudioLoading,
     sendMessage,
     handleQuickReply,
     resetChat,
@@ -202,7 +203,11 @@ const ChatWidget = () => {
               </div>
 
               <div className="call-status-text">
-                {isBotSpeaking ? "Mithila is speaking..." : isRecording ? "Listening..." : "Tap the mic to speak"}
+                {isBotSpeaking ? "Mithila is speaking..." 
+                 : isAudioLoading ? "Mithila is getting ready to speak..." 
+                 : isSending || isTyping ? "Mithila is thinking..." 
+                 : isRecording ? "Listening..." 
+                 : "Tap the mic to speak"}
               </div>
 
               {inputValue && (
@@ -215,7 +220,7 @@ const ChatWidget = () => {
                 <button
                   className={`call-mic-btn ${isRecording ? 'recording' : ''}`}
                   onClick={handleMicClick}
-                  disabled={isSending || isBotSpeaking}
+                  disabled={isSending || isBotSpeaking || isAudioLoading || isTyping}
                 >
                   <Mic size={24} />
                 </button>

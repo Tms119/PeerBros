@@ -28,6 +28,7 @@ export function useChatState() {
   const [isMuted, setIsMuted] = useState(true); // Default to muted for better UX
   const [isCallMode, setIsCallMode] = useState(false);
   const [isBotSpeaking, setIsBotSpeaking] = useState(false);
+  const [isAudioLoading, setIsAudioLoading] = useState(false);
   const [isFallbackMode, setIsFallbackMode] = useState(false);
   const [fallbackStep, setFallbackStep] = useState(0);
   const [fallbackData, setFallbackData] = useState({ name: '', email: '', service_type: '', notes: '' });
@@ -150,14 +151,19 @@ export function useChatState() {
 
       // Handle TTS if not muted or in call mode
       if (!isMuted || isCallMode) {
+        setIsAudioLoading(true);
         generateSpeechAction({ text: result.reply })
           .then((url) => {
             if (url) {
               const audio = new Audio(url);
-              audio.onplay = () => setIsBotSpeaking(true);
+              audio.onplay = () => {
+                setIsAudioLoading(false);
+                setIsBotSpeaking(true);
+              };
               audio.onended = () => setIsBotSpeaking(false);
               audio.play().catch(e => {
                 console.error("Audio play failed:", e);
+                setIsAudioLoading(false);
                 setIsBotSpeaking(false);
               });
               
@@ -167,10 +173,13 @@ export function useChatState() {
                 newMsgs[newMsgs.length - 1].audioUrl = url;
                 return newMsgs;
               });
+            } else {
+              setIsAudioLoading(false);
             }
           })
           .catch(err => {
             console.error("Speech gen failed:", err);
+            setIsAudioLoading(false);
             setIsBotSpeaking(false);
           });
       }
@@ -224,6 +233,7 @@ export function useChatState() {
     isCallMode,
     setIsCallMode,
     isBotSpeaking,
+    isAudioLoading,
     isFallbackMode,
     sendMessage,
     handleQuickReply,
