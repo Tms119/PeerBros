@@ -131,21 +131,18 @@ const Hero = () => {
                     <div className="hero-tag opacity-0 translate-y-10 inline-flex items-center gap-3 px-5 py-2.5 rounded-full border border-white/10 bg-[#0a0a0a]/80 backdrop-blur-xl mb-12 md:shadow-2xl">
                         <div className="w-1.5 h-1.5 bg-accent rounded-full md:animate-pulse md:shadow-[0_0_10px_rgba(249,115,22,0.8)]" />
                         <span className="text-white/80 uppercase tracking-[0.3em] text-[10px] md:text-xs font-mono font-medium">
-                            Digital Growth Agency
+                            Business Systems Engineering
                         </span>
                     </div>
 
-                    <h1 className="flex flex-col md:flex-row flex-wrap items-center justify-center gap-x-[2vw] gap-y-2 text-[clamp(2.5rem,7vw,10rem)] font-display font-medium tracking-tighter text-white w-full leading-[0.85] drop-shadow-2xl relative z-40 transform-gpu">
-                        <div className="hero-focus-word opacity-0 md:blur-2xl blur-xl scale-110 translate-y-10 will-change-transform inline-block">Your</div>
-                        <div className="hero-focus-word opacity-0 md:blur-2xl blur-xl scale-110 translate-y-10 text-white/30 italic font-light will-change-transform inline-block pr-2">software</div>
-                        <div className="hero-focus-word opacity-0 md:blur-2xl blur-xl scale-110 translate-y-10 will-change-transform inline-block">is</div>
-                        <div className="hero-focus-word opacity-0 md:blur-2xl blur-xl scale-110 translate-y-10 text-accent will-change-transform inline-block mix-blend-screen">making</div>
-                        <div className="hero-focus-word opacity-0 md:blur-2xl blur-xl scale-110 translate-y-10 text-white/30 italic font-light will-change-transform inline-block pr-2">you</div>
-                        <div className="hero-focus-word opacity-0 md:blur-2xl blur-xl scale-110 translate-y-10 will-change-transform inline-block">stupid...</div>
+                    <h1 className="flex flex-col md:flex-row flex-wrap items-center justify-center gap-x-[2vw] gap-y-2 text-[clamp(4rem,9vw,12rem)] font-display font-medium tracking-tighter text-white w-full leading-[0.85] drop-shadow-2xl relative z-40 transform-gpu uppercase">
+                        <div className="hero-focus-word opacity-0 md:blur-2xl blur-xl scale-110 translate-y-10 will-change-transform inline-block">STOP</div>
+                        <div className="hero-focus-word opacity-0 md:blur-2xl blur-xl scale-110 translate-y-10 text-white/30 italic font-light will-change-transform inline-block pr-2">HIRING</div>
+                        <div className="hero-focus-word opacity-0 md:blur-2xl blur-xl scale-110 translate-y-10 text-accent will-change-transform inline-block mix-blend-screen">HUMANS.</div>
                     </h1>
 
-                    <p className="hero-sub opacity-0 translate-y-12 mt-8 md:mt-16 text-sm md:text-[clamp(1.2rem,2vw,1.8rem)] text-white/50 font-light max-w-sm md:max-w-3xl text-center mx-auto tracking-wide leading-relaxed relative z-40 px-4">
-                        Your software should work for you, not the other way around.
+                    <p className="hero-sub opacity-0 translate-y-12 mt-8 md:mt-16 text-sm md:text-[clamp(1.2rem,2vw,1.8rem)] text-white/50 font-light max-w-sm md:max-w-4xl text-center mx-auto tracking-wide leading-relaxed relative z-40 px-4">
+                        Your software should work for you, not the other way around.<br className="hidden md:block" /> Stop hiring around broken systems. We engineer custom software and automation that eliminates pointless manual labor, connects your operations, and scales your business without adding headcount.
                     </p>
 
                     {/* --- FLOATING MICRO-ELEMENTS --- */}
@@ -155,8 +152,8 @@ const Hero = () => {
                             <svg width="12" height="12" className="md:w-3.5 md:h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><polyline points="16 11 18 13 22 9" /></svg>
                         </div>
                         <div className="flex flex-col text-left">
-                            <span className="text-white font-medium text-sm leading-tight">+100K</span>
-                            <span className="text-white/40 text-[10px] uppercase tracking-wider">Followers Stacked</span>
+                            <span className="text-white font-medium text-sm leading-tight">24/7 Output</span>
+                            <span className="text-white/40 text-[10px] uppercase tracking-wider">No Payroll or Sleep</span>
                         </div>
                     </div>
 
@@ -166,8 +163,8 @@ const Hero = () => {
                             <svg width="12" height="12" className="md:w-3.5 md:h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="1" x2="12" y2="23" /><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" /></svg>
                         </div>
                         <div className="flex flex-col text-left">
-                            <span className="text-white font-medium text-sm leading-tight">$10M+</span>
-                            <span className="text-white/40 text-[10px] uppercase tracking-wider">Client Revenue</span>
+                            <span className="text-white font-medium text-sm leading-tight">100% Accurate</span>
+                            <span className="text-white/40 text-[10px] uppercase tracking-wider">Zero Human Error</span>
                         </div>
                     </div>
 
@@ -177,8 +174,8 @@ const Hero = () => {
                             <svg width="12" height="12" className="md:w-3.5 md:h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" /><polyline points="22 4 12 14.01 9 11.01" /></svg>
                         </div>
                         <div className="flex flex-col text-left">
-                            <span className="text-white font-medium text-sm leading-tight">99.9%</span>
-                            <span className="text-white/40 text-[10px] uppercase tracking-wider">Automation Uptime</span>
+                            <span className="text-white font-medium text-sm leading-tight">Infinite Scale</span>
+                            <span className="text-white/40 text-[10px] uppercase tracking-wider">Without New Hires</span>
                         </div>
                     </div>
                 </div>
