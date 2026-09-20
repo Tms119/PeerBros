@@ -135,9 +135,9 @@ const Hero = () => {
                         </span>
                     </div>
 
-                    <h1 className="flex flex-col md:flex-row flex-wrap items-center justify-center gap-x-[2vw] gap-y-2 text-[clamp(4rem,9vw,12rem)] font-display font-medium tracking-tighter text-white w-full leading-[0.85] drop-shadow-2xl relative z-40 transform-gpu uppercase">
+                    <h1 className="flex flex-col md:flex-row flex-wrap items-center justify-center gap-x-4 md:gap-x-[2.5vw] gap-y-4 md:gap-y-2 text-[clamp(3.5rem,8vw,11rem)] font-display font-medium tracking-tighter text-white w-full leading-[0.95] drop-shadow-2xl relative z-40 transform-gpu uppercase">
                         <div className="hero-focus-word opacity-0 md:blur-2xl blur-xl scale-110 translate-y-10 will-change-transform inline-block">STOP</div>
-                        <div className="hero-focus-word opacity-0 md:blur-2xl blur-xl scale-110 translate-y-10 text-white/30 italic font-light will-change-transform inline-block pr-2">HIRING</div>
+                        <div className="hero-focus-word opacity-0 md:blur-2xl blur-xl scale-110 translate-y-10 text-white/30 italic font-light will-change-transform inline-block">HIRING</div>
                         <div className="hero-focus-word opacity-0 md:blur-2xl blur-xl scale-110 translate-y-10 text-accent will-change-transform inline-block mix-blend-screen">HUMANS.</div>
                     </h1>
 
