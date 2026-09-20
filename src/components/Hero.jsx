@@ -155,7 +155,7 @@ const Hero = () => {
 
                     {/* --- FLOATING MICRO-ELEMENTS --- */}
                     {/* Badge 1: Top Left */}
-                    <div className="hero-badge opacity-0 translate-y-8 scale-[0.85] md:scale-90 absolute top-[5%] left-2 md:top-[10%] md:left-[10%] z-50 px-3 md:px-4 py-2 md:py-2.5 rounded-2xl bg-[#0a0a0a]/90 md:bg-[#0a0a0a]/80 md:backdrop-blur-xl border border-white/[0.08] flex items-center gap-2 md:gap-3 shadow-[0_10px_40px_rgba(0,0,0,0.5)] md:animate-[floatBadge_6s_ease-in-out_infinite] max-w-[48vw]">
+                    <div className="hero-badge opacity-0 translate-y-8 scale-[0.5] md:scale-90 absolute top-[5%] left-2 md:top-[10%] md:left-[10%] z-50 px-3 md:px-4 py-2 md:py-2.5 rounded-2xl bg-[#0a0a0a]/90 md:bg-[#0a0a0a]/80 md:backdrop-blur-xl border border-white/[0.08] flex items-center gap-2 md:gap-3 shadow-[0_10px_40px_rgba(0,0,0,0.5)] md:animate-[floatBadge_6s_ease-in-out_infinite] max-w-[48vw]">
                         <div className="w-6 h-6 md:w-8 md:h-8 rounded-full bg-accent/20 flex items-center justify-center border border-accent/30 text-accent">
                             <svg width="12" height="12" className="md:w-3.5 md:h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><polyline points="16 11 18 13 22 9" /></svg>
                         </div>
@@ -166,7 +166,7 @@ const Hero = () => {
                     </div>
 
                     {/* Badge 2: Right Middle */}
-                    <div className="hero-badge opacity-0 translate-y-8 scale-[0.85] md:scale-90 absolute top-[30%] right-2 md:top-[45%] lg:right-[8%] z-50 px-3 md:px-4 py-2 md:py-2.5 rounded-2xl bg-[#0a0a0a]/90 md:bg-[#0a0a0a]/80 md:backdrop-blur-xl border border-white/[0.08] flex items-center gap-2 md:gap-3 shadow-[0_10px_40px_rgba(0,0,0,0.5)] md:animate-[floatBadge_7s_ease-in-out_infinite_1s] max-w-[48vw]">
+                    <div className="hero-badge opacity-0 translate-y-8 scale-[0.5] md:scale-90 absolute top-[30%] right-2 md:top-[45%] lg:right-[8%] z-50 px-3 md:px-4 py-2 md:py-2.5 rounded-2xl bg-[#0a0a0a]/90 md:bg-[#0a0a0a]/80 md:backdrop-blur-xl border border-white/[0.08] flex items-center gap-2 md:gap-3 shadow-[0_10px_40px_rgba(0,0,0,0.5)] md:animate-[floatBadge_7s_ease-in-out_infinite_1s] max-w-[48vw]">
                         <div className="w-6 h-6 md:w-8 md:h-8 rounded-full bg-green-500/20 flex items-center justify-center border border-green-500/30 text-green-400">
                             <svg width="12" height="12" className="md:w-3.5 md:h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="1" x2="12" y2="23" /><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" /></svg>
                         </div>
@@ -177,7 +177,7 @@ const Hero = () => {
                     </div>
 
                     {/* Badge 3: Bottom Left / Center-ish */}
-                    <div className="hero-badge opacity-0 translate-y-8 scale-[0.85] md:scale-90 absolute bottom-[25%] left-4 md:bottom-[20%] md:left-[15%] z-50 px-3 md:px-4 py-2 md:py-2.5 rounded-2xl bg-[#0a0a0a]/90 md:bg-[#0a0a0a]/80 md:backdrop-blur-xl border border-white/[0.08] flex items-center gap-2 md:gap-3 shadow-[0_10px_40px_rgba(0,0,0,0.5)] md:animate-[floatBadge_8s_ease-in-out_infinite_2s] max-w-[48vw]">
+                    <div className="hero-badge opacity-0 translate-y-8 scale-[0.5] md:scale-90 absolute bottom-[25%] left-4 md:bottom-[20%] md:left-[15%] z-50 px-3 md:px-4 py-2 md:py-2.5 rounded-2xl bg-[#0a0a0a]/90 md:bg-[#0a0a0a]/80 md:backdrop-blur-xl border border-white/[0.08] flex items-center gap-2 md:gap-3 shadow-[0_10px_40px_rgba(0,0,0,0.5)] md:animate-[floatBadge_8s_ease-in-out_infinite_2s] max-w-[48vw]">
                         <div className="w-6 h-6 md:w-8 md:h-8 rounded-full bg-blue-500/20 flex items-center justify-center border border-blue-500/30 text-blue-400">
                             <svg width="12" height="12" className="md:w-3.5 md:h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" /><polyline points="22 4 12 14.01 9 11.01" /></svg>
                         </div>
