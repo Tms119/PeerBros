@@ -72,7 +72,6 @@ const AmbientDepthEngine = () => {
 const Hero = () => {
     const [loaded, setLoaded] = useState(false);
     const containerRef = useRef(null);
-    const auraRef = useRef(null);
     const scrollCueRef = useRef(null);
 
     // Initial Load Animation (FOUC Eradicated)
@@ -105,27 +104,6 @@ const Hero = () => {
         return () => ctx.revert();
     }, [loaded]);
 
-    // --- MAGNETIC VELVETY HOVER ---
-    useEffect(() => {
-        if (!loaded || !containerRef.current || !auraRef.current) return;
-
-        const isTouchDevice = window.matchMedia("(hover: none) and (pointer: coarse)").matches || window.innerWidth < 768;
-        if (isTouchDevice) return; // Completely disable the math on mobile
-
-        // Extremely sluggish, velvety interpolation for the massive glow tracking
-        const xToAura = gsap.quickTo(auraRef.current, "x", { duration: 1.5, ease: "power3.out" });
-        const yToAura = gsap.quickTo(auraRef.current, "y", { duration: 1.5, ease: "power3.out" });
-
-        const handleMouseMove = (e) => {
-            // Subtract half the width/height (400px) to center it on the cursor
-            xToAura(e.clientX - 400);
-            yToAura(e.clientY - 400);
-        };
-
-        window.addEventListener("mousemove", handleMouseMove);
-        return () => window.removeEventListener("mousemove", handleMouseMove);
-    }, [loaded]);
-
     // --- SCROLL INDICATOR LOOP (animate SVG rect y attr) ---
     useEffect(() => {
         if (!loaded || !scrollCueRef.current) return;
@@ -148,12 +126,6 @@ const Hero = () => {
 
                 <AmbientDepthEngine />
 
-                {/* The Velvety Magnetic Aura */}
-                <div
-                    ref={auraRef}
-                    className="hidden md:block absolute top-0 left-0 w-[800px] h-[800px] bg-accent/15 rounded-full blur-[150px] mix-blend-screen pointer-events-none z-10 will-change-transform transform-gpu opacity-0 animate-[fadeIn_3s_ease-in_2s_forwards]"
-                />
-
                 <div className="relative z-30 w-full max-w-[100rem] mx-auto px-6 md:px-12 flex flex-col items-center text-center">
 
                     <div className="hero-tag opacity-0 translate-y-10 inline-flex items-center gap-3 px-5 py-2.5 rounded-full border border-white/10 bg-[#0a0a0a]/80 backdrop-blur-xl mb-12 md:shadow-2xl">
@@ -163,15 +135,17 @@ const Hero = () => {
                         </span>
                     </div>
 
-                    <h1 className="flex flex-col md:flex-row flex-wrap items-center justify-center gap-x-[2vw] gap-y-2 text-[clamp(4rem,11vw,14rem)] font-display font-medium tracking-tighter text-white w-full leading-[0.85] drop-shadow-2xl relative z-40 transform-gpu">
-                        <div className="hero-focus-word opacity-0 md:blur-2xl blur-xl scale-110 translate-y-10 will-change-transform inline-block">We</div>
-                        <div className="hero-focus-word opacity-0 md:blur-2xl blur-xl scale-110 translate-y-10 text-white/30 italic font-light will-change-transform inline-block pr-2">Build</div>
-                        <div className="hero-focus-word opacity-0 md:blur-2xl blur-xl scale-110 translate-y-10 will-change-transform inline-block">Digital</div>
-                        <div className="hero-focus-word opacity-0 md:blur-2xl blur-xl scale-110 translate-y-10 text-accent will-change-transform inline-block mix-blend-screen">Businesses.</div>
+                    <h1 className="flex flex-col md:flex-row flex-wrap items-center justify-center gap-x-[2vw] gap-y-2 text-[clamp(2.5rem,7vw,10rem)] font-display font-medium tracking-tighter text-white w-full leading-[0.85] drop-shadow-2xl relative z-40 transform-gpu">
+                        <div className="hero-focus-word opacity-0 md:blur-2xl blur-xl scale-110 translate-y-10 will-change-transform inline-block">Your</div>
+                        <div className="hero-focus-word opacity-0 md:blur-2xl blur-xl scale-110 translate-y-10 text-white/30 italic font-light will-change-transform inline-block pr-2">software</div>
+                        <div className="hero-focus-word opacity-0 md:blur-2xl blur-xl scale-110 translate-y-10 will-change-transform inline-block">is</div>
+                        <div className="hero-focus-word opacity-0 md:blur-2xl blur-xl scale-110 translate-y-10 text-accent will-change-transform inline-block mix-blend-screen">making</div>
+                        <div className="hero-focus-word opacity-0 md:blur-2xl blur-xl scale-110 translate-y-10 text-white/30 italic font-light will-change-transform inline-block pr-2">you</div>
+                        <div className="hero-focus-word opacity-0 md:blur-2xl blur-xl scale-110 translate-y-10 will-change-transform inline-block">stupid...</div>
                     </h1>
 
                     <p className="hero-sub opacity-0 translate-y-12 mt-8 md:mt-16 text-sm md:text-[clamp(1.2rem,2vw,1.8rem)] text-white/50 font-light max-w-sm md:max-w-3xl text-center mx-auto tracking-wide leading-relaxed relative z-40 px-4">
-                        We don't just build websites. We create powerful digital systems that help your business grow automatically.
+                        Your software should work for you, not the other way around.
                     </p>
 
                     {/* --- FLOATING MICRO-ELEMENTS --- */}

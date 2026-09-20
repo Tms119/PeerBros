@@ -4,7 +4,6 @@ import gsap from 'gsap';
 export const CustomCursor = () => {
     const dotRef = useRef(null);
     const ringRef = useRef(null);
-    const auraRef = useRef(null);
     const rippleRef = useRef(null);
     const labelRef = useRef(null);
     const [cursorState, setCursorState] = useState('default'); // 'default' | 'hover' | 'text'
@@ -14,12 +13,11 @@ export const CustomCursor = () => {
 
         const dot = dotRef.current;
         const ring = ringRef.current;
-        const aura = auraRef.current;
         const label = labelRef.current;
 
         // Completely disable on touch devices
         const isTouchDevice = window.matchMedia("(hover: none) and (pointer: coarse)").matches || window.innerWidth < 768;
-        if (isTouchDevice || !dot || !ring || !aura) return;
+        if (isTouchDevice || !dot || !ring) return;
 
         // Layer 1: Inner dot - instant snap
         const dotXTo = gsap.quickTo(dot, 'x', { duration: 0.05, ease: 'none' });
@@ -29,17 +27,11 @@ export const CustomCursor = () => {
         const ringXTo = gsap.quickTo(ring, 'x', { duration: 0.25, ease: 'power3.out' });
         const ringYTo = gsap.quickTo(ring, 'y', { duration: 0.25, ease: 'power3.out' });
 
-        // Layer 3: Aura blob - very sluggish
-        const auraXTo = gsap.quickTo(aura, 'x', { duration: 0.7, ease: 'power2.out' });
-        const auraYTo = gsap.quickTo(aura, 'y', { duration: 0.7, ease: 'power2.out' });
-
         const moveCursor = (e) => {
             dotXTo(e.clientX);
             dotYTo(e.clientY);
             ringXTo(e.clientX);
             ringYTo(e.clientY);
-            auraXTo(e.clientX);
-            auraYTo(e.clientY);
         };
 
         window.addEventListener('mousemove', moveCursor);
@@ -99,12 +91,6 @@ export const CustomCursor = () => {
 
     return (
         <div className="hidden md:block pointer-events-none">
-            {/* Layer 3: Aura blob — shrunk down */}
-            <div
-                ref={auraRef}
-                className="fixed top-0 left-0 w-[40px] h-[40px] bg-accent/25 rounded-full blur-[12px] pointer-events-none z-[9990] -translate-x-1/2 -translate-y-1/2 transform-gpu mix-blend-screen will-change-transform"
-            />
-
             {/* Layer 2: Outer ring */}
             <div
                 ref={ringRef}
