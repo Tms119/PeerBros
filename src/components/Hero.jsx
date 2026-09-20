@@ -154,7 +154,7 @@ const Hero = () => {
                     </p>
 
                     {/* --- BADGES (Stacked on mobile, floating on desktop) --- */}
-                    <div className="flex flex-row flex-wrap justify-center items-center gap-3 mt-8 md:mt-0 w-full md:w-auto relative z-50">
+                    <div className="flex flex-row flex-wrap justify-center items-center gap-3 mt-8 md:mt-0 w-full md:w-auto z-50">
                         {/* Badge 1: Top Left on Desktop */}
                         <div className="hero-badge opacity-0 translate-y-8 relative md:absolute md:top-[10%] md:left-[10%] px-3 md:px-4 py-2 md:py-2.5 rounded-2xl bg-[#0a0a0a]/90 md:bg-[#0a0a0a]/80 md:backdrop-blur-xl border border-white/[0.08] flex items-center gap-2 md:gap-3 shadow-[0_10px_40px_rgba(0,0,0,0.5)] md:animate-[floatBadge_6s_ease-in-out_infinite] w-[45%] md:w-auto">
                             <div className="w-6 h-6 md:w-8 md:h-8 rounded-full bg-accent/20 flex items-center justify-center border border-accent/30 text-accent shrink-0">
