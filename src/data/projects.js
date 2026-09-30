@@ -38,25 +38,6 @@ export const projects = [
     category_icon: 'ShoppingCart',
   },
   {
-    id: '03',
-    name: 'Moneo Trading',
-    category: 'FinTech Platform',
-    tagline: 'Infrastructure built for traders who mean business.',
-    description:
-      'Real time data, automated strategies, and tight risk controls. All in one platform. Moneo is what serious traders use when they stop messing around.',
-    url: 'https://moneotrading.com',
-    accent: '#10B981',
-    accentRgb: '16, 185, 129',
-    features: [
-      'Real time WebSocket data feeds',
-      'Strategy builder & backtesting',
-      'Live P&L and risk dashboard',
-      'Secure user trading accounts',
-    ],
-    tech: ['React', 'WebSockets', 'Python', 'Redis'],
-    category_icon: 'TrendingUp',
-  },
-  {
     id: '04',
     name: 'WhoGoHost',
     category: 'Hosting Provider',
